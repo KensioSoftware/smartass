@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { assertNonNullable } from "./non-nullable.assert";
+import { assertNonNullable } from "./non-nullable.assert.js";
 
 describe("non-nullable", () => {
   test("throws on null", () => {

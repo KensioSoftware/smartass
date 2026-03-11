@@ -29,7 +29,7 @@
     "removeComments": false,
 
     "outDir": "dist",
-    "rootDir": "."
+    "rootDir": "src"
   },
   "include": ["src/**/*", "test/**/*", "typings/**/*.d.ts"]
 }
