@@ -6,7 +6,9 @@
   "main": "index.js",
   "scripts": {
     "fmt": "eslint --fix '{src,test}/**/*.{ts,js}' && prettier --write '{src,test}/**/*.{ts,js,json,md,css,html,yml,yaml}'",
-    "lint": "eslint '{src,test}/**/*.{ts,js}' && prettier --check '{src,test}/**/*.{ts,js,json,md,css,html,yml,yaml}'"
+    "lint": "eslint '{src,test}/**/*.{ts,js}' && prettier --check '{src,test}/**/*.{ts,js,json,md,css,html,yml,yaml}'",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "keywords": [
     "test",
@@ -15,11 +17,12 @@
   ],
   "author": "Kensio Software",
   "license": "AGPL-3.0",
-  "packageManager": "pnpm@10.32.0",
+  "packageManager": "pnpm@10.32.1",
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/eslint-plugin-security": "^3.0.1",
     "@types/node": "^25.4.0",
+    "@vitest/coverage-v8": "^4.0.18",
     "@vitest/eslint-plugin": "^1.6.10",
     "eslint": "^10.0.3",
     "eslint-config-prettier": "^10.1.8",
