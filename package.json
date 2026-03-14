@@ -4,7 +4,7 @@
   "author": "Kensio Software",
   "repository": "https://github.com/KensioSoftware/smartass",
   "license": "AGPL-3.0",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,10 +22,13 @@
   },
   "sideEffects": false,
   "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": ">=24.14.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "fmt": "eslint --fix '{src,test}/**/*.{ts,js}' && prettier --write '{src,test}/**/*.{ts,js,json,md,css,html,yml,yaml}'",
-    "lint": "eslint '{src,test}/**/*.{ts,js}' && prettier --check '{src,test}/**/*.{ts,js,json,md,css,html,yml,yaml}'",
+    "fmt": "eslint --fix '{src,test}/**/*.ts' && prettier --write '{src,test}/**/*.{ts,json,md,css,html,yml,yaml}'",
+    "lint": "eslint '{src,test}/**/*.ts' && prettier --check '{src,test}/**/*.{ts,json,md,css,html,yml,yaml}'",
     "test": "vitest run",
     "test:coverage": "vitest run --coverage"
   },

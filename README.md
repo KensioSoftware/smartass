@@ -20,6 +20,12 @@ npm install @kensio/smartass
 
 ## Usage
 
+- [assertNonNullable](#assertnonnullable)
+- [assertNotEmpty](#assertnotempty)
+- [assertOneOf](#assertoneof)
+- [assertTypeString](#asserttypestring)
+- [assertTypeNumber](#asserttypenumber)
+
 ### assertNonNullable
 
 Assert that a value is neither null nor undefined, with type narrowing.
@@ -67,12 +73,62 @@ test('status is valid', () => {
 });
 ```
 
-## Custom Error Messages
+### assertTypeString
 
-All assertion functions accept an optional custom error message:
+Assert that a value is a string, with type narrowing.
 
 ```typescript
-assertNonNullable(user, 'User must be provided');
-assertNotEmpty(items, 'Items array cannot be empty');
-assertOneOf(status, ['open', 'closed'], 'Status must be either open or closed');
+import { assertTypeString } from '@kensio/smartass';
+
+test('value is a string', () => {
+  const value: unknown = getValue();
+  assertTypeString(value);
+  // TypeScript now knows value is a string
+  expect(value.length).toBeGreaterThan(0);
+});
+```
+
+### assertTypeNumber
+
+Assert that a value is a number, with type narrowing.
+
+```typescript
+import { assertTypeNumber } from '@kensio/smartass';
+
+test('value is a number', () => {
+  const value: unknown = getValue();
+  assertTypeNumber(value);
+  // TypeScript now knows value is a number
+  expect(value).toBeGreaterThan(0);
+});
+```
+
+### assertTypeString
+
+Assert that a value is a string, with type narrowing.
+
+```typescript
+import { assertTypeString } from '@kensio/smartass';
+
+test('value is a string', () => {
+  const value: unknown = getValue();
+  assertTypeString(value);
+  // TypeScript now knows value is a string
+  expect(value.length).toBeGreaterThan(0);
+});
+```
+
+### assertTypeNumber
+
+Assert that a value is a number, with type narrowing.
+
+```typescript
+import { assertTypeNumber } from '@kensio/smartass';
+
+test('value is a number', () => {
+  const value: unknown = getValue();
+  assertTypeNumber(value);
+  // TypeScript now knows value is a number
+  expect(value).toBeGreaterThan(0);
+});
 ```

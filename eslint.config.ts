@@ -120,7 +120,7 @@ export default defineConfig(
 
   // ── Vitest (test files only) ────────────────────────────
   {
-    files: ["test/**/*.test.ts"],
+    files: ["**/*.test.ts"],
     plugins: {
       vitest,
     },
@@ -141,6 +141,8 @@ export default defineConfig(
       "@typescript-eslint/no-unsafe-member-access": "off",
       "@typescript-eslint/explicit-function-return-type": "off",
       "import-x/no-default-export": "off",
+      "unicorn/no-null": "off",
+      "unicorn/no-useless-undefined": "off",
     },
   },
 
