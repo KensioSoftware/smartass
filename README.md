@@ -38,7 +38,6 @@ test('user has a name', () => {
   assertNonNullable(user);
   // TypeScript now knows user is neither null nor undefined, so no need
   // for ! or ? operators.
-  expect(user.name).toBe('Alice');
 });
 ```
 
@@ -54,7 +53,6 @@ test('first item is correct', () => {
   assertNotEmpty(items);
   // TypeScript now knows items is an array of strings with at
   // least one element, so no need for ? operator.
-  expect(items[0]).toBe('first');
 });
 ```
 
@@ -69,7 +67,6 @@ test('status is valid', () => {
   const status = getStatus();
   assertOneOf(status, ['pending', 'active', 'completed'] as const);
   // TypeScript now knows status is 'pending' | 'active' | 'completed'
-  expect(status).toBe('active');
 });
 ```
 
@@ -83,8 +80,7 @@ import { assertTypeString } from '@kensio/smartass';
 test('value is a string', () => {
   const value: unknown = getValue();
   assertTypeString(value);
-  // TypeScript now knows value is a string
-  expect(value.length).toBeGreaterThan(0);
+  // TypeScript now knows value is a string.
 });
 ```
 
@@ -98,37 +94,6 @@ import { assertTypeNumber } from '@kensio/smartass';
 test('value is a number', () => {
   const value: unknown = getValue();
   assertTypeNumber(value);
-  // TypeScript now knows value is a number
-  expect(value).toBeGreaterThan(0);
-});
-```
-
-### assertTypeString
-
-Assert that a value is a string, with type narrowing.
-
-```typescript
-import { assertTypeString } from '@kensio/smartass';
-
-test('value is a string', () => {
-  const value: unknown = getValue();
-  assertTypeString(value);
-  // TypeScript now knows value is a string
-  expect(value.length).toBeGreaterThan(0);
-});
-```
-
-### assertTypeNumber
-
-Assert that a value is a number, with type narrowing.
-
-```typescript
-import { assertTypeNumber } from '@kensio/smartass';
-
-test('value is a number', () => {
-  const value: unknown = getValue();
-  assertTypeNumber(value);
-  // TypeScript now knows value is a number
-  expect(value).toBeGreaterThan(0);
+  // TypeScript now knows value is a number.
 });
 ```
