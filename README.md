@@ -12,88 +12,38 @@ unable to provide type information to TypeScript and IntelliSense.
 This library provides assertion functions with assertion signatures so that you
 can benefit from the extra type information.
 
+```typescript
+import { assertNonNullable } from '@kensio/smartass';
+
+const user: { name: string } | undefined = getUser();
+assertNonNullable(user);
+// TypeScript now knows user is neither null nor undefined,
+// so no need for ? or ! operators.
+const userName = user.name;
+```
+
+```typescript
+import { assertOneOf } from '@kensio/smartass';
+
+const status = getStatus();
+assertOneOf(status, ['pending', 'active', 'completed']);
+// TypeScript now knows status is of type 'pending' | 'active' | 'completed'
+```
+
 ## Installation
 
 ```bash
 npm install @kensio/smartass
 ```
 
-## Usage
+## Assertion functions
 
-- [assertNonNullable](#assertnonnullable)
-- [assertNotEmpty](#assertnotempty)
-- [assertOneOf](#assertoneof)
-- [assertTypeString](#asserttypestring)
-- [assertTypeNumber](#asserttypenumber)
-
-### assertNonNullable
-
-Assert that a value is neither null nor undefined, with type narrowing.
-
-```typescript
-import { assertNonNullable } from '@kensio/smartass';
-
-test('user has a name', () => {
-  const user = getUser();
-  assertNonNullable(user);
-  // TypeScript now knows user is neither null nor undefined, so no need
-  // for ! or ? operators.
-});
-```
-
-### assertNotEmpty
-
-Assert that an array is non-empty, with type narrowing to a tuple type.
-
-```typescript
-import { assertNotEmpty } from '@kensio/smartass';
-
-test('first item is correct', () => {
-  const items: string[] = getItems();
-  assertNotEmpty(items);
-  // TypeScript now knows items is an array of strings with at
-  // least one element, so no need for ? operator.
-});
-```
-
-### assertOneOf
-
-Assert that a value is one of a set of allowed values, with type narrowing.
-
-```typescript
-import { assertOneOf } from '@kensio/smartass';
-
-test('status is valid', () => {
-  const status = getStatus();
-  assertOneOf(status, ['pending', 'active', 'completed'] as const);
-  // TypeScript now knows status is 'pending' | 'active' | 'completed'
-});
-```
-
-### assertTypeString
-
-Assert that a value is a string, with type narrowing.
-
-```typescript
-import { assertTypeString } from '@kensio/smartass';
-
-test('value is a string', () => {
-  const value: unknown = getValue();
-  assertTypeString(value);
-  // TypeScript now knows value is a string.
-});
-```
-
-### assertTypeNumber
-
-Assert that a value is a number, with type narrowing.
-
-```typescript
-import { assertTypeNumber } from '@kensio/smartass';
-
-test('value is a number', () => {
-  const value: unknown = getValue();
-  assertTypeNumber(value);
-  // TypeScript now knows value is a number.
-});
-```
+- [assertNonNullable](src/assert/non-nullable/non-nullable.assert.ts)
+- [assertNotEmpty](src/assert/not-empty/not-empty.assert.ts)
+- [assertOneOf](src/assert/one-of/one-of.assert.ts)
+- [assertTypeBigInt](src/assert/type-bigint/type-bigint.assert.ts)
+- [assertTypeBoolean](src/assert/type-boolean/type-boolean.assert.ts)
+- [assertTypeFunction](src/assert/type-function/type-function.assert.ts)
+- [assertTypeNumber](src/assert/type-number/type-number.assert.ts)
+- [assertTypeObject](src/assert/type-object/type-object.assert.ts)
+- [assertTypeString](src/assert/type-string/type-string.assert.ts)
