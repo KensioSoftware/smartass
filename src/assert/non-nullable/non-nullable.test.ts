@@ -5,15 +5,13 @@ describe("non-nullable", () => {
   it("throws on null", () => {
     expect(() => {
       assertNonNullable(null);
-    }).toThrowError("Expected value not to be null, but it was null.");
+    }).toThrowError("Expected null not to be null.");
   });
 
   it("throws on undefined", () => {
     expect(() => {
       assertNonNullable(undefined);
-    }).toThrowError(
-      "Expected value not to be undefined, but it was undefined.",
-    );
+    }).toThrowError("Expected undefined not to be undefined.");
   });
 
   it("OK on non-nullable", () => {

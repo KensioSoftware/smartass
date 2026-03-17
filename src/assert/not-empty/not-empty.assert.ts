@@ -13,6 +13,8 @@ export function assertNotEmpty<T>(
   if (value.length === 0) {
     throw new AssertionError(
       message ?? `Expected array not to be empty, but it was empty.`,
+      value,
+      ["..."],
     );
   }
 }

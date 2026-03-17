@@ -45,7 +45,7 @@ describe("assertTypeBigInt", () => {
   it("should throw with default error message", () => {
     expect(() => {
       assertTypeBigInt(42);
-    }).toThrow("Expected 42 to be of type BigInt, but it was of type number");
+    }).toThrow("Expected number 42 to be of type bigint.");
   });
 
   it("should throw with custom error message", () => {
