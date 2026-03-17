@@ -4,10 +4,8 @@ import { assertTypeFunction } from "./type-function.assert.js";
 describe("type-function", () => {
   it("throws when value is not a function", () => {
     expect(() => {
-      assertTypeFunction("function");
-    }).toThrowError(
-      "Expected function to be of type function, but it was of type string",
-    );
+      assertTypeFunction("foobar");
+    }).toThrowError('Expected string "foobar" to be of type function.');
   });
 
   it("does not throw when value is a function", () => {
@@ -37,28 +35,18 @@ describe("type-function", () => {
   it("works with various non-function types", () => {
     expect(() => {
       assertTypeFunction(null);
-    }).toThrowError(
-      "Expected null to be of type function, but it was of type object",
-    );
+    }).toThrowError("Expected null to be of type function.");
     expect(() => {
       assertTypeFunction(undefined);
-    }).toThrowError(
-      "Expected undefined to be of type function, but it was of type undefined",
-    );
+    }).toThrowError("Expected undefined to be of type function.");
     expect(() => {
       assertTypeFunction(true);
-    }).toThrowError(
-      "Expected true to be of type function, but it was of type boolean",
-    );
+    }).toThrowError("Expected boolean true to be of type function.");
     expect(() => {
       assertTypeFunction(123);
-    }).toThrowError(
-      "Expected 123 to be of type function, but it was of type number",
-    );
+    }).toThrowError("Expected number 123 to be of type function.");
     expect(() => {
       assertTypeFunction({});
-    }).toThrowError(
-      "Expected [object Object] to be of type function, but it was of type object",
-    );
+    }).toThrowError("Expected object {} to be of type function.");
   });
 });

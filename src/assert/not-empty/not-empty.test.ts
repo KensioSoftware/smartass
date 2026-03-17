@@ -1,24 +1,32 @@
 import { describe, expect, it } from "vitest";
 import { assertNotEmpty } from "./not-empty.assert.js";
+import type { AssertionError } from "../../assertion-error.js";
 
 describe("not-empty", () => {
   it("throws on empty array", () => {
-    expect(() => {
+    let error: AssertionError;
+    try {
       assertNotEmpty([]);
-    }).toThrowError("Expected array not to be empty, but it was empty.");
+      expect.unreachable();
+    } catch (error_: any) {
+      error = error_;
+    }
+    expect(error.message).toBe(
+      "Expected array not to be empty, but it was empty.",
+    );
+    expect(error.actual).toStrictEqual([]);
+    expect(error.expected).toStrictEqual(["..."]);
   });
 
   it("throws on null", () => {
     expect(() => {
       assertNotEmpty(null);
-    }).toThrowError("Expected value not to be null, but it was null.");
+    }).toThrowError("Expected null not to be null.");
   });
 
   it("throws on undefined", () => {
     expect(() => {
       assertNotEmpty(undefined);
-    }).toThrowError(
-      "Expected value not to be undefined, but it was undefined.",
-    );
+    }).toThrowError("Expected undefined not to be undefined.");
   });
 });

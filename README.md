@@ -38,6 +38,7 @@ npm install @kensio/smartass
 
 ## Assertion functions
 
+- [assertIdentical](src/assert/identical/identical.assert.ts)
 - [assertNonNullable](src/assert/non-nullable/non-nullable.assert.ts)
 - [assertNotEmpty](src/assert/not-empty/not-empty.assert.ts)
 - [assertOneOf](src/assert/one-of/one-of.assert.ts)

@@ -4,10 +4,8 @@ import { assertTypeObject } from "./type-object.assert.js";
 describe("type-object", () => {
   it("throws when value is not an object", () => {
     expect(() => {
-      assertTypeObject("object");
-    }).toThrowError(
-      "Expected object to be of type object, but it was of type string",
-    );
+      assertTypeObject("not an object");
+    }).toThrowError('Expected string "not an object" to be of type object.');
   });
 
   it("does not throw when value is an object", () => {
@@ -34,23 +32,15 @@ describe("type-object", () => {
   it("works with various non-object types", () => {
     expect(() => {
       assertTypeObject(undefined);
-    }).toThrowError(
-      "Expected undefined to be of type object, but it was of type undefined",
-    );
+    }).toThrowError("Expected undefined to be of type object.");
     expect(() => {
       assertTypeObject(true);
-    }).toThrowError(
-      "Expected true to be of type object, but it was of type boolean",
-    );
+    }).toThrowError("Expected boolean true to be of type object.");
     expect(() => {
       assertTypeObject(123);
-    }).toThrowError(
-      "Expected 123 to be of type object, but it was of type number",
-    );
+    }).toThrowError("Expected number 123 to be of type object.");
     expect(() => {
-      assertTypeObject("string");
-    }).toThrowError(
-      "Expected string to be of type object, but it was of type string",
-    );
+      assertTypeObject("foobar");
+    }).toThrowError('Expected string "foobar" to be of type object.');
   });
 });

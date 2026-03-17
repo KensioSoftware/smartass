@@ -1,4 +1,5 @@
 import { AssertionError } from "../../assertion-error.js";
+import { desc } from "../../describe/describe.js";
 
 /**
  * Assert that a value is non-nullable, with type-narrowing.
@@ -9,12 +10,17 @@ export function assertNonNullable<T>(
 ): asserts value is NonNullable<T> {
   if (value === null) {
     throw new AssertionError(
-      message ?? "Expected value not to be null, but it was null.",
+      message ?? `Expected ${desc(value)} not to be null.`,
+      value,
+      // eslint-disable-next-line unicorn/no-null
+      null,
     );
   }
   if (value === undefined) {
     throw new AssertionError(
-      message ?? "Expected value not to be undefined, but it was undefined.",
+      message ?? `Expected ${desc(value)} not to be undefined.`,
+      value,
+      undefined,
     );
   }
 }
