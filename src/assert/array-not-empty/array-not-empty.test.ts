@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { assertNotEmpty } from "./not-empty.assert.js";
+import { assertArrayNotEmpty } from "./array-not-empty.assert.js";
 import type { AssertionError } from "../../assertion-error.js";
 
 describe("not-empty", () => {
   it("throws on empty array", () => {
     let error: AssertionError;
     try {
-      assertNotEmpty([]);
+      assertArrayNotEmpty([]);
       expect.unreachable();
     } catch (error_: any) {
       error = error_;
@@ -20,13 +20,13 @@ describe("not-empty", () => {
 
   it("throws on null", () => {
     expect(() => {
-      assertNotEmpty(null);
+      assertArrayNotEmpty(null);
     }).toThrowError("Expected null not to be null.");
   });
 
   it("throws on undefined", () => {
     expect(() => {
-      assertNotEmpty(undefined);
+      assertArrayNotEmpty(undefined);
     }).toThrowError("Expected undefined not to be undefined.");
   });
 });

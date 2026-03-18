@@ -38,12 +38,17 @@ npm install @kensio/smartass
 
 ## Assertion functions
 
+- [assertArrayLength](src/assert/array-length/array-length.assert.ts)
+- [assertArrayMinLength](src/assert/array-min-length/array-min-length.assert.ts)
+- [assertArrayNotEmpty](src/assert/array-not-empty/array-not-empty.assert.ts)
 - [assertIdentical](src/assert/identical/identical.assert.ts)
+- [assertInstanceOf](src/assert/instance-of/instance-of.assert.ts)
 - [assertNonNullable](src/assert/non-nullable/non-nullable.assert.ts)
-- [assertNotEmpty](src/assert/not-empty/not-empty.assert.ts)
 - [assertNumberBetween](src/assert/number-between/number-between.assert.ts)
 - [assertNumberToNearest](src/assert/number-to-nearest/number-to-nearest.assert.ts)
 - [assertOneOf](src/assert/one-of/one-of.assert.ts)
+- [assertThrowsError](src/assert/throws-error/throws-error.assert.ts)
+- [assertThrowsErrorAsync](src/assert/throws-error-async/throws-error-async.assert.ts)
 - [assertTypeBigInt](src/assert/type-bigint/type-bigint.assert.ts)
 - [assertTypeBoolean](src/assert/type-boolean/type-boolean.assert.ts)
 - [assertTypeFunction](src/assert/type-function/type-function.assert.ts)
@@ -51,6 +56,3 @@ npm install @kensio/smartass
 - [assertTypeNumeric](src/assert/type-numeric/type-numeric.assert.ts)
 - [assertTypeObject](src/assert/type-object/type-object.assert.ts)
 - [assertTypeString](src/assert/type-string/type-string.assert.ts)
-- [assertInstanceOf](src/assert/instance-of/instance-of.assert.ts)
-- [assertThrowsError](src/assert/throws-error/throws-error.assert.ts)
-- [assertThrowsErrorAsync](src/assert/throws-error-async/throws-error-async.assert.ts)
