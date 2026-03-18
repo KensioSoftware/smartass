@@ -4,7 +4,7 @@
   "author": "Kensio Software",
   "repository": "https://github.com/KensioSoftware/smartass",
   "license": "AGPL-3.0",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
