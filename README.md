@@ -51,3 +51,6 @@ npm install @kensio/smartass
 - [assertTypeNumeric](src/assert/type-numeric/type-numeric.assert.ts)
 - [assertTypeObject](src/assert/type-object/type-object.assert.ts)
 - [assertTypeString](src/assert/type-string/type-string.assert.ts)
+- [assertInstanceOf](src/assert/instance-of/instance-of.assert.ts)
+- [assertThrowsError](src/assert/throws-error/throws-error.assert.ts)
+- [assertThrowsErrorAsync](src/assert/throws-error-async/throws-error-async.assert.ts)
