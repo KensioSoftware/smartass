@@ -1,6 +1,7 @@
 export * from "./assert/array-length/array-length.assert.js";
 export * from "./assert/array-min-length/array-min-length.assert.js";
 export * from "./assert/array-not-empty/array-not-empty.assert.js";
+export * from "./assert/false/false.assert.js";
 export * from "./assert/identical/identical.assert.js";
 export * from "./assert/instance-of/instance-of.assert.js";
 export * from "./assert/non-nullable/non-nullable.assert.js";
@@ -9,6 +10,7 @@ export * from "./assert/number-to-nearest/number-to-nearest.assert.js";
 export * from "./assert/one-of/one-of.assert.js";
 export * from "./assert/throws-error-async/throws-error-async.assert.js";
 export * from "./assert/throws-error/throws-error.assert.js";
+export * from "./assert/true/true.assert.js";
 export * from "./assert/type-bigint/type-bigint.assert.js";
 export * from "./assert/type-boolean/type-boolean.assert.js";
 export * from "./assert/type-function/type-function.assert.js";
