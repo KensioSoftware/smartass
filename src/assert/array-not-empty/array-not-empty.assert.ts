@@ -2,9 +2,9 @@ import { assertNonNullable } from "../non-nullable/non-nullable.assert.js";
 import { AssertionError } from "../../assertion-error.js";
 
 /**
- * Assertion function a non-empty array, with type-narrowing.
+ * Assert that an array has at least one element, with type-narrowing.
  */
-export function assertNotEmpty<T>(
+export function assertArrayNotEmpty<T>(
   value: readonly T[] | undefined | null,
   message?: string,
 ): asserts value is readonly [T, ...T[]] {
