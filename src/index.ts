@@ -1,3 +1,5 @@
+export * from "./assert/array-includes/array-includes.assert.js";
+export * from "./assert/array-includes-all/array-includes-all.assert.js";
 export * from "./assert/array-length/array-length.assert.js";
 export * from "./assert/array-min-length/array-min-length.assert.js";
 export * from "./assert/array-not-empty/array-not-empty.assert.js";
@@ -9,6 +11,9 @@ export * from "./assert/non-nullable/non-nullable.assert.js";
 export * from "./assert/number-between/number-between.assert.js";
 export * from "./assert/number-to-nearest/number-to-nearest.assert.js";
 export * from "./assert/one-of/one-of.assert.js";
+export * from "./assert/string-includes/string-includes.assert.js";
+export * from "./assert/string-ends-with/string-ends-with.assert.js";
+export * from "./assert/string-starts-with/string-starts-with.assert.js";
 export * from "./assert/throws-error-async/throws-error-async.assert.js";
 export * from "./assert/throws-error/throws-error.assert.js";
 export * from "./assert/true/true.assert.js";
