@@ -1,6 +1,7 @@
 export * from "./assert/array-length/array-length.assert.js";
 export * from "./assert/array-min-length/array-min-length.assert.js";
 export * from "./assert/array-not-empty/array-not-empty.assert.js";
+export * from "./assert/buffer-equal/buffer-equal.assert.js";
 export * from "./assert/false/false.assert.js";
 export * from "./assert/identical/identical.assert.js";
 export * from "./assert/instance-of/instance-of.assert.js";
@@ -18,3 +19,4 @@ export * from "./assert/type-number/type-number.assert.js";
 export * from "./assert/type-numeric/type-numeric.assert.js";
 export * from "./assert/type-object/type-object.assert.js";
 export * from "./assert/type-string/type-string.assert.js";
+export * from "./assert/type-typed-array/type-typed-array.assert.js";
