@@ -41,6 +41,7 @@ npm install @kensio/smartass
 - [assertArrayLength](src/assert/array-length/array-length.assert.ts)
 - [assertArrayMinLength](src/assert/array-min-length/array-min-length.assert.ts)
 - [assertArrayNotEmpty](src/assert/array-not-empty/array-not-empty.assert.ts)
+- [assertBufferEqual](src/assert/buffer-equal/buffer-equal.assert.ts)
 - [assertFalse](src/assert/false/false.assert.ts)
 - [assertIdentical](src/assert/identical/identical.assert.ts)
 - [assertInstanceOf](src/assert/instance-of/instance-of.assert.ts)
@@ -58,3 +59,4 @@ npm install @kensio/smartass
 - [assertTypeNumeric](src/assert/type-numeric/type-numeric.assert.ts)
 - [assertTypeObject](src/assert/type-object/type-object.assert.ts)
 - [assertTypeString](src/assert/type-string/type-string.assert.ts)
+- [assertTypeTypedArray](src/assert/type-typed-array/type-typed-array.assert.ts)
