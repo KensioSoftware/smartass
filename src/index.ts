@@ -1,3 +1,4 @@
+export * from "./assert/array-equal/array-equal.assert.js";
 export * from "./assert/array-includes-all/array-includes-all.assert.js";
 export * from "./assert/array-includes/array-includes.assert.js";
 export * from "./assert/array-length/array-length.assert.js";
