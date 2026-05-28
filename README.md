@@ -38,6 +38,7 @@ npm install @kensio/smartass
 
 ## Assertion functions
 
+- [assertArrayEqual](src/assert/array-equal/array-equal.assert.ts)
 - [assertArrayIncludes](src/assert/array-includes/array-includes.assert.ts)
 - [assertArrayIncludesAll](src/assert/array-includes-all/array-includes-all.assert.ts)
 - [assertArrayLength](src/assert/array-length/array-length.assert.ts)
