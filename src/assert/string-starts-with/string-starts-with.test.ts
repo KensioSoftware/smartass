@@ -5,7 +5,7 @@ describe("string-starts-with", () => {
   it("throws when string does not start with prefix", () => {
     expect(() => {
       assertStringStartsWith("hello world", "foo");
-    }).toThrowError(
+    }).toThrow(
       'Expected string "hello world" to start with "foo", but it did not.',
     );
   });
@@ -19,7 +19,7 @@ describe("string-starts-with", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertStringStartsWith("hello", "goodbye", "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with empty prefix", () => {
@@ -31,7 +31,7 @@ describe("string-starts-with", () => {
   it("is case sensitive", () => {
     expect(() => {
       assertStringStartsWith("Hello World", "hello");
-    }).toThrowError(
+    }).toThrow(
       'Expected string "Hello World" to start with "hello", but it did not.',
     );
   });
@@ -45,8 +45,6 @@ describe("string-starts-with", () => {
   it("throws when prefix is longer than string", () => {
     expect(() => {
       assertStringStartsWith("hi", "hello");
-    }).toThrowError(
-      'Expected string "hi" to start with "hello", but it did not.',
-    );
+    }).toThrow('Expected string "hi" to start with "hello", but it did not.');
   });
 });

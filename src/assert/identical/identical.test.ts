@@ -5,7 +5,7 @@ describe("identical", () => {
   it("throws when values are not identical", () => {
     expect(() => {
       assertIdentical("foo", "bar");
-    }).toThrowError('Expected string "foo" to be identical to string "bar".');
+    }).toThrow('Expected string "foo" to be identical to string "bar".');
   });
 
   it("does not throw when values are identical", () => {
@@ -17,13 +17,13 @@ describe("identical", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertIdentical(1, 2, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("uses === for comparison (not ==)", () => {
     expect(() => {
       assertIdentical(1, "1");
-    }).toThrowError('Expected number 1 to be identical to string "1".');
+    }).toThrow('Expected number 1 to be identical to string "1".');
   });
 
   it("works with object references", () => {
@@ -54,7 +54,7 @@ describe("identical", () => {
     }).not.toThrow();
     expect(() => {
       assertIdentical(42, 43);
-    }).toThrowError("Expected number 42 to be identical to number 43");
+    }).toThrow("Expected number 42 to be identical to number 43");
   });
 
   it("works with booleans", () => {

@@ -24,7 +24,7 @@ describe("number-between", () => {
     it("throws when value is below min", () => {
       expect(() => {
         assertNumberBetween(0, 1, 10);
-      }).toThrowError(
+      }).toThrow(
         "Expected number 0 to be between number 1 and number 10 inclusive.",
       );
     });
@@ -32,7 +32,7 @@ describe("number-between", () => {
     it("throws when value is above max", () => {
       expect(() => {
         assertNumberBetween(11, 1, 10);
-      }).toThrowError(
+      }).toThrow(
         "Expected number 11 to be between number 1 and number 10 inclusive.",
       );
     });
@@ -40,7 +40,7 @@ describe("number-between", () => {
     it("throws with custom message", () => {
       expect(() => {
         assertNumberBetween(100, 1, 10, "Custom error message");
-      }).toThrowError("Custom error message");
+      }).toThrow("Custom error message");
     });
 
     it("works with negative numbers", () => {
@@ -49,7 +49,7 @@ describe("number-between", () => {
       }).not.toThrow();
       expect(() => {
         assertNumberBetween(-15, -10, 0);
-      }).toThrowError(
+      }).toThrow(
         "Expected number -15 to be between number -10 and number 0 inclusive.",
       );
     });
@@ -86,7 +86,7 @@ describe("number-between", () => {
     it("throws when value is below min", () => {
       expect(() => {
         assertNumberBetween(0n, 1n, 10n);
-      }).toThrowError(
+      }).toThrow(
         "Expected bigint 0n to be between bigint 1n and bigint 10n inclusive.",
       );
     });
@@ -94,7 +94,7 @@ describe("number-between", () => {
     it("throws when value is above max", () => {
       expect(() => {
         assertNumberBetween(11n, 1n, 10n);
-      }).toThrowError(
+      }).toThrow(
         "Expected bigint 11n to be between bigint 1n and bigint 10n inclusive.",
       );
     });
@@ -104,7 +104,7 @@ describe("number-between", () => {
     it("throws when value is not a number or bigint", () => {
       expect(() => {
         assertNumberBetween("5", 1, 10);
-      }).toThrowError(
+      }).toThrow(
         'Expected string "5" to be between number 1 and number 10 inclusive.',
       );
     });

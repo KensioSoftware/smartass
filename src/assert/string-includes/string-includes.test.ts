@@ -5,7 +5,7 @@ describe("string-includes", () => {
   it("throws when string does not include substring", () => {
     expect(() => {
       assertStringIncludes("hello world", "foo");
-    }).toThrowError(
+    }).toThrow(
       'Expected string "hello world" to include "foo", but it did not.',
     );
   });
@@ -19,7 +19,7 @@ describe("string-includes", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertStringIncludes("hello", "goodbye", "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with empty substring", () => {
@@ -31,7 +31,7 @@ describe("string-includes", () => {
   it("is case sensitive", () => {
     expect(() => {
       assertStringIncludes("Hello World", "hello");
-    }).toThrowError(
+    }).toThrow(
       'Expected string "Hello World" to include "hello", but it did not.',
     );
   });

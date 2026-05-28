@@ -40,15 +40,13 @@ describe("number-to-nearest", () => {
   it("throws when rounded value does not match expected", () => {
     expect(() => {
       assertNumberToNearest(47, 10, 40);
-    }).toThrowError(
-      "Expected to equal 40 to nearest 10, got 47 rounding to 50.",
-    );
+    }).toThrow("Expected to equal 40 to nearest 10, got 47 rounding to 50.");
   });
 
   it("throws with custom message", () => {
     expect(() => {
       assertNumberToNearest(47, 10, 40, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("handles exact values", () => {
@@ -69,6 +67,6 @@ describe("number-to-nearest", () => {
   it("throws when value is not a number", () => {
     expect(() => {
       assertNumberToNearest("47", 10, 50);
-    }).toThrowError('Expected string "47" to be of type number.');
+    }).toThrow('Expected string "47" to be of type number.');
   });
 });

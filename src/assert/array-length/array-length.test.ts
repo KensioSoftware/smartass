@@ -5,7 +5,7 @@ describe("array-length", () => {
   it("throws when array length does not match", () => {
     expect(() => {
       assertArrayLength([1, 2, 3], 2);
-    }).toThrowError(
+    }).toThrow(
       "Expected array [1,2,3] (len 3) to have length 2, but it had length 3.",
     );
   });
@@ -19,7 +19,7 @@ describe("array-length", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertArrayLength([], 1, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with empty arrays", () => {
@@ -28,7 +28,7 @@ describe("array-length", () => {
     }).not.toThrow();
     expect(() => {
       assertArrayLength([], 1);
-    }).toThrowError(
+    }).toThrow(
       "Expected array [] (len 0) to have length 1, but it had length 0.",
     );
   });
@@ -36,13 +36,13 @@ describe("array-length", () => {
   it("throws on null", () => {
     expect(() => {
       assertArrayLength(null, 0);
-    }).toThrowError("Expected null not to be null.");
+    }).toThrow("Expected null not to be null.");
   });
 
   it("throws on undefined", () => {
     expect(() => {
       assertArrayLength(undefined, 0);
-    }).toThrowError("Expected undefined not to be undefined.");
+    }).toThrow("Expected undefined not to be undefined.");
   });
 
   it("works with different lengths", () => {

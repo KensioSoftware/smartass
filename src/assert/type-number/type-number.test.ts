@@ -5,7 +5,7 @@ describe("type-number", () => {
   it("throws when value is not a number", () => {
     expect(() => {
       assertTypeNumber("123");
-    }).toThrowError('Expected string "123" to be of type number.');
+    }).toThrow('Expected string "123" to be of type number.');
   });
 
   it("does not throw when value is a number", () => {
@@ -17,22 +17,22 @@ describe("type-number", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertTypeNumber("123", "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with various non-number types", () => {
     expect(() => {
       assertTypeNumber(null);
-    }).toThrowError("Expected null to be of type number.");
+    }).toThrow("Expected null to be of type number.");
     expect(() => {
       assertTypeNumber(undefined);
-    }).toThrowError("Expected undefined to be of type number.");
+    }).toThrow("Expected undefined to be of type number.");
     expect(() => {
       assertTypeNumber(true);
-    }).toThrowError("Expected boolean true to be of type number.");
+    }).toThrow("Expected boolean true to be of type number.");
     expect(() => {
       assertTypeNumber({});
-    }).toThrowError("Expected object {} to be of type number.");
+    }).toThrow("Expected object {} to be of type number.");
   });
 
   it("works with different number types", () => {

@@ -65,43 +65,43 @@ describe("type-typed-array", () => {
   it("throws when value is a regular array", () => {
     expect(() => {
       assertTypeTypedArray([1, 2, 3]);
-    }).toThrowError("Expected array [1,2,3] (len 3) to be a TypedArray.");
+    }).toThrow("Expected array [1,2,3] (len 3) to be a TypedArray.");
   });
 
   it("throws when value is null", () => {
     expect(() => {
       assertTypeTypedArray(null);
-    }).toThrowError("Expected null to be a TypedArray.");
+    }).toThrow("Expected null to be a TypedArray.");
   });
 
   it("throws when value is undefined", () => {
     expect(() => {
       assertTypeTypedArray(undefined);
-    }).toThrowError("Expected undefined to be a TypedArray.");
+    }).toThrow("Expected undefined to be a TypedArray.");
   });
 
   it("throws when value is a number", () => {
     expect(() => {
       assertTypeTypedArray(123);
-    }).toThrowError("Expected number 123 to be a TypedArray.");
+    }).toThrow("Expected number 123 to be a TypedArray.");
   });
 
   it("throws when value is a string", () => {
     expect(() => {
       assertTypeTypedArray("hello");
-    }).toThrowError('Expected string "hello" to be a TypedArray.');
+    }).toThrow('Expected string "hello" to be a TypedArray.');
   });
 
   it("throws when value is an object", () => {
     expect(() => {
       assertTypeTypedArray({});
-    }).toThrowError("Expected object {} to be a TypedArray.");
+    }).toThrow("Expected object {} to be a TypedArray.");
   });
 
   it("throws with custom message", () => {
     expect(() => {
       assertTypeTypedArray(123, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with empty TypedArrays", () => {
