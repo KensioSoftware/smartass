@@ -5,7 +5,7 @@ describe("type-function", () => {
   it("throws when value is not a function", () => {
     expect(() => {
       assertTypeFunction("foobar");
-    }).toThrowError('Expected string "foobar" to be of type function.');
+    }).toThrow('Expected string "foobar" to be of type function.');
   });
 
   it("does not throw when value is a function", () => {
@@ -29,24 +29,24 @@ describe("type-function", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertTypeFunction(123, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with various non-function types", () => {
     expect(() => {
       assertTypeFunction(null);
-    }).toThrowError("Expected null to be of type function.");
+    }).toThrow("Expected null to be of type function.");
     expect(() => {
       assertTypeFunction(undefined);
-    }).toThrowError("Expected undefined to be of type function.");
+    }).toThrow("Expected undefined to be of type function.");
     expect(() => {
       assertTypeFunction(true);
-    }).toThrowError("Expected boolean true to be of type function.");
+    }).toThrow("Expected boolean true to be of type function.");
     expect(() => {
       assertTypeFunction(123);
-    }).toThrowError("Expected number 123 to be of type function.");
+    }).toThrow("Expected number 123 to be of type function.");
     expect(() => {
       assertTypeFunction({});
-    }).toThrowError("Expected object {} to be of type function.");
+    }).toThrow("Expected object {} to be of type function.");
   });
 });

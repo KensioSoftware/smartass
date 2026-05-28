@@ -15,7 +15,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 5, 4]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrowError(
+    }).toThrow(
       "Expected object Uint8Array (4 bytes) to equal object Uint8Array (4 bytes).",
     );
   });
@@ -25,7 +25,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 3, 4]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrowError(
+    }).toThrow(
       "Expected object Uint8Array (3 bytes) to equal object Uint8Array (4 bytes).",
     );
   });
@@ -119,7 +119,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 3]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrowError("to be a TypedArray");
+    }).toThrow("to be a TypedArray");
   });
 
   it("works with empty buffers", () => {
@@ -135,7 +135,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 4]);
     expect(() => {
       assertBufferEqual(a, b, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("detects difference at first index", () => {
@@ -143,7 +143,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 3]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrowError(
+    }).toThrow(
       "Expected object Uint8Array (3 bytes) to equal object Uint8Array (3 bytes).",
     );
   });
@@ -153,7 +153,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 3, 4]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrowError(
+    }).toThrow(
       "Expected object Uint8Array (4 bytes) to equal object Uint8Array (4 bytes).",
     );
   });

@@ -21,40 +21,32 @@ describe("instance-of", () => {
     const instance = new OtherClass();
     expect(() => {
       assertInstanceOf(instance, TestClass);
-    }).toThrowError(
-      "Expected value to be instance of TestClass, but it was not.",
-    );
+    }).toThrow("Expected value to be instance of TestClass, but it was not.");
   });
 
   it("throws when value is a plain object", () => {
     const obj = { value: 42 };
     expect(() => {
       assertInstanceOf(obj, TestClass);
-    }).toThrowError(
-      "Expected value to be instance of TestClass, but it was not.",
-    );
+    }).toThrow("Expected value to be instance of TestClass, but it was not.");
   });
 
   it("throws when value is null", () => {
     expect(() => {
       assertInstanceOf(null, TestClass);
-    }).toThrowError(
-      "Expected value to be instance of TestClass, but it was not.",
-    );
+    }).toThrow("Expected value to be instance of TestClass, but it was not.");
   });
 
   it("throws when value is undefined", () => {
     expect(() => {
       assertInstanceOf(undefined, TestClass);
-    }).toThrowError(
-      "Expected value to be instance of TestClass, but it was not.",
-    );
+    }).toThrow("Expected value to be instance of TestClass, but it was not.");
   });
 
   it("throws with custom message", () => {
     expect(() => {
       assertInstanceOf({}, TestClass, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with built-in classes", () => {
@@ -68,6 +60,6 @@ describe("instance-of", () => {
 
     expect(() => {
       assertInstanceOf("string", Date);
-    }).toThrowError("Expected value to be instance of Date, but it was not.");
+    }).toThrow("Expected value to be instance of Date, but it was not.");
   });
 });

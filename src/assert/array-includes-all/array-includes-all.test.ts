@@ -5,7 +5,7 @@ describe("array-includes-all", () => {
   it("throws when array does not include all elements", () => {
     expect(() => {
       assertArrayIncludesAll([1, 2, 3], [2, 4]);
-    }).toThrowError(
+    }).toThrow(
       "Expected array [1,2,3] (len 3) to include all of [2,4], but missing [4].",
     );
   });
@@ -19,7 +19,7 @@ describe("array-includes-all", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertArrayIncludesAll([1, 2, 3], [4, 5], "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with elements in different order", () => {
@@ -41,7 +41,7 @@ describe("array-includes-all", () => {
 
     expect(() => {
       assertArrayIncludesAll(["foo", "bar", "baz"], ["qux", "bar"]);
-    }).toThrowError(
+    }).toThrow(
       'Expected array ["foo","bar","baz"] (len 3) to include all of ["qux","bar"], but missing ["qux"].',
     );
   });
@@ -55,7 +55,7 @@ describe("array-includes-all", () => {
   it("throws with multiple missing elements", () => {
     expect(() => {
       assertArrayIncludesAll([1, 2], [3, 4, 5]);
-    }).toThrowError(
+    }).toThrow(
       "Expected array [1,2] (len 2) to include all of [3,4,5], but missing [3,4,5].",
     );
   });
@@ -81,7 +81,7 @@ describe("array-includes-all", () => {
 
     expect(() => {
       assertArrayIncludesAll([{ id: 1 }, { id: 2 }], [{ id: 1 }]);
-    }).toThrowError(
+    }).toThrow(
       'Expected array [{"id":1},{"id":2}] (len 2) to include all of [{"id":1}], but missing [{"id":1}].',
     );
   });

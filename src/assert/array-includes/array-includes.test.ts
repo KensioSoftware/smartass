@@ -5,7 +5,7 @@ describe("array-includes", () => {
   it("throws when array does not include element", () => {
     expect(() => {
       assertArrayIncludes([1, 2, 3], 4);
-    }).toThrowError(
+    }).toThrow(
       "Expected array [1,2,3] (len 3) to include number 4, but it did not.",
     );
   });
@@ -19,7 +19,7 @@ describe("array-includes", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertArrayIncludes([1, 2, 3], 5, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with strings", () => {
@@ -29,7 +29,7 @@ describe("array-includes", () => {
 
     expect(() => {
       assertArrayIncludes(["foo", "bar", "baz"], "qux");
-    }).toThrowError(
+    }).toThrow(
       'Expected array ["foo","bar","baz"] (len 3) to include string "qux", but it did not.',
     );
   });
@@ -60,7 +60,7 @@ describe("array-includes", () => {
 
     expect(() => {
       assertArrayIncludes([{ id: 1 }, { id: 2 }], { id: 1 });
-    }).toThrowError(
+    }).toThrow(
       'Expected array [{"id":1},{"id":2}] (len 2) to include object {"id":1}, but it did not.',
     );
   });

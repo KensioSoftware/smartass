@@ -5,7 +5,7 @@ describe("array-min-length", () => {
   it("throws when array is shorter than minimum length", () => {
     expect(() => {
       assertArrayMinLength([1, 2], 3);
-    }).toThrowError(
+    }).toThrow(
       "Expected array [1,2] (len 2) to have at least 3 elements, but it had 2.",
     );
   });
@@ -25,7 +25,7 @@ describe("array-min-length", () => {
   it("throws with custom message", () => {
     expect(() => {
       assertArrayMinLength([1], 5, "Custom error message");
-    }).toThrowError("Custom error message");
+    }).toThrow("Custom error message");
   });
 
   it("works with empty arrays and minimum 0", () => {
@@ -34,7 +34,7 @@ describe("array-min-length", () => {
     }).not.toThrow();
     expect(() => {
       assertArrayMinLength([], 1);
-    }).toThrowError(
+    }).toThrow(
       "Expected array [] (len 0) to have at least 1 elements, but it had 0.",
     );
   });
@@ -42,13 +42,13 @@ describe("array-min-length", () => {
   it("throws on null", () => {
     expect(() => {
       assertArrayMinLength(null, 1);
-    }).toThrowError("Expected null not to be null.");
+    }).toThrow("Expected null not to be null.");
   });
 
   it("throws on undefined", () => {
     expect(() => {
       assertArrayMinLength(undefined, 1);
-    }).toThrowError("Expected undefined not to be undefined.");
+    }).toThrow("Expected undefined not to be undefined.");
   });
 
   it("works with different minimum lengths", () => {

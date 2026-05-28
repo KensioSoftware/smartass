@@ -5,18 +5,18 @@ describe("non-nullable", () => {
   it("throws on null", () => {
     expect(() => {
       assertNonNullable(null);
-    }).toThrowError("Expected null not to be null.");
+    }).toThrow("Expected null not to be null.");
   });
 
   it("throws on undefined", () => {
     expect(() => {
       assertNonNullable(undefined);
-    }).toThrowError("Expected undefined not to be undefined.");
+    }).toThrow("Expected undefined not to be undefined.");
   });
 
   it("OK on non-nullable", () => {
     expect(() => {
       assertNonNullable("foobar");
-    }).not.toThrowError();
+    }).not.toThrow();
   });
 });

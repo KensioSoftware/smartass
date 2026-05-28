@@ -65,7 +65,7 @@ describe("throws-error-async", () => {
       assertThrowsErrorAsync(async () => {
         await Promise.resolve();
       }, "Custom message"),
-    ).rejects.toThrowError("Custom message");
+    ).rejects.toThrow("Custom message");
   });
 
   it("uses custom message when async function throws non-Error", async () => {
@@ -75,6 +75,6 @@ describe("throws-error-async", () => {
         // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw "string";
       }, "Custom message"),
-    ).rejects.toThrowError("Custom message");
+    ).rejects.toThrow("Custom message");
   });
 });

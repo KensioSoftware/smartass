@@ -59,7 +59,7 @@ describe("throws-error", () => {
       assertThrowsError(() => {
         /* empty */
       }, "Custom message");
-    }).toThrowError("Custom message");
+    }).toThrow("Custom message");
   });
 
   it("uses custom message when function throws non-Error", () => {
@@ -68,6 +68,6 @@ describe("throws-error", () => {
         // eslint-disable-next-line @typescript-eslint/only-throw-error
         throw "string";
       }, "Custom message");
-    }).toThrowError("Custom message");
+    }).toThrow("Custom message");
   });
 });

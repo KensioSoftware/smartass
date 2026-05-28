@@ -21,12 +21,12 @@ describe("not-empty", () => {
   it("throws on null", () => {
     expect(() => {
       assertArrayNotEmpty(null);
-    }).toThrowError("Expected null not to be null.");
+    }).toThrow("Expected null not to be null.");
   });
 
   it("throws on undefined", () => {
     expect(() => {
       assertArrayNotEmpty(undefined);
-    }).toThrowError("Expected undefined not to be undefined.");
+    }).toThrow("Expected undefined not to be undefined.");
   });
 });
