@@ -1,4 +1,4 @@
-export * from "./assert/array-equal/array-equal.assert.js";
+export * from "./assert/array-equals/array-equals.assert.js";
 export * from "./assert/array-includes-all/array-includes-all.assert.js";
 export * from "./assert/array-includes/array-includes.assert.js";
 export * from "./assert/array-length/array-length.assert.js";
@@ -11,6 +11,7 @@ export * from "./assert/instance-of/instance-of.assert.js";
 export * from "./assert/non-nullable/non-nullable.assert.js";
 export * from "./assert/number-between/number-between.assert.js";
 export * from "./assert/number-to-nearest/number-to-nearest.assert.js";
+export * from "./assert/object-matches/object-matches.assert.js";
 export * from "./assert/one-of/one-of.assert.js";
 export * from "./assert/string-ends-with/string-ends-with.assert.js";
 export * from "./assert/string-includes/string-includes.assert.js";

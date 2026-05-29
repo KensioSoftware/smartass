@@ -80,6 +80,11 @@ export default defineConfig(
           leadingUnderscore: "allow",
         },
         {
+          selector: ["property", "objectLiteralProperty", "typeProperty"],
+          modifiers: ["requiresQuotes"],
+          format: null,
+        },
+        {
           selector: "default",
           format: ["camelCase"],
           leadingUnderscore: "allow",
