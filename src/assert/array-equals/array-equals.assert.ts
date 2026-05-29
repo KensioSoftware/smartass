@@ -8,7 +8,7 @@ import { desc } from "../../describe/describe.js";
  * Elements are compared using Object.is; nested arrays and objects must be the
  * same references.
  */
-export function assertArrayEqual<const TExpected extends readonly unknown[]>(
+export function assertArrayEquals<const TExpected extends readonly unknown[]>(
   actual: unknown,
   expected: TExpected,
   message?: string,

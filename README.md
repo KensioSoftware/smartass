@@ -38,7 +38,7 @@ npm install @kensio/smartass
 
 ## Assertion functions
 
-- [assertArrayEqual](src/assert/array-equal/array-equal.assert.ts)
+- [assertArrayEquals](src/assert/array-equals/array-equals.assert.ts)
 - [assertArrayIncludes](src/assert/array-includes/array-includes.assert.ts)
 - [assertArrayIncludesAll](src/assert/array-includes-all/array-includes-all.assert.ts)
 - [assertArrayLength](src/assert/array-length/array-length.assert.ts)
@@ -51,6 +51,7 @@ npm install @kensio/smartass
 - [assertNonNullable](src/assert/non-nullable/non-nullable.assert.ts)
 - [assertNumberBetween](src/assert/number-between/number-between.assert.ts)
 - [assertNumberToNearest](src/assert/number-to-nearest/number-to-nearest.assert.ts)
+- [assertObjectMatches](src/assert/object-matches/object-matches.assert.ts)
 - [assertOneOf](src/assert/one-of/one-of.assert.ts)
 - [assertStringEndsWith](src/assert/string-ends-with/string-ends-with.assert.ts)
 - [assertStringIncludes](src/assert/string-includes/string-includes.assert.ts)
