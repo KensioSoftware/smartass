@@ -15,6 +15,7 @@ export * from "./assert/object-matches/object-matches.assert.js";
 export * from "./assert/one-of/one-of.assert.js";
 export * from "./assert/string-ends-with/string-ends-with.assert.js";
 export * from "./assert/string-includes/string-includes.assert.js";
+export * from "./assert/string-not-includes/string-not-includes.assert.js";
 export * from "./assert/string-starts-with/string-starts-with.assert.js";
 export * from "./assert/throws-error-async/throws-error-async.assert.js";
 export * from "./assert/throws-error/throws-error.assert.js";
