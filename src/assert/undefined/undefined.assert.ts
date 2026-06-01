@@ -7,7 +7,7 @@ import { desc } from "../../describe/describe.js";
  */
 export function assertUndefined(
   value: unknown,
-  message = `Expected ${desc(value)} to be ${desc()}.`,
+  message = `Expected ${desc(value)} to be undefined.`,
 ): asserts value is undefined {
   if (value !== undefined) {
     throw new AssertionError(message, value, undefined);
