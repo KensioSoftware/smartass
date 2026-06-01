@@ -28,4 +28,5 @@ export * from "./assert/type-numeric/type-numeric.assert.js";
 export * from "./assert/type-object/type-object.assert.js";
 export * from "./assert/type-string/type-string.assert.js";
 export * from "./assert/type-typed-array/type-typed-array.assert.js";
+export * from "./assert/undefined/undefined.assert.js";
 export * from "./assert/uuid/uuid-v4.assert.js";
