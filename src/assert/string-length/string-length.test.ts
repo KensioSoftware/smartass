@@ -76,4 +76,11 @@ describe("string-length", () => {
       'Expected string "aaaaaaaaaa...aaaaaaaaaa" to have length 999, but it had length 1000.',
     );
   });
+
+  it("narrows type for safe indexing", () => {
+    const foo = "a".repeat(10);
+    assertStringLength(foo, 10);
+    const thirdChar = foo[2];
+    expect(thirdChar.indexOf("a")).toBe(0);
+  });
 });
