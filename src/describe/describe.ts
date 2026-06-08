@@ -66,6 +66,9 @@ export function repr(value: unknown, seen = new WeakSet<object>()): string {
   }
 
   if (typeof value === "string") {
+    if (value.length > 100) {
+      return safeJson(`${value.slice(0, 10)}...${value.slice(-10)}`);
+    }
     return safeJson(value);
   }
 
