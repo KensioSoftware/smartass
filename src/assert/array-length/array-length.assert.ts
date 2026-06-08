@@ -6,28 +6,14 @@ import { desc, repr } from "../../describe/describe.js";
  * Assert that an array has exactly the expected length, with type narrowing.
  * The type narrowing indicates:
  *  - An empty array for 0
- *  - An exact number of elements up to 5
- *  - At least 5 elements for >5
+ *  - An exact number of elements up to 10
+ *  - At least 10 elements for >10
  */
 export function assertArrayLength<T, const N extends number>(
   value: readonly T[] | undefined | null,
   expectedLength: N,
   message?: string,
-): asserts value is N extends 0
-  ? readonly []
-  : N extends 1
-    ? readonly [T]
-    : N extends 2
-      ? readonly [T, T]
-      : N extends 3
-        ? readonly [T, T, T]
-        : N extends 4
-          ? readonly [T, T, T, T]
-          : N extends 5
-            ? readonly [T, T, T, T, T]
-            : readonly [T, T, T, T, T, ...T[]] & {
-                length: N;
-              } {
+): asserts value is ArrayOfLength<T, N> {
   assertNonNullable(value, message);
 
   if (value.length !== expectedLength) {
@@ -39,3 +25,29 @@ export function assertArrayLength<T, const N extends number>(
     );
   }
 }
+
+type ArrayOfLength<T, N extends number> = N extends 0
+  ? readonly []
+  : N extends 1
+    ? readonly [T]
+    : N extends 2
+      ? readonly [T, T]
+      : N extends 3
+        ? readonly [T, T, T]
+        : N extends 4
+          ? readonly [T, T, T, T]
+          : N extends 5
+            ? readonly [T, T, T, T, T]
+            : N extends 6
+              ? readonly [T, T, T, T, T, T]
+              : N extends 7
+                ? readonly [T, T, T, T, T, T, T]
+                : N extends 8
+                  ? readonly [T, T, T, T, T, T, T, T]
+                  : N extends 9
+                    ? readonly [T, T, T, T, T, T, T, T, T]
+                    : N extends 10
+                      ? readonly [T, T, T, T, T, T, T, T, T, T]
+                      : readonly [T, T, T, T, T, T, T, T, T, T, ...T[]] & {
+                          length: N;
+                        };
