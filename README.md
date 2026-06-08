@@ -56,6 +56,7 @@ npm install @kensio/smartass
 - [assertOneOf](src/assert/one-of/one-of.assert.ts)
 - [assertStringEndsWith](src/assert/string-ends-with/string-ends-with.assert.ts)
 - [assertStringIncludes](src/assert/string-includes/string-includes.assert.ts)
+- [assertStringLength](src/assert/string-length/string-length.assert.ts)
 - [assertStringNotIncludes](src/assert/string-not-includes/string-not-includes.assert.ts)
 - [assertStringStartsWith](src/assert/string-starts-with/string-starts-with.assert.ts)
 - [assertThrowsError](src/assert/throws-error/throws-error.assert.ts)
