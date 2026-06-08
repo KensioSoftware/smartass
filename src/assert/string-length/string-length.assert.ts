@@ -7,7 +7,8 @@ import { desc, repr } from "../../describe/describe.js";
  * The type narrowing indicates:
  *  - An empty string for 0
  *  - An exact length and safe indexing of known character positions up to 10
- *  - An exact length but no indexing for values greater than 10
+ *  - For >10, an exact length and safe indexing of known character positions up
+ *    to 10 when those positions are guaranteed to exist.
  *
  * Note that this models JavaScript string indexing and length (UTF-16 code units),
  * not Unicode grapheme clusters.
@@ -106,4 +107,17 @@ type StringOfLength<N extends number> = N extends 0
                           8: string;
                           9: string;
                         }
-                      : string & { length: N };
+                      : string & {
+                          length: N;
+                          0: string;
+                          1: string;
+                          2: string;
+                          3: string;
+                          4: string;
+                          5: string;
+                          6: string;
+                          7: string;
+                          8: string;
+                          9: string;
+                          10: string;
+                        };
