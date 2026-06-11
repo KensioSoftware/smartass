@@ -249,9 +249,9 @@ describe("repr", () => {
   });
 
   it("represents TypedArrays", () => {
-    expect(repr(new Uint8Array(10))).toBe("Uint8Array (10 bytes)");
-    expect(repr(new Int32Array(5))).toBe("Int32Array (20 bytes)");
-    expect(repr(new Float64Array(3))).toBe("Float64Array (24 bytes)");
+    expect(repr(new Uint8Array(10))).toBe("Uint8Array(10)");
+    expect(repr(new Int32Array(5))).toBe("Int32Array(20)");
+    expect(repr(new Float64Array(3))).toBe("Float64Array(24)");
   });
 
   it("represents URLs", () => {

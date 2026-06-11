@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { assertArrayIncludes } from "./array-includes.assert.js";
 import { arrayIncluding } from "./array-includes.match.js";
 import { desc, repr } from "../../describe/describe.js";
+import { bufferEqualTo } from "../buffer-equal/buffer-equal.match.js";
 
 describe("array-includes", () => {
   it("throws when array does not include element", () => {
@@ -72,5 +73,12 @@ describe("array-includes", () => {
 
     expect(desc(matcher)).toBe('array including string "foobar"');
     expect(repr(matcher)).toBe('[…,"foobar",…]');
+  });
+
+  it("describes and represents the bufferEqualTo matcher", () => {
+    const matcher = bufferEqualTo(new Uint8Array([1, 2, 3]));
+
+    expect(desc(matcher)).toBe("buffer equal to object Uint8Array(3)");
+    expect(repr(matcher)).toBe("Uint8Array(3)");
   });
 });
