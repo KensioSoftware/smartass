@@ -143,56 +143,56 @@ describe("array-includes-all", () => {
     expect(desc(matcher)).toBe(
       'array including all of array ["foo","bar"] (len 2)',
     );
-    expect(repr(matcher)).toBe('[_,"foo","bar",_]');
+    expect(repr(matcher)).toBe('[…,"foo","bar",…]');
   });
 
   it("handles empty elements array in repr", () => {
     const matcher = arrayIncludingAll([]);
 
-    expect(repr(matcher)).toBe("[_,,_]");
+    expect(repr(matcher)).toBe("[…,,…]");
   });
 
   it("repr shows all elements for arrays with ≤5 elements", () => {
-    expect(repr(arrayIncludingAll([1]))).toBe("[_,1,_]");
-    expect(repr(arrayIncludingAll([1, 2]))).toBe("[_,1,2,_]");
-    expect(repr(arrayIncludingAll([1, 2, 3]))).toBe("[_,1,2,3,_]");
-    expect(repr(arrayIncludingAll([1, 2, 3, 4]))).toBe("[_,1,2,3,4,_]");
-    expect(repr(arrayIncludingAll([1, 2, 3, 4, 5]))).toBe("[_,1,2,3,4,5,_]");
+    expect(repr(arrayIncludingAll([1]))).toBe("[…,1,…]");
+    expect(repr(arrayIncludingAll([1, 2]))).toBe("[…,1,2,…]");
+    expect(repr(arrayIncludingAll([1, 2, 3]))).toBe("[…,1,2,3,…]");
+    expect(repr(arrayIncludingAll([1, 2, 3, 4]))).toBe("[…,1,2,3,4,…]");
+    expect(repr(arrayIncludingAll([1, 2, 3, 4, 5]))).toBe("[…,1,2,3,4,5,…]");
   });
 
   it("repr truncates arrays with >5 elements showing first 3 and last 1", () => {
-    expect(repr(arrayIncludingAll([1, 2, 3, 4, 5, 6]))).toBe("[_,1,2,3,_,6,_]");
+    expect(repr(arrayIncludingAll([1, 2, 3, 4, 5, 6]))).toBe("[…,1,2,3,…,6,…]");
     expect(repr(arrayIncludingAll([1, 2, 3, 4, 5, 6, 7]))).toBe(
-      "[_,1,2,3,_,7,_]",
+      "[…,1,2,3,…,7,…]",
     );
     expect(repr(arrayIncludingAll([1, 2, 3, 4, 5, 6, 7, 8]))).toBe(
-      "[_,1,2,3,_,8,_]",
+      "[…,1,2,3,…,8,…]",
     );
   });
 
   it("repr shows strings with proper quoting for arrays ≤5 elements", () => {
-    expect(repr(arrayIncludingAll(["a", "b"]))).toBe('[_,"a","b",_]');
+    expect(repr(arrayIncludingAll(["a", "b"]))).toBe('[…,"a","b",…]');
   });
 
   it("repr shows strings with proper quoting for truncated arrays", () => {
     expect(repr(arrayIncludingAll(["a", "b", "c", "d", "e", "f"]))).toBe(
-      '[_,"a","b","c",_,"f",_]',
+      '[…,"a","b","c",…,"f",…]',
     );
   });
 
   it("repr handles mixed types correctly for arrays ≤5 elements", () => {
-    expect(repr(arrayIncludingAll([1, "a", null]))).toBe('[_,1,"a",null,_]');
+    expect(repr(arrayIncludingAll([1, "a", null]))).toBe('[…,1,"a",null,…]');
   });
 
   it("repr handles mixed types correctly for truncated arrays", () => {
     expect(repr(arrayIncludingAll([1, "a", null, true, 2n, Symbol("x")]))).toBe(
-      '[_,1,"a",null,_,Symbol(x),_]',
+      '[…,1,"a",null,…,Symbol(x),…]',
     );
   });
 
   it("repr handles objects correctly for truncated arrays", () => {
     expect(
       repr(arrayIncludingAll([{ a: 1 }, { b: 2 }, { c: 3 }, { d: 4 }])),
-    ).toBe('[_,{"a":1},{"b":2},{"c":3},{"d":4},_]');
+    ).toBe('[…,{"a":1},{"b":2},{"c":3},{"d":4},…]');
   });
 });

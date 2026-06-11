@@ -71,6 +71,6 @@ describe("array-includes", () => {
     const matcher = arrayIncluding("foobar");
 
     expect(desc(matcher)).toBe('array including string "foobar"');
-    expect(repr(matcher)).toBe('[_,"foobar",_]');
+    expect(repr(matcher)).toBe('[…,"foobar",…]');
   });
 });

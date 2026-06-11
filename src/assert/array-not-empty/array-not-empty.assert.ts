@@ -1,4 +1,5 @@
 import { assertNonNullable } from "../non-nullable/non-nullable.assert.js";
+import { type NonEmptyArray, nonEmptyArray } from "./array-not-empty.match.js";
 import { AssertionError } from "../../assertion-error.js";
 
 /**
@@ -7,10 +8,10 @@ import { AssertionError } from "../../assertion-error.js";
 export function assertArrayNotEmpty<T>(
   value: readonly T[] | undefined | null,
   message?: string,
-): asserts value is readonly [T, ...T[]] {
+): asserts value is NonEmptyArray<T> {
   assertNonNullable(value, message);
 
-  if (value.length === 0) {
+  if (!nonEmptyArray<T>().matches(value)) {
     throw new AssertionError(
       message ?? `Expected array not to be empty, but it was empty.`,
       value,

@@ -21,7 +21,7 @@ export function arrayIncludingAll<const E extends readonly unknown[]>(
       Array.isArray(value) &&
       elements.every((element) => value.includes(element)),
     () => `array including all of ${desc(elements)}`,
-    () => `[_,${reprArrayElements(elements)},_]`,
+    () => `[…,${reprArrayElements(elements)},…]`,
   );
 }
 
@@ -33,5 +33,5 @@ function reprArrayElements(values: readonly unknown[]): string {
   const first = values.slice(0, 3).map((value) => repr(value));
   const last = values.slice(-1).map((value) => repr(value));
 
-  return [...first, "_", ...last].join(",");
+  return [...first, "…", ...last].join(",");
 }

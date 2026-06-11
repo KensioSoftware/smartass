@@ -15,6 +15,6 @@ export function arrayIncluding<const E>(
     (value): value is ArrayIncluding<unknown, E> =>
       Array.isArray(value) && value.includes(element),
     () => `array including ${desc(element)}`,
-    () => `[_,${repr(element)},_]`,
+    () => `[…,${repr(element)},…]`,
   );
 }
