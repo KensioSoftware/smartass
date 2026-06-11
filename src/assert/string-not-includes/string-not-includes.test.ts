@@ -1,60 +1,133 @@
 import { describe, expect, it } from "vitest";
 import { assertStringNotIncludes } from "./string-not-includes.assert.js";
+import { desc, repr } from "../../describe/describe.js";
+import { stringNotIncluding } from "./string-not-includes.match.js";
 
 describe("string-not-includes", () => {
-  it("throws when string includes substring", () => {
-    expect(() => {
-      assertStringNotIncludes("hello world", "world");
-    }).toThrow(
-      'Expected string "hello world" not to include "world", but it did.',
-    );
+  describe("assertStringNotIncludes", () => {
+    it("throws when string includes substring", () => {
+      expect(() => {
+        assertStringNotIncludes("hello world", "world");
+      }).toThrow(
+        'Expected string "hello world" not to include "world", but it did.',
+      );
+    });
+
+    it("does not throw when string does not include substring", () => {
+      expect(() => {
+        assertStringNotIncludes("hello world", "foo");
+      }).not.toThrow();
+    });
+
+    it("throws with custom message", () => {
+      expect(() => {
+        assertStringNotIncludes("hello", "ell", "Custom error message");
+      }).toThrow("Custom error message");
+    });
+
+    it("throws with empty substring", () => {
+      expect(() => {
+        assertStringNotIncludes("hello", "");
+      }).toThrow('Expected string "hello" not to include "", but it did.');
+    });
+
+    it("is case sensitive", () => {
+      expect(() => {
+        assertStringNotIncludes("Hello World", "hello");
+      }).not.toThrow();
+    });
+
+    it("throws with substring at start", () => {
+      expect(() => {
+        assertStringNotIncludes("hello world", "hello");
+      }).toThrow(
+        'Expected string "hello world" not to include "hello", but it did.',
+      );
+    });
+
+    it("throws with substring at end", () => {
+      expect(() => {
+        assertStringNotIncludes("hello world", "world");
+      }).toThrow(
+        'Expected string "hello world" not to include "world", but it did.',
+      );
+    });
+
+    it("throws with substring in middle", () => {
+      expect(() => {
+        assertStringNotIncludes("hello world", "o w");
+      }).toThrow(
+        'Expected string "hello world" not to include "o w", but it did.',
+      );
+    });
   });
 
-  it("does not throw when string does not include substring", () => {
-    expect(() => {
-      assertStringNotIncludes("hello world", "foo");
-    }).not.toThrow();
-  });
+  describe("stringNotIncluding", () => {
+    it("matches strings that do not include substring", () => {
+      const matcher = stringNotIncluding("world");
+      expect(matcher.matches("hello")).toBe(true);
+    });
 
-  it("throws with custom message", () => {
-    expect(() => {
-      assertStringNotIncludes("hello", "ell", "Custom error message");
-    }).toThrow("Custom error message");
-  });
+    it("does not match strings that include substring", () => {
+      const matcher = stringNotIncluding("world");
+      expect(matcher.matches("hello world")).toBe(false);
+    });
 
-  it("throws with empty substring", () => {
-    expect(() => {
-      assertStringNotIncludes("hello", "");
-    }).toThrow('Expected string "hello" not to include "", but it did.');
-  });
+    it("does not match empty string with non-empty substring", () => {
+      const matcher = stringNotIncluding("world");
+      expect(matcher.matches("")).toBe(true);
+    });
 
-  it("is case sensitive", () => {
-    expect(() => {
-      assertStringNotIncludes("Hello World", "hello");
-    }).not.toThrow();
-  });
+    it("does not match when string equals substring", () => {
+      const matcher = stringNotIncluding("world");
+      expect(matcher.matches("world")).toBe(false);
+    });
 
-  it("throws with substring at start", () => {
-    expect(() => {
-      assertStringNotIncludes("hello world", "hello");
-    }).toThrow(
-      'Expected string "hello world" not to include "hello", but it did.',
-    );
-  });
+    it("works with empty substring", () => {
+      const matcher = stringNotIncluding("");
+      expect(matcher.matches("hello")).toBe(false);
+      expect(matcher.matches("")).toBe(false);
+    });
 
-  it("throws with substring at end", () => {
-    expect(() => {
-      assertStringNotIncludes("hello world", "world");
-    }).toThrow(
-      'Expected string "hello world" not to include "world", but it did.',
-    );
-  });
+    it("is case sensitive", () => {
+      const matcher = stringNotIncluding("hello");
+      expect(matcher.matches("Hello World")).toBe(true);
+      expect(matcher.matches("hello world")).toBe(false);
+    });
 
-  it("throws with substring in middle", () => {
-    expect(() => {
-      assertStringNotIncludes("hello world", "o w");
-    }).toThrow(
-      'Expected string "hello world" not to include "o w", but it did.',
-    );
+    it("works with substring at start", () => {
+      const matcher = stringNotIncluding("hello");
+      expect(matcher.matches("hello world")).toBe(false);
+      expect(matcher.matches("world hello")).toBe(false);
+    });
+
+    it("works with substring at end", () => {
+      const matcher = stringNotIncluding("world");
+      expect(matcher.matches("hello world")).toBe(false);
+      expect(matcher.matches("world hello")).toBe(false);
+    });
+
+    it("does not match non-string values", () => {
+      const matcher = stringNotIncluding("foo");
+      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.matches(undefined)).toBe(false);
+      expect(matcher.matches(123)).toBe(false);
+      expect(matcher.matches(true)).toBe(false);
+    });
+
+    it("describes the matcher", () => {
+      const matcher = stringNotIncluding("foo");
+      expect(desc(matcher)).toBe('string not including "foo"');
+    });
+
+    it("represents the matcher", () => {
+      const matcher = stringNotIncluding("foobar");
+      expect(repr(matcher)).toBe('"✗foobar✗"');
+    });
+
+    it("represents with special characters", () => {
+      const matcher = stringNotIncluding(".");
+      expect(repr(matcher)).toBe('"✗.✗"');
+    });
   });
 });

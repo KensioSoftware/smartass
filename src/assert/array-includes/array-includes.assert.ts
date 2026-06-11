@@ -13,12 +13,13 @@ export function assertArrayIncludes<T, const E extends T>(
   element: E,
   message?: string,
 ): asserts value is ArrayIncluding<T, E> {
-  if (!arrayIncluding(element).matches(value)) {
+  const matcher = arrayIncluding(element);
+  if (!matcher.matches(value)) {
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to include ${desc(element)}, but it did not.`,
       value,
-      [element],
+      matcher.represent(),
     );
   }
 }

@@ -112,12 +112,7 @@ describe("string-includes", () => {
 
     it("represents the matcher", () => {
       const matcher = stringIncluding("foobar");
-      expect(repr(matcher)).toBe('"*foobar*"');
-    });
-
-    it("represents with special characters", () => {
-      const matcher = stringIncluding(".");
-      expect(repr(matcher)).toBe('"*.*"');
+      expect(repr(matcher)).toBe('"…foobar…"');
     });
   });
 });

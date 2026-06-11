@@ -11,6 +11,6 @@ export function stringIncluding<const T extends string>(
     (value): value is `${string}${T}${string}` =>
       typeof value === "string" && value.includes(substring),
     () => `string including ${repr(substring)}`,
-    () => `"*${substring}*"`,
+    () => `"…${substring}…"`,
   );
 }

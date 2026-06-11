@@ -15,14 +15,14 @@ export function assertArrayIncludesAll<T, const E extends readonly T[]>(
   elements: E,
   message?: string,
 ): asserts value is ArrayIncludingAll<T, E> {
-  if (!arrayIncludingAll(elements).matches(value)) {
+  const matcher = arrayIncludingAll(elements);
+  if (!matcher.matches(value)) {
     const missing = elements.filter((element) => !value.includes(element));
-
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to include all of ${repr(elements)}, but missing ${repr(missing)}.`,
       value,
-      elements,
+      matcher.represent(),
     );
   }
 }
