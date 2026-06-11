@@ -52,6 +52,7 @@ npm install @kensio/smartass
 - [assertNumberBetween](src/assert/number-between/number-between.assert.ts)
 - [assertNumberToNearest](src/assert/number-to-nearest/number-to-nearest.assert.ts)
 - [assertObjectEquals](src/assert/object-equals/object-equals.assert.ts)
+- [assertObjectHasProperty](src/assert/object-has-property/object-has-property.assert.ts)
 - [assertObjectMatches](src/assert/object-matches/object-matches.assert.ts)
 - [assertOneOf](src/assert/one-of/one-of.assert.ts)
 - [assertStringEndsWith](src/assert/string-ends-with/string-ends-with.assert.ts)
