@@ -1,3 +1,4 @@
+import { arrayIncluding, type ArrayIncluding } from "./array-includes.match.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
 
@@ -11,10 +12,8 @@ export function assertArrayIncludes<T, const E extends T>(
   value: readonly T[],
   element: E,
   message?: string,
-): asserts value is readonly [T, ...T[]] & {
-  includes(searchElement: E): true;
-} {
-  if (!value.includes(element)) {
+): asserts value is ArrayIncluding<T, E> {
+  if (!arrayIncluding(element).matches(value)) {
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to include ${desc(element)}, but it did not.`,
