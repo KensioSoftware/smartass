@@ -115,7 +115,7 @@ describe("object-matches", () => {
         { id: 1, tags: arrayIncluding("foobar") },
       );
     }).toThrow(
-      'Expected object {"id":1,"tags":["hello"]} to match object {"id":1,"tags":["foobar"]}. Mismatch at $.tags: expected ["foobar"], got ["hello"].',
+      'Expected object {"id":1,"tags":["hello"]} to match object {"id":1,"tags":[_,"foobar",_]}. Mismatch at $.tags: expected [_,"foobar",_], got ["hello"].',
     );
   });
 

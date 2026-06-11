@@ -95,6 +95,6 @@ describe("array-length", () => {
     const matcher = arrayOfLength(3);
 
     expect(desc(matcher)).toBe("array of length 3");
-    expect(repr(matcher)).toBe("{ length: 3 }");
+    expect(repr(matcher)).toBe("Array(3)");
   });
 });

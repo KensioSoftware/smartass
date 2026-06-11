@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { assertArrayMinLength } from "./array-min-length.assert.js";
+import { arrayOfMinLength } from "./array-min-length.match.js";
+import { desc, repr } from "../../describe/describe.js";
 
 describe("array-min-length", () => {
   it("throws when array is shorter than minimum length", () => {
@@ -67,5 +69,46 @@ describe("array-min-length", () => {
     expect(() => {
       assertArrayMinLength([1, 2, 3, 4, 5, 6], 3);
     }).not.toThrow();
+  });
+
+  it("matches arrays with exactly the minimum length", () => {
+    const matcher = arrayOfMinLength(3);
+
+    expect(matcher.matches([1, 2, 3])).toBe(true);
+  });
+
+  it("matches arrays longer than the minimum length", () => {
+    const matcher = arrayOfMinLength(3);
+
+    expect(matcher.matches([1, 2, 3, 4])).toBe(true);
+  });
+
+  it("does not match arrays shorter than the minimum length", () => {
+    const matcher = arrayOfMinLength(3);
+
+    expect(matcher.matches([1, 2])).toBe(false);
+  });
+
+  it("matches any array when minimum length is zero", () => {
+    const matcher = arrayOfMinLength(0);
+
+    expect(matcher.matches([])).toBe(true);
+    expect(matcher.matches([1, 2, 3])).toBe(true);
+  });
+
+  it("does not match non-arrays", () => {
+    const matcher = arrayOfMinLength(1);
+
+    expect(matcher.matches(1)).toBe(false);
+    expect(matcher.matches("a")).toBe(false);
+    expect(matcher.matches({ 0: "a", length: 1 })).toBe(false);
+    expect(matcher.matches(null)).toBe(false);
+  });
+
+  it("describes the arrayOfMinLength matcher", () => {
+    const matcher = arrayOfMinLength(3);
+
+    expect(desc(matcher)).toBe("array of at least 3 elements");
+    expect(repr(matcher)).toBe("Array(>=3)");
   });
 });

@@ -37,6 +37,6 @@ export function arrayOfLength<const N extends number>(
     (value): value is ArrayOfLength<unknown, N> =>
       Array.isArray(value) && value.length === expectedLength,
     () => `array of length ${repr(expectedLength)}`,
-    () => `{ length: ${repr(expectedLength)} }`,
+    () => `Array(${repr(expectedLength)})`,
   );
 }
