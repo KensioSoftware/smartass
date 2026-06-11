@@ -1,6 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { repr } from "../../describe/describe.js";
 import { assertTypeNumber } from "../type-number/type-number.assert.js";
+import { numberToNearest } from "./number-to-nearest.match.js";
 
 /**
  * Assert that a numeric value, when rounded to the nearest given increment,
@@ -14,19 +15,13 @@ export function assertNumberToNearest(
 ): asserts value is number {
   assertTypeNumber(value);
 
-  const rawRounded = Math.round(value / toNearest) * toNearest;
+  const matcher = numberToNearest(toNearest, expected);
 
-  // Determine decimal places in toNearest to avoid floating point errors
-  const parts = toNearest.toString().split(".");
-  const decimalPlaces = parts[1]?.length ?? 0;
-  const rounded = Number(rawRounded.toFixed(decimalPlaces));
-
-  if (rounded !== expected) {
+  if (!matcher.matches(value)) {
     throw new AssertionError(
-      message ??
-        `Expected to equal ${repr(expected)} to nearest ${repr(toNearest)}, got ${repr(value)} rounding to ${repr(rounded)}.`,
+      message ?? `Expected ${repr(value)} to ${matcher.describe()}.`,
       value,
-      `${repr(expected)} (to nearest ${repr(toNearest)})`,
+      matcher.represent(),
     );
   }
 }
