@@ -1,5 +1,6 @@
 import { AssertionError } from "../../assertion-error.js";
-import { desc, repr } from "../../describe/describe.js";
+import { desc } from "../../describe/describe.js";
+import { oneOf } from "./one-of.match.js";
 
 /**
  * Assert that a value is one of a set of expected values, with type-narrowing.
@@ -7,9 +8,14 @@ import { desc, repr } from "../../describe/describe.js";
 export function assertOneOf<const TAllowed extends readonly unknown[]>(
   value: unknown,
   allowed: TAllowed,
-  message = `Expected ${desc(value)} to be one of ${repr(allowed)}.`,
+  message?: string,
 ): asserts value is TAllowed[number] {
-  if (!allowed.includes(value)) {
-    throw new AssertionError(message, value, `one of ${desc(allowed)}`);
+  const matcher = oneOf(allowed);
+  if (!matcher.matches(value)) {
+    throw new AssertionError(
+      message ?? `Expected ${desc(value)} to be ${matcher.describe()}.`,
+      value,
+      matcher.represent(),
+    );
   }
 }
