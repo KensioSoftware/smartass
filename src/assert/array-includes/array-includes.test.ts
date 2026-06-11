@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { assertArrayIncludes } from "./array-includes.assert.js";
+import { arrayIncluding } from "./array-includes.match.js";
+import { desc, repr } from "../../describe/describe.js";
 
 describe("array-includes", () => {
   it("throws when array does not include element", () => {
@@ -63,5 +65,12 @@ describe("array-includes", () => {
     }).toThrow(
       'Expected array [{"id":1},{"id":2}] (len 2) to include object {"id":1}, but it did not.',
     );
+  });
+
+  it("describes the arrayIncluding matcher", () => {
+    const matcher = arrayIncluding("foobar");
+
+    expect(desc(matcher)).toBe('array including string "foobar"');
+    expect(repr(matcher)).toBe('["foobar"]');
   });
 });

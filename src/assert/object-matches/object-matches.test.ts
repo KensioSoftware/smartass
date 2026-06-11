@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { assertObjectMatches } from "./object-matches.assert.js";
+import {
+  type ArrayIncluding,
+  arrayIncluding,
+} from "../array-includes/array-includes.match.js";
 
 describe("object-matches", () => {
   it("does not throw when object matches expected properties", () => {
@@ -93,5 +97,43 @@ describe("object-matches", () => {
     expect(() => {
       assertObjectMatches({ id: 1 }, { id: 2 }, "Custom error message");
     }).toThrow("Custom error message");
+  });
+
+  it("does not throw when nested matcher matches", () => {
+    expect(() => {
+      assertObjectMatches(
+        { id: 1, tags: ["foobar", "assertions"] },
+        { id: 1, tags: arrayIncluding("foobar") },
+      );
+    }).not.toThrow();
+  });
+
+  it("throws when nested matcher does not match", () => {
+    expect(() => {
+      assertObjectMatches(
+        { id: 1, tags: ["hello"] },
+        { id: 1, tags: arrayIncluding("foobar") },
+      );
+    }).toThrow(
+      'Expected object {"id":1,"tags":["hello"]} to match object {"id":1,"tags":["foobar"]}. Mismatch at $.tags: expected ["foobar"], got ["hello"].',
+    );
+  });
+
+  it("narrows nested matcher values precisely", () => {
+    const actual: unknown = {
+      id: 1,
+      tags: ["foobar", "assertions"],
+    };
+
+    assertObjectMatches(actual, {
+      id: 1,
+      tags: arrayIncluding("foobar"),
+    });
+
+    const id: 1 = actual.id;
+    const tags: ArrayIncluding<unknown, "foobar"> = actual.tags;
+
+    expect(id).toBe(1);
+    expect(tags.includes("foobar")).toBe(true);
   });
 });

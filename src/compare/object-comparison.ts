@@ -1,4 +1,5 @@
 import { repr } from "../describe/describe.js";
+import { isMatcher } from "../match/match.js";
 
 export interface ObjectComparisonMismatch {
   path: string;
@@ -20,6 +21,18 @@ export function findObjectComparisonMismatch(
   options: ObjectComparisonOptions,
   path = "$",
 ): ObjectComparisonMismatch | undefined {
+  if (isMatcher(expected)) {
+    if (!expected.matches(actual)) {
+      return {
+        path,
+        actual,
+        expected,
+      };
+    }
+
+    return undefined;
+  }
+
   if (Array.isArray(expected)) {
     return findArrayMismatch(actual, expected, options, path);
   }

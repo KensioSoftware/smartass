@@ -1,7 +1,13 @@
+import { isMatcher } from "../match/match.js";
+
 /**
  * Try to make a useful description of a value that is helpful for debugging.
  */
 export function desc(value: unknown): string {
+  if (isMatcher(value)) {
+    return value.describe();
+  }
+
   if (value === null) return "null";
   if (value === undefined) return "undefined";
 
@@ -42,6 +48,10 @@ export function desc(value: unknown): string {
  * that value, or at least unambiguous.
  */
 export function repr(value: unknown, seen = new WeakSet<object>()): string {
+  if (isMatcher(value)) {
+    return value.represent();
+  }
+
   // Avoid infinite recursion on circular references.
   if (value !== null && typeof value === "object") {
     if (seen.has(value)) return "[Circular]";
