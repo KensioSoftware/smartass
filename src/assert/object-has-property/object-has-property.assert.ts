@@ -1,5 +1,9 @@
 import { AssertionError } from "../../assertion-error.js";
-import { desc, repr } from "../../describe/describe.js";
+import { desc } from "../../describe/describe.js";
+import {
+  objectWithProperty,
+  type ObjectWithProperty,
+} from "./object-has-property.match.js";
 
 /**
  * Assert that an object has a certain named property.
@@ -12,12 +16,14 @@ export function assertObjectHasProperty<
   value: T,
   key: K,
   message?: string,
-): asserts value is T & { [P in K]: P extends keyof T ? T[P] : unknown } {
-  if (!(key in value)) {
+): asserts value is T & ObjectWithProperty<K> {
+  const matcher = objectWithProperty(key);
+
+  if (!matcher.matches(value)) {
     throw new AssertionError(
-      message ?? `Expected ${desc(value)} to have property ${repr(key)}.`,
+      message ?? `Expected ${desc(value)} to be ${matcher.describe()}.`,
       value,
-      [key],
+      matcher.represent(),
     );
   }
 }
