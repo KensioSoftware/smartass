@@ -20,6 +20,7 @@ export * from "./assert/string-length/string-length.assert.js";
 export * from "./assert/string-not-includes/string-not-includes.assert.js";
 export * from "./assert/string-starts-with/string-starts-with.assert.js";
 export * from "./assert/throws-error-async/throws-error-async.assert.js";
+export * from "./assert/throws-error-like/throws-error-like.assert.js";
 export * from "./assert/throws-error/throws-error.assert.js";
 export * from "./assert/true/true.assert.js";
 export * from "./assert/type-bigint/type-bigint.assert.js";

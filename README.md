@@ -61,6 +61,7 @@ npm install @kensio/smartass
 - [assertStringStartsWith](src/assert/string-starts-with/string-starts-with.assert.ts)
 - [assertThrowsError](src/assert/throws-error/throws-error.assert.ts)
 - [assertThrowsErrorAsync](src/assert/throws-error-async/throws-error-async.assert.ts)
+- [assertThrowsErrorLike](src/assert/throws-error-like/throws-error-like.assert.ts)
 - [assertTrue](src/assert/true/true.assert.ts)
 - [assertTypeBigInt](src/assert/type-bigint/type-bigint.assert.ts)
 - [assertTypeBoolean](src/assert/type-boolean/type-boolean.assert.ts)
