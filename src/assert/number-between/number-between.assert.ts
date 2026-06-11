@@ -1,6 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { assertTypeNumeric } from "../type-numeric/type-numeric.assert.js";
 import { desc, repr } from "../../describe/describe.js";
+import { numberBetween } from "./number-between.match.js";
 
 /**
  * Assert that a numeric value is between min and max inclusive, with
@@ -13,8 +14,7 @@ export function assertNumberBetween(
   message = `Expected ${desc(value)} to be between ${desc(min)} and ${desc(max)} inclusive.`,
 ): asserts value is number | bigint {
   assertTypeNumeric(value, message);
-
-  if (value < min || value > max) {
+  if (!numberBetween(min, max).matches(value)) {
     throw new AssertionError(
       message,
       value,

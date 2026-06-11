@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { assertInstanceOf } from "./instance-of.assert.js";
+import { instanceOf } from "./instance-of.match.js";
 
 class TestClass {
   value = 42;
@@ -61,5 +62,45 @@ describe("instance-of", () => {
     expect(() => {
       assertInstanceOf("string", Date);
     }).toThrow("Expected value to be instance of Date, but it was not.");
+  });
+
+  describe("instanceOf", () => {
+    it("matches correct instances", () => {
+      expect(instanceOf(TestClass).matches(new TestClass())).toBe(true);
+    });
+
+    it("does not match incorrect instances", () => {
+      expect(instanceOf(TestClass).matches(new OtherClass())).toBe(false);
+    });
+
+    it("does not match plain objects", () => {
+      expect(instanceOf(TestClass).matches({ value: 42 })).toBe(false);
+    });
+
+    it("does not match null", () => {
+      expect(instanceOf(TestClass).matches(null)).toBe(false);
+    });
+
+    it("does not match undefined", () => {
+      expect(instanceOf(TestClass).matches(undefined)).toBe(false);
+    });
+
+    it("describes the matcher", () => {
+      expect(instanceOf(TestClass).describe()).toBe("instance of TestClass");
+    });
+
+    it("represents the matcher", () => {
+      expect(instanceOf(TestClass).represent()).toBe("TestClass()");
+    });
+
+    it("describes when constructor has no name", () => {
+      const noNameCtor = function (): void {
+        //
+      } as unknown as abstract new (...args: never[]) => unknown;
+      const matcher = instanceOf(noNameCtor);
+
+      expect(matcher.describe()).toBe("instance of noNameCtor");
+      expect(matcher.represent()).toBe("noNameCtor()");
+    });
   });
 });

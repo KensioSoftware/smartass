@@ -1,86 +1,164 @@
 import { describe, expect, it } from "vitest";
 import { assertStringLength } from "./string-length.assert.js";
+import { stringOfLength } from "./string-length.match.js";
+import { desc, repr } from "../../describe/describe.js";
 
 describe("string-length", () => {
-  it("does not throw when string has expected length", () => {
-    expect(() => {
-      assertStringLength("hello", 5);
-    }).not.toThrow();
+  describe("assertStringLength", () => {
+    it("does not throw when string has expected length", () => {
+      expect(() => {
+        assertStringLength("hello", 5);
+      }).not.toThrow();
+    });
+
+    it("throws when string has different length", () => {
+      expect(() => {
+        assertStringLength("hello", 3);
+      }).toThrow(
+        'Expected string "hello" to have length 3, but it had length 5.',
+      );
+    });
+
+    it("works with empty string", () => {
+      expect(() => {
+        assertStringLength("", 0);
+      }).not.toThrow();
+    });
+
+    it("throws when expecting non-zero length on empty string", () => {
+      expect(() => {
+        assertStringLength("", 1);
+      }).toThrow('Expected string "" to have length 1, but it had length 0.');
+    });
+
+    it("throws with custom message", () => {
+      expect(() => {
+        assertStringLength("hello", 2, "Custom error message");
+      }).toThrow("Custom error message");
+    });
+
+    it("works with single character", () => {
+      expect(() => {
+        assertStringLength("a", 1);
+      }).not.toThrow();
+    });
+
+    it("throws when expecting single character on multi-character string", () => {
+      expect(() => {
+        assertStringLength("hello", 1);
+      }).toThrow(
+        'Expected string "hello" to have length 1, but it had length 5.',
+      );
+    });
+
+    it("works with exact length match", () => {
+      expect(() => {
+        assertStringLength("test", 4);
+      }).not.toThrow();
+    });
+
+    it("counts characters correctly including unicode", () => {
+      // Note: JavaScript's .length counts UTF-16 code units, not visual characters
+      expect(() => {
+        assertStringLength("hi", 2);
+      }).not.toThrow();
+    });
+
+    it("works with large lengths", () => {
+      const longString = "a".repeat(1000);
+      expect(() => {
+        assertStringLength(longString, 1000);
+      }).not.toThrow();
+    });
+
+    it("throws when length differs for large strings", () => {
+      const longString = "a".repeat(1000);
+      expect(() => {
+        assertStringLength(longString, 999);
+      }).toThrow(
+        'Expected string "aaaaaaaaaa...aaaaaaaaaa" to have length 999, but it had length 1000.',
+      );
+    });
+
+    it("narrows type for safe indexing", () => {
+      const foo = "a".repeat(10);
+      assertStringLength(foo, 10);
+      const thirdChar = foo[2];
+      expect(thirdChar.indexOf("a")).toBe(0);
+    });
   });
 
-  it("throws when string has different length", () => {
-    expect(() => {
-      assertStringLength("hello", 3);
-    }).toThrow(
-      'Expected string "hello" to have length 3, but it had length 5.',
-    );
-  });
+  describe("stringOfLength", () => {
+    it("matches strings with expected length", () => {
+      const matcher = stringOfLength(5);
+      expect(matcher.matches("hello")).toBe(true);
+    });
 
-  it("works with empty string", () => {
-    expect(() => {
-      assertStringLength("", 0);
-    }).not.toThrow();
-  });
+    it("does not match strings with different length", () => {
+      const matcher = stringOfLength(3);
+      expect(matcher.matches("hello")).toBe(false);
+    });
 
-  it("throws when expecting non-zero length on empty string", () => {
-    expect(() => {
-      assertStringLength("", 1);
-    }).toThrow('Expected string "" to have length 1, but it had length 0.');
-  });
+    it("works with empty string", () => {
+      const matcher = stringOfLength(0);
+      expect(matcher.matches("")).toBe(true);
+    });
 
-  it("throws with custom message", () => {
-    expect(() => {
-      assertStringLength("hello", 2, "Custom error message");
-    }).toThrow("Custom error message");
-  });
+    it("does not match non-empty string when expecting empty", () => {
+      const matcher = stringOfLength(0);
+      expect(matcher.matches("a")).toBe(false);
+    });
 
-  it("works with single character", () => {
-    expect(() => {
-      assertStringLength("a", 1);
-    }).not.toThrow();
-  });
+    it("works with single character", () => {
+      const matcher = stringOfLength(1);
+      expect(matcher.matches("a")).toBe(true);
+    });
 
-  it("throws when expecting single character on multi-character string", () => {
-    expect(() => {
-      assertStringLength("hello", 1);
-    }).toThrow(
-      'Expected string "hello" to have length 1, but it had length 5.',
-    );
-  });
+    it("does not match multi-character when expecting single", () => {
+      const matcher = stringOfLength(1);
+      expect(matcher.matches("ab")).toBe(false);
+    });
 
-  it("works with exact length match", () => {
-    expect(() => {
-      assertStringLength("test", 4);
-    }).not.toThrow();
-  });
+    it("works with large lengths", () => {
+      const longString = "a".repeat(1000);
+      const matcher = stringOfLength(1000);
+      expect(matcher.matches(longString)).toBe(true);
+    });
 
-  it("counts characters correctly including unicode", () => {
-    // Note: JavaScript's .length counts UTF-16 code units, not visual characters
-    expect(() => {
-      assertStringLength("hi", 2);
-    }).not.toThrow();
-  });
+    it("does not match when length differs for large strings", () => {
+      const longString = "a".repeat(1000);
+      const matcher = stringOfLength(999);
+      expect(matcher.matches(longString)).toBe(false);
+    });
 
-  it("works with large lengths", () => {
-    const longString = "a".repeat(1000);
-    expect(() => {
-      assertStringLength(longString, 1000);
-    }).not.toThrow();
-  });
+    it("does not match non-string values", () => {
+      const matcher = stringOfLength(5);
+      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.matches(undefined)).toBe(false);
+      expect(matcher.matches(123)).toBe(false);
+      expect(matcher.matches(true)).toBe(false);
+      expect(matcher.matches({ length: 5 })).toBe(false);
+    });
 
-  it("throws when length differs for large strings", () => {
-    const longString = "a".repeat(1000);
-    expect(() => {
-      assertStringLength(longString, 999);
-    }).toThrow(
-      'Expected string "aaaaaaaaaa...aaaaaaaaaa" to have length 999, but it had length 1000.',
-    );
-  });
+    it("describes the matcher", () => {
+      const matcher = stringOfLength(5);
+      expect(desc(matcher)).toBe("string of length 5");
+    });
 
-  it("narrows type for safe indexing", () => {
-    const foo = "a".repeat(10);
-    assertStringLength(foo, 10);
-    const thirdChar = foo[2];
-    expect(thirdChar.indexOf("a")).toBe(0);
+    it("represents the matcher", () => {
+      const matcher = stringOfLength(5);
+      expect(repr(matcher)).toBe("String(5)");
+    });
+
+    it("represents with zero length", () => {
+      const matcher = stringOfLength(0);
+      expect(repr(matcher)).toBe("String(0)");
+    });
+
+    it("works with unicode characters", () => {
+      // JavaScript's .length counts UTF-16 code units
+      const matcher = stringOfLength(2);
+      expect(matcher.matches("你好")).toBe(true);
+    });
   });
 });

@@ -1,9 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
-import {
-  assertTypeTypedArray,
-  type TypedArray,
-} from "../type-typed-array/type-typed-array.assert.js";
+import type { TypedArray } from "../type-typed-array/type-typed-array.assert.js";
+import { bufferEqualTo } from "./buffer-equal.match.js";
 
 /**
  * Assert that two buffers (TypedArrays) are equal, comparing element by element.
@@ -15,21 +13,7 @@ export function assertBufferEqual<T extends TypedArray>(
   expected: T,
   message?: string,
 ): asserts actual is T {
-  assertTypeTypedArray(actual);
-
-  // Convert to Node.js Buffer for fast native comparison
-  const actualBuffer = Buffer.from(
-    actual.buffer,
-    actual.byteOffset,
-    actual.byteLength,
-  );
-  const expectedBuffer = Buffer.from(
-    expected.buffer,
-    expected.byteOffset,
-    expected.byteLength,
-  );
-
-  if (Buffer.compare(actualBuffer, expectedBuffer) !== 0) {
+  if (!bufferEqualTo(expected).matches(actual)) {
     throw new AssertionError(
       message ?? `Expected ${desc(actual)} to equal ${desc(expected)}.`,
       actual,

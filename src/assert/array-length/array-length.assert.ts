@@ -1,3 +1,4 @@
+import { arrayOfLength, type ArrayOfLength } from "./array-length.match.js";
 import { assertNonNullable } from "../non-nullable/non-nullable.assert.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
@@ -15,39 +16,13 @@ export function assertArrayLength<T, const N extends number>(
   message?: string,
 ): asserts value is ArrayOfLength<T, N> {
   assertNonNullable(value, message);
-
-  if (value.length !== expectedLength) {
+  const matcher = arrayOfLength(expectedLength);
+  if (!matcher.matches(value)) {
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to have length ${repr(expectedLength)}, but it had length ${repr(value.length)}.`,
       value,
-      { length: expectedLength },
+      matcher.represent(),
     );
   }
 }
-
-type ArrayOfLength<T, N extends number> = N extends 0
-  ? readonly []
-  : N extends 1
-    ? readonly [T]
-    : N extends 2
-      ? readonly [T, T]
-      : N extends 3
-        ? readonly [T, T, T]
-        : N extends 4
-          ? readonly [T, T, T, T]
-          : N extends 5
-            ? readonly [T, T, T, T, T]
-            : N extends 6
-              ? readonly [T, T, T, T, T, T]
-              : N extends 7
-                ? readonly [T, T, T, T, T, T, T]
-                : N extends 8
-                  ? readonly [T, T, T, T, T, T, T, T]
-                  : N extends 9
-                    ? readonly [T, T, T, T, T, T, T, T, T]
-                    : N extends 10
-                      ? readonly [T, T, T, T, T, T, T, T, T, T]
-                      : readonly [T, T, T, T, T, T, T, T, T, T, ...T[]] & {
-                          length: N;
-                        };

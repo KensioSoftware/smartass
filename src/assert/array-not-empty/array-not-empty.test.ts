@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { assertArrayNotEmpty } from "./array-not-empty.assert.js";
 import type { AssertionError } from "../../assertion-error.js";
+import { nonEmptyArray } from "./array-not-empty.match.js";
+import { desc, repr } from "../../describe/describe.js";
 
 describe("not-empty", () => {
   it("throws on empty array", () => {
@@ -28,5 +30,39 @@ describe("not-empty", () => {
     expect(() => {
       assertArrayNotEmpty(undefined);
     }).toThrow("Expected undefined not to be undefined.");
+  });
+
+  it("matches non-empty arrays", () => {
+    const matcher = nonEmptyArray<number>();
+
+    expect(matcher.matches([1])).toBe(true);
+  });
+
+  it("matches arrays with multiple elements", () => {
+    const matcher = nonEmptyArray<number>();
+
+    expect(matcher.matches([1, 2, 3])).toBe(true);
+  });
+
+  it("does not match empty arrays", () => {
+    const matcher = nonEmptyArray<number>();
+
+    expect(matcher.matches([])).toBe(false);
+  });
+
+  it("does not match non-arrays", () => {
+    const matcher = nonEmptyArray<number>();
+
+    expect(matcher.matches(1)).toBe(false);
+    expect(matcher.matches("a")).toBe(false);
+    expect(matcher.matches({ 0: "a", length: 1 })).toBe(false);
+    expect(matcher.matches(null)).toBe(false);
+  });
+
+  it("describes the nonEmptyArray matcher", () => {
+    const matcher = nonEmptyArray<number>();
+
+    expect(desc(matcher)).toBe("non-empty array");
+    expect(repr(matcher)).toBe("[...]");
   });
 });

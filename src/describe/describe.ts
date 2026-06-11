@@ -123,7 +123,7 @@ export function repr(value: unknown, seen = new WeakSet<object>()): string {
   }
 
   if (ArrayBuffer.isView(value)) {
-    return `${value.constructor.name} (${String(value.byteLength)} bytes)`;
+    return `${value.constructor.name}(${String(value.byteLength)})`;
   }
 
   if (value instanceof URL) return `URL("${value.href}")`;

@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { assertNumberBetween } from "./number-between.assert.js";
+import { numberBetween } from "./number-between.match.js";
+import { desc, repr } from "../../describe/describe.js";
 
 describe("number-between", () => {
   describe("with numbers", () => {
@@ -64,7 +66,7 @@ describe("number-between", () => {
     });
   });
 
-  describe("with bigints", () => {
+  describe("with bigint", () => {
     it("does not throw when value is within range", () => {
       expect(() => {
         assertNumberBetween(5n, 1n, 10n);
@@ -107,6 +109,109 @@ describe("number-between", () => {
       }).toThrow(
         'Expected string "5" to be between number 1 and number 10 inclusive.',
       );
+    });
+  });
+
+  describe("numberBetween", () => {
+    describe("with numbers", () => {
+      it("matches values within range", () => {
+        const matcher = numberBetween(1, 10);
+        expect(matcher.matches(5)).toBe(true);
+      });
+
+      it("matches values equal to min", () => {
+        const matcher = numberBetween(1, 10);
+        expect(matcher.matches(1)).toBe(true);
+      });
+
+      it("matches values equal to max", () => {
+        const matcher = numberBetween(1, 10);
+        expect(matcher.matches(10)).toBe(true);
+      });
+
+      it("does not match values below min", () => {
+        const matcher = numberBetween(1, 10);
+        expect(matcher.matches(0)).toBe(false);
+      });
+
+      it("does not match values above max", () => {
+        const matcher = numberBetween(1, 10);
+        expect(matcher.matches(11)).toBe(false);
+      });
+
+      it("works with negative numbers", () => {
+        const matcher = numberBetween(-10, 0);
+        expect(matcher.matches(-5)).toBe(true);
+        expect(matcher.matches(-15)).toBe(false);
+      });
+
+      it("works with decimals", () => {
+        const matcher = numberBetween(1, 2);
+        expect(matcher.matches(1.5)).toBe(true);
+        expect(matcher.matches(2.1)).toBe(false);
+      });
+    });
+
+    describe("with bigint", () => {
+      it("matches values within range", () => {
+        const matcher = numberBetween(1n, 10n);
+        expect(matcher.matches(5n)).toBe(true);
+      });
+
+      it("matches values equal to min", () => {
+        const matcher = numberBetween(1n, 10n);
+        expect(matcher.matches(1n)).toBe(true);
+      });
+
+      it("matches values equal to max", () => {
+        const matcher = numberBetween(1n, 10n);
+        expect(matcher.matches(10n)).toBe(true);
+      });
+
+      it("does not match values below min", () => {
+        const matcher = numberBetween(1n, 10n);
+        expect(matcher.matches(0n)).toBe(false);
+      });
+
+      it("does not match values above max", () => {
+        const matcher = numberBetween(1n, 10n);
+        expect(matcher.matches(11n)).toBe(false);
+      });
+    });
+
+    describe("type checking", () => {
+      it("does not match non-numeric values", () => {
+        const matcher = numberBetween(1, 10);
+        expect(matcher.matches("5")).toBe(false);
+        expect(matcher.matches(null)).toBe(false);
+        expect(matcher.matches(undefined)).toBe(false);
+      });
+    });
+
+    describe("description", () => {
+      it("describes the matcher correctly", () => {
+        const matcher = numberBetween(1, 10);
+        expect(desc(matcher)).toBe(
+          "number between number 1 and number 10 inclusive",
+        );
+      });
+
+      it("represents the matcher correctly", () => {
+        const matcher = numberBetween(1, 10);
+        expect(repr(matcher)).toBe("1<>10");
+      });
+
+      it("describes bigint correctly", () => {
+        const matcher = numberBetween(1n, 10n);
+        expect(desc(matcher)).toBe(
+          "number between bigint 1n and bigint 10n inclusive",
+        );
+      });
+
+      it("represents bigint correctly", () => {
+        const matcher = numberBetween(1n, 10n);
+        expect(repr(matcher)).toBe("1n<>10n");
+      });
     });
   });
 });

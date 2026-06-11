@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { assertBufferEqual } from "./buffer-equal.assert.js";
+import { bufferEqualTo } from "./buffer-equal.match.js";
 
 describe("assertBufferEqual", () => {
   it("does not throw when Uint8Arrays are equal", () => {
@@ -15,9 +16,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 5, 4]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrow(
-      "Expected object Uint8Array (4 bytes) to equal object Uint8Array (4 bytes).",
-    );
+    }).toThrow("Expected object Uint8Array(4) to equal object Uint8Array(4).");
   });
 
   it("throws when Uint8Arrays differ in length", () => {
@@ -25,9 +24,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 3, 4]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrow(
-      "Expected object Uint8Array (3 bytes) to equal object Uint8Array (4 bytes).",
-    );
+    }).toThrow("Expected object Uint8Array(3) to equal object Uint8Array(4).");
   });
 
   it("works with Int8Array", () => {
@@ -119,7 +116,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 3]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrow("to be a TypedArray");
+    }).toThrow("Expected array [1,2,3] (len 3) to equal object Uint8Array(3).");
   });
 
   it("works with empty buffers", () => {
@@ -143,9 +140,7 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 3]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrow(
-      "Expected object Uint8Array (3 bytes) to equal object Uint8Array (3 bytes).",
-    );
+    }).toThrow("Expected object Uint8Array(3) to equal object Uint8Array(3).");
   });
 
   it("detects difference at last index", () => {
@@ -153,8 +148,28 @@ describe("assertBufferEqual", () => {
     const b = new Uint8Array([1, 2, 3, 4]);
     expect(() => {
       assertBufferEqual(a, b);
-    }).toThrow(
-      "Expected object Uint8Array (4 bytes) to equal object Uint8Array (4 bytes).",
+    }).toThrow("Expected object Uint8Array(4) to equal object Uint8Array(4).");
+  });
+
+  it("matches equal TypedArrays", () => {
+    expect(
+      bufferEqualTo(new Uint8Array([1, 2, 3])).matches(
+        new Uint8Array([1, 2, 3]),
+      ),
+    ).toBe(true);
+  });
+
+  it("does not match different TypedArrays", () => {
+    expect(
+      bufferEqualTo(new Uint8Array([1, 2, 3])).matches(
+        new Uint8Array([1, 2, 4]),
+      ),
+    ).toBe(false);
+  });
+
+  it("does not match non-TypedArrays", () => {
+    expect(bufferEqualTo(new Uint8Array([1, 2, 3])).matches([1, 2, 3])).toBe(
+      false,
     );
   });
 });

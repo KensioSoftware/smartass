@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { assertArrayLength } from "./array-length.assert.js";
+import { arrayOfLength } from "./array-length.match.js";
+import { desc, repr } from "../../describe/describe.js";
 
 describe("array-length", () => {
   it("throws when array length does not match", () => {
@@ -58,5 +60,41 @@ describe("array-length", () => {
     expect(() => {
       assertArrayLength([1, 2, 3, 4, 5, 6], 6);
     }).not.toThrow();
+  });
+
+  it("matches arrays with the expected length", () => {
+    const matcher = arrayOfLength(3);
+
+    expect(matcher.matches([1, 2, 3])).toBe(true);
+  });
+
+  it("does not match arrays with a different length", () => {
+    const matcher = arrayOfLength(3);
+
+    expect(matcher.matches([1, 2])).toBe(false);
+    expect(matcher.matches([1, 2, 3, 4])).toBe(false);
+  });
+
+  it("matches empty arrays when expected length is zero", () => {
+    const matcher = arrayOfLength(0);
+
+    expect(matcher.matches([])).toBe(true);
+    expect(matcher.matches([1])).toBe(false);
+  });
+
+  it("does not match non-arrays", () => {
+    const matcher = arrayOfLength(1);
+
+    expect(matcher.matches(1)).toBe(false);
+    expect(matcher.matches("a")).toBe(false);
+    expect(matcher.matches({ 0: "a", length: 1 })).toBe(false);
+    expect(matcher.matches(null)).toBe(false);
+  });
+
+  it("describes the arrayOfLength matcher", () => {
+    const matcher = arrayOfLength(3);
+
+    expect(desc(matcher)).toBe("array of length 3");
+    expect(repr(matcher)).toBe("Array(3)");
   });
 });
