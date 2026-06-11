@@ -16,13 +16,13 @@ export function assertArrayLength<T, const N extends number>(
   message?: string,
 ): asserts value is ArrayOfLength<T, N> {
   assertNonNullable(value, message);
-
-  if (!arrayOfLength(expectedLength).matches(value)) {
+  const matcher = arrayOfLength(expectedLength);
+  if (!matcher.matches(value)) {
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to have length ${repr(expectedLength)}, but it had length ${repr(value.length)}.`,
       value,
-      { length: expectedLength },
+      matcher.represent(),
     );
   }
 }
