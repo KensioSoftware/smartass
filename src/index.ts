@@ -12,6 +12,7 @@ export * from "./assert/non-nullable/non-nullable.assert.js";
 export * from "./assert/number-between/number-between.assert.js";
 export * from "./assert/number-to-nearest/number-to-nearest.assert.js";
 export * from "./assert/object-equals/object-equals.assert.js";
+export * from "./assert/object-has-property/object-has-property.assert.js";
 export * from "./assert/object-matches/object-matches.assert.js";
 export * from "./assert/one-of/one-of.assert.js";
 export * from "./assert/string-ends-with/string-ends-with.assert.js";
