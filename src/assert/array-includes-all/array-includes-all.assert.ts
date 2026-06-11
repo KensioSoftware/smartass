@@ -1,3 +1,7 @@
+import {
+  arrayIncludingAll,
+  type ArrayIncludingAll,
+} from "./array-includes-all.match.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 
@@ -10,12 +14,10 @@ export function assertArrayIncludesAll<T, const E extends readonly T[]>(
   value: readonly T[],
   elements: E,
   message?: string,
-): asserts value is readonly [T, ...T[]] & {
-  includes(searchElement: E[number]): true;
-} {
-  const missing = elements.filter((element) => !value.includes(element));
+): asserts value is ArrayIncludingAll<T, E> {
+  if (!arrayIncludingAll(elements).matches(value)) {
+    const missing = elements.filter((element) => !value.includes(element));
 
-  if (missing.length > 0) {
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to include all of ${repr(elements)}, but missing ${repr(missing)}.`,

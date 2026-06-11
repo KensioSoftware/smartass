@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { assertArrayIncludesAll } from "./array-includes-all.assert.js";
+import { desc, repr } from "../../describe/describe.js";
+import { arrayIncludingAll } from "./array-includes-all.match.js";
 
 describe("array-includes-all", () => {
   it("throws when array does not include all elements", () => {
@@ -84,5 +86,63 @@ describe("array-includes-all", () => {
     }).toThrow(
       'Expected array [{"id":1},{"id":2}] (len 2) to include all of [{"id":1}], but missing [{"id":1}].',
     );
+  });
+
+  it("matches arrays including all required elements", () => {
+    const matcher = arrayIncludingAll([2, 4]);
+
+    expect(matcher.matches([1, 2, 3, 4])).toBe(true);
+  });
+
+  it("matches arrays including all required elements in any order", () => {
+    const matcher = arrayIncludingAll([4, 2, 1]);
+
+    expect(matcher.matches([1, 2, 3, 4])).toBe(true);
+  });
+
+  it("matches arrays including duplicate required elements when the element exists", () => {
+    const matcher = arrayIncludingAll([2, 2, 3]);
+
+    expect(matcher.matches([1, 2, 3])).toBe(true);
+  });
+
+  it("does not match arrays missing required elements", () => {
+    const matcher = arrayIncludingAll([2, 4]);
+
+    expect(matcher.matches([1, 2, 3])).toBe(false);
+  });
+
+  it("does not match non-arrays", () => {
+    const matcher = arrayIncludingAll([1]);
+
+    expect(matcher.matches(1)).toBe(false);
+    expect(matcher.matches("1")).toBe(false);
+    expect(matcher.matches({ 0: 1, length: 1 })).toBe(false);
+    expect(matcher.matches(null)).toBe(false);
+  });
+
+  it("matches any array when no elements are required", () => {
+    const matcher = arrayIncludingAll([]);
+
+    expect(matcher.matches([])).toBe(true);
+    expect(matcher.matches([1, 2, 3])).toBe(true);
+  });
+
+  it("matches objects using reference equality", () => {
+    const obj1 = { id: 1 };
+    const obj2 = { id: 2 };
+    const matcher = arrayIncludingAll([obj1, obj2]);
+
+    expect(matcher.matches([obj1, obj2, { id: 3 }])).toBe(true);
+    expect(matcher.matches([{ id: 1 }, obj2])).toBe(false);
+  });
+
+  it("describes the arrayIncludingAll matcher", () => {
+    const matcher = arrayIncludingAll(["foo", "bar"]);
+
+    expect(desc(matcher)).toBe(
+      'array including all of array ["foo","bar"] (len 2)',
+    );
+    expect(repr(matcher)).toBe('["foo","bar"]');
   });
 });
