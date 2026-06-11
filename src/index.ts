@@ -16,6 +16,7 @@ export * from "./assert/identical/identical.assert.js";
 export * from "./assert/instance-of/instance-of.assert.js";
 export * from "./assert/instance-of/instance-of.match.js";
 export * from "./assert/non-nullable/non-nullable.assert.js";
+export * from "./assert/non-nullable/non-nullable.match.js";
 export * from "./assert/number-between/number-between.assert.js";
 export * from "./assert/number-to-nearest/number-to-nearest.assert.js";
 export * from "./assert/object-equals/object-equals.assert.js";
