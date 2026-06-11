@@ -70,4 +70,13 @@ describe("throws-error", () => {
       }, "Custom message");
     }).toThrow("Custom message");
   });
+
+  it("captures ReferenceError", () => {
+    const error = assertThrowsError(() => {
+      throw new ReferenceError("test reference error");
+    });
+    expect(error).toBeInstanceOf(Error);
+    expect(error).toBeInstanceOf(ReferenceError);
+    expect(error.message).toBe("test reference error");
+  });
 });
