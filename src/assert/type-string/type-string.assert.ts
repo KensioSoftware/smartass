@@ -1,5 +1,6 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
+import { typeString } from "./type-string.match.js";
 
 /**
  * Assert that a value is of type string, with type-narrowing.
@@ -8,7 +9,8 @@ export function assertTypeString(
   value: unknown,
   message = `Expected ${desc(value)} to be of type string.`,
 ): asserts value is string {
-  if (typeof value !== "string") {
-    throw new AssertionError(message, typeof value, "string");
+  const matcher = typeString();
+  if (!matcher.matches(value)) {
+    throw new AssertionError(message, value, matcher.represent());
   }
 }

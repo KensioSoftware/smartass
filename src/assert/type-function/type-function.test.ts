@@ -1,52 +1,97 @@
 import { describe, expect, it } from "vitest";
 import { assertTypeFunction } from "./type-function.assert.js";
+import { desc, repr } from "../../describe/describe.js";
+import { typeFunction } from "./type-function.match.js";
 
 describe("type-function", () => {
-  it("throws when value is not a function", () => {
-    expect(() => {
-      assertTypeFunction("foobar");
-    }).toThrow('Expected string "foobar" to be of type function.');
+  describe("assertTypeFunction", () => {
+    it("throws when value is not a function", () => {
+      expect(() => {
+        assertTypeFunction("foobar");
+      }).toThrow('Expected string "foobar" to be of type function.');
+    });
+
+    it("does not throw when value is a function", () => {
+      expect(() => {
+        assertTypeFunction(() => {
+          /* empty */
+        });
+      }).not.toThrow();
+      expect(() => {
+        assertTypeFunction(function () {
+          /* empty */
+        });
+      }).not.toThrow();
+      expect(() => {
+        assertTypeFunction(async () => {
+          /* empty */
+        });
+      }).not.toThrow();
+    });
+
+    it("throws with custom message", () => {
+      expect(() => {
+        assertTypeFunction(123, "Custom error message");
+      }).toThrow("Custom error message");
+    });
+
+    it("works with various non-function types", () => {
+      expect(() => {
+        assertTypeFunction(null);
+      }).toThrow("Expected null to be of type function.");
+      expect(() => {
+        assertTypeFunction(undefined);
+      }).toThrow("Expected undefined to be of type function.");
+      expect(() => {
+        assertTypeFunction(true);
+      }).toThrow("Expected boolean true to be of type function.");
+      expect(() => {
+        assertTypeFunction(123);
+      }).toThrow("Expected number 123 to be of type function.");
+      expect(() => {
+        assertTypeFunction({});
+      }).toThrow("Expected object {} to be of type function.");
+    });
   });
 
-  it("does not throw when value is a function", () => {
-    expect(() => {
-      assertTypeFunction(() => {
-        /* empty */
-      });
-    }).not.toThrow();
-    expect(() => {
-      assertTypeFunction(function () {
-        /* empty */
-      });
-    }).not.toThrow();
-    expect(() => {
-      assertTypeFunction(async () => {
-        /* empty */
-      });
-    }).not.toThrow();
-  });
+  describe("typeFunction", () => {
+    it("matches function values", () => {
+      const matcher = typeFunction();
+      expect(
+        matcher.matches(() => {
+          //
+        }),
+      ).toBe(true);
+      expect(
+        matcher.matches(function () {
+          //
+        }),
+      ).toBe(true);
+      expect(
+        matcher.matches(async () => {
+          //
+        }),
+      ).toBe(true);
+    });
 
-  it("throws with custom message", () => {
-    expect(() => {
-      assertTypeFunction(123, "Custom error message");
-    }).toThrow("Custom error message");
-  });
+    it("does not match non-function values", () => {
+      const matcher = typeFunction();
+      expect(matcher.matches("foobar")).toBe(false);
+      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.matches(undefined)).toBe(false);
+      expect(matcher.matches(true)).toBe(false);
+      expect(matcher.matches(123)).toBe(false);
+      expect(matcher.matches({})).toBe(false);
+    });
 
-  it("works with various non-function types", () => {
-    expect(() => {
-      assertTypeFunction(null);
-    }).toThrow("Expected null to be of type function.");
-    expect(() => {
-      assertTypeFunction(undefined);
-    }).toThrow("Expected undefined to be of type function.");
-    expect(() => {
-      assertTypeFunction(true);
-    }).toThrow("Expected boolean true to be of type function.");
-    expect(() => {
-      assertTypeFunction(123);
-    }).toThrow("Expected number 123 to be of type function.");
-    expect(() => {
-      assertTypeFunction({});
-    }).toThrow("Expected object {} to be of type function.");
+    it("describes the matcher", () => {
+      const matcher = typeFunction();
+      expect(desc(matcher)).toBe("function");
+    });
+
+    it("represents the matcher", () => {
+      const matcher = typeFunction();
+      expect(repr(matcher)).toBe("Function()");
+    });
   });
 });

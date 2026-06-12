@@ -46,7 +46,6 @@ describe("desc", () => {
   });
 
   it("describes functions", () => {
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     function testFunc(a: number, b: number): number {
       return a + b;
     }
@@ -160,7 +159,6 @@ describe("repr", () => {
   });
 
   it("represents functions", () => {
-    // eslint-disable-next-line unicorn/consistent-function-scoping
     function namedFunc(): void {
       /* empty */
     }

@@ -1,4 +1,5 @@
 const matcher = Symbol("smartass.matcher");
+export declare const refinement: unique symbol;
 
 export interface AssertionMatcher<T> {
   readonly [matcher]: true;
@@ -6,6 +7,20 @@ export interface AssertionMatcher<T> {
   describe(): string;
   represent(): string;
 }
+
+type ApplyRefinement<TRefinement, TActual> = TRefinement extends (
+  actual: TActual,
+) => infer TRefined
+  ? TRefined
+  : never;
+
+export type RefinedMatch<TMatcher, TActual> = TMatcher extends {
+  readonly [refinement]?: infer TRefinement;
+}
+  ? TActual & ApplyRefinement<TRefinement, TActual>
+  : TMatcher extends AssertionMatcher<infer TMatched>
+    ? TActual & TMatched
+    : TActual & InferMatch<TMatcher>;
 
 export type InferMatch<T> =
   T extends AssertionMatcher<infer U>

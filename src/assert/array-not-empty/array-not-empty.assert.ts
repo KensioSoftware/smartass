@@ -11,7 +11,7 @@ export function assertArrayNotEmpty<T>(
 ): asserts value is NonEmptyArray<T> {
   assertNonNullable(value, message);
 
-  if (!nonEmptyArray<T>().matches(value)) {
+  if (!nonEmptyArray().matches(value)) {
     throw new AssertionError(
       message ?? `Expected array not to be empty, but it was empty.`,
       value,

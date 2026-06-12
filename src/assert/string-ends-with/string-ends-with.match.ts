@@ -11,6 +11,6 @@ export function stringEndingWith<const T extends string>(
     (value): value is `${string}${T}` =>
       typeof value === "string" && value.endsWith(suffix),
     () => `string ending with ${repr(suffix)}`,
-    () => `"*${suffix}"`,
+    () => `"…${suffix}"`,
   );
 }
