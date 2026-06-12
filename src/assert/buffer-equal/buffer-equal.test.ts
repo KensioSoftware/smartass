@@ -168,7 +168,7 @@ describe("assertBufferEqual", () => {
   describe("bufferEqualTo", () => {
     it("works as composable matcher", () => {
       interface Foo {
-        bar?: { foobar?: Buffer };
+        bar?: { foobar?: Buffer | string };
       }
 
       function getFoo(): Foo {
