@@ -86,9 +86,12 @@ describe("array-includes", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is an array including an element "b".
-      const foobar = foo.bar.foobar;
-      const foobarIncludesB: true = foobar.includes("b");
-      expect(foobarIncludesB).toBeTruthy();
+      const foobarIncludesA: boolean = foo.bar.foobar.includes("a");
+      const foobarIncludesB: true = foo.bar.foobar.includes("b");
+      const foobarIncludesC: boolean = foo.bar.foobar.includes("c");
+      expect(foobarIncludesA).toBeTypeOf("boolean");
+      expect(foobarIncludesB).toBe(true);
+      expect(foobarIncludesC).toBeTypeOf("boolean");
     });
 
     it("describes the arrayIncluding matcher", () => {

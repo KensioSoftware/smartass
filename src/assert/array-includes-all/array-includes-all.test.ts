@@ -111,8 +111,10 @@ describe("array-includes-all", () => {
       // TypeScript knows foo.bar.foobar is an array including "a" and "b".
       const foobarIncludesA: true = foo.bar.foobar.includes("a");
       const foobarIncludesB: true = foo.bar.foobar.includes("b");
-      expect(foobarIncludesA).toBeTruthy();
-      expect(foobarIncludesB).toBeTruthy();
+      const foobarIncludesC: boolean = foo.bar.foobar.includes("c");
+      expect(foobarIncludesA).toBe(true);
+      expect(foobarIncludesB).toBe(true);
+      expect(foobarIncludesC).toBeTypeOf("boolean");
     });
 
     it("matches arrays including all required elements", () => {
