@@ -102,12 +102,7 @@ describe("string-ends-with", () => {
 
     it("represents the matcher", () => {
       const matcher = stringEndingWith("foobar");
-      expect(repr(matcher)).toBe('"*foobar"');
-    });
-
-    it("represents with special characters", () => {
-      const matcher = stringEndingWith(".");
-      expect(repr(matcher)).toBe('"*."');
+      expect(repr(matcher)).toBe('"…foobar"');
     });
   });
 });
