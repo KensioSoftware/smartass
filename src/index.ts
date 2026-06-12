@@ -61,4 +61,3 @@ export * from "./assert/typeof/typeof.assert.js";
 export * from "./assert/undefined/undefined.assert.js";
 export * from "./assert/uuid/uuid-v4.assert.js";
 export * from "./assert/uuid/uuid-v4.match.js";
-
