@@ -18,6 +18,10 @@ import type {
   ArrayOfMinLength,
   ArrayOfMinLengthMatcher,
 } from "../array-min-length/array-min-length.match.js";
+import type {
+  NonEmptyArray,
+  NonEmptyArrayMatcher,
+} from "../array-not-empty/array-not-empty.match.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -62,18 +66,23 @@ type ArrayIncludingAllRefine<TActual, E extends readonly unknown[]> = Omit<
 > &
   ArrayIncludingAll<ActualArrayElement<TActual> | E[number], E>;
 
+type NonEmptyArrayRefine<TActual> = TActual &
+  NonEmptyArray<ActualArrayElement<TActual>>;
+
 type MatcherRefine<TActual, TExpected> =
   TExpected extends ArrayOfLengthMatcher<infer N>
     ? ArrayOfLengthRefine<TActual, N>
     : TExpected extends ArrayOfMinLengthMatcher<infer N>
       ? ArrayOfMinLengthRefine<TActual, N>
-      : TExpected extends ArrayIncludingMatcher<infer E>
-        ? ArrayIncludingRefine<TActual, E>
-        : TExpected extends ArrayIncludingAllMatcher<infer E>
-          ? ArrayIncludingAllRefine<TActual, E>
-          : TExpected extends AssertionMatcher<unknown>
-            ? RefinedMatch<TExpected, TActual>
-            : never;
+      : TExpected extends NonEmptyArrayMatcher
+        ? NonEmptyArrayRefine<TActual>
+        : TExpected extends ArrayIncludingMatcher<infer E>
+          ? ArrayIncludingRefine<TActual, E>
+          : TExpected extends ArrayIncludingAllMatcher<infer E>
+            ? ArrayIncludingAllRefine<TActual, E>
+            : TExpected extends AssertionMatcher<unknown>
+              ? RefinedMatch<TExpected, TActual>
+              : never;
 
 type AssertedRefine<TActual, TRefined> = TRefined extends TActual
   ? TRefined
