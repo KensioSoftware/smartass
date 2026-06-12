@@ -17,4 +17,9 @@ INDEX_FILE="${SRC_DIR}/index.ts"
   printf '\n'
 } > "${INDEX_FILE}"
 
+(
+  cd "${ROOT_DIR}"
+  pnpm run fmt
+)
+
 echo "Built ${INDEX_FILE}"
