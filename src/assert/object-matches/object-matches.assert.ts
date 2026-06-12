@@ -3,9 +3,21 @@ import { desc, repr } from "../../describe/describe.js";
 import { findObjectComparisonMismatch } from "../../compare/object-comparison.js";
 import type { AssertionMatcher, RefinedMatch } from "../../match/match.js";
 import type {
+  ArrayIncluding,
+  ArrayIncludingMatcher,
+} from "../array-includes/array-includes.match.js";
+import type {
+  ArrayIncludingAll,
+  ArrayIncludingAllMatcher,
+} from "../array-includes-all/array-includes-all.match.js";
+import type {
   ArrayOfLength,
   ArrayOfLengthMatcher,
 } from "../array-length/array-length.match.js";
+import type {
+  ArrayOfMinLength,
+  ArrayOfMinLengthMatcher,
+} from "../array-min-length/array-min-length.match.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -30,33 +42,63 @@ type ArrayElement<T> = T extends readonly (infer TElement)[]
   ? TElement
   : unknown;
 
-type ArrayOfLengthRefine<TActual, N extends number> =
+type ActualArrayElement<TActual> =
   NonNullable<TActual> extends readonly unknown[]
-    ? TActual & ArrayOfLength<ArrayElement<NonNullable<TActual>>, N>
-    : TActual & ArrayOfLength<unknown, N>;
+    ? ArrayElement<NonNullable<TActual>>
+    : unknown;
 
-type DeepObjectRefine<TActual, TExpected> =
+type ArrayOfLengthRefine<TActual, N extends number> = TActual &
+  ArrayOfLength<ActualArrayElement<TActual>, N>;
+
+type ArrayOfMinLengthRefine<TActual, N extends number> = TActual &
+  ArrayOfMinLength<ActualArrayElement<TActual>, N>;
+
+type ArrayIncludingRefine<TActual, E> = Omit<NonNullable<TActual>, "includes"> &
+  ArrayIncluding<ActualArrayElement<TActual> | E, E>;
+
+type ArrayIncludingAllRefine<TActual, E extends readonly unknown[]> = Omit<
+  NonNullable<TActual>,
+  "includes"
+> &
+  ArrayIncludingAll<ActualArrayElement<TActual> | E[number], E>;
+
+type MatcherRefine<TActual, TExpected> =
   TExpected extends ArrayOfLengthMatcher<infer N>
     ? ArrayOfLengthRefine<TActual, N>
-    : TExpected extends AssertionMatcher<unknown>
-      ? RefinedMatch<TExpected, TActual>
-      : TExpected extends ObjectMatchLeaf
-        ? TActual & TExpected
-        : TExpected extends readonly unknown[]
-          ? TActual & {
-              readonly [K in keyof TExpected]: DeepObjectRefine<
+    : TExpected extends ArrayOfMinLengthMatcher<infer N>
+      ? ArrayOfMinLengthRefine<TActual, N>
+      : TExpected extends ArrayIncludingMatcher<infer E>
+        ? ArrayIncludingRefine<TActual, E>
+        : TExpected extends ArrayIncludingAllMatcher<infer E>
+          ? ArrayIncludingAllRefine<TActual, E>
+          : TExpected extends AssertionMatcher<unknown>
+            ? RefinedMatch<TExpected, TActual>
+            : never;
+
+type AssertedRefine<TActual, TRefined> = TRefined extends TActual
+  ? TRefined
+  : TActual & TRefined;
+
+type DeepObjectRefine<TActual, TExpected> =
+  TExpected extends AssertionMatcher<unknown>
+    ? MatcherRefine<TActual, TExpected>
+    : TExpected extends ObjectMatchLeaf
+      ? TActual & TExpected
+      : TExpected extends readonly unknown[]
+        ? TActual & {
+            readonly [K in keyof TExpected]: DeepObjectRefine<
+              ActualProperty<TActual, K>,
+              TExpected[K]
+            >;
+          }
+        : TExpected extends object
+          ? Omit<NonNullable<TActual>, keyof TExpected> & {
+              [K in keyof TExpected]: DeepObjectRefine<
                 ActualProperty<TActual, K>,
                 TExpected[K]
               >;
             }
-          : TExpected extends object
-            ? TActual & {
-                [K in keyof TExpected]: DeepObjectRefine<
-                  ActualProperty<TActual, K>,
-                  TExpected[K]
-                >;
-              }
-            : TActual & TExpected;
+          : TActual & TExpected;
 
 /**
  * Assert that an object matches a partial deep object structure, with
@@ -75,7 +117,10 @@ export function assertObjectMatches<
   actual: TActual,
   expected: TExpected,
   message?: string,
-): asserts actual is DeepObjectRefine<TActual, TExpected> {
+): asserts actual is AssertedRefine<
+  TActual,
+  DeepObjectRefine<TActual, TExpected>
+> {
   const mismatch = findObjectComparisonMismatch(actual, expected, {
     exactObjectKeys: false,
     plainActualObjectsOnly: false,

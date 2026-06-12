@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { assertBufferEqual } from "./buffer-equal.assert.js";
 import { bufferEqualTo } from "./buffer-equal.match.js";
+import { desc, repr } from "../../describe/describe.js";
 
 describe("assertBufferEqual", () => {
   it("does not throw when Uint8Arrays are equal", () => {
@@ -171,5 +172,12 @@ describe("assertBufferEqual", () => {
     expect(bufferEqualTo(new Uint8Array([1, 2, 3])).matches([1, 2, 3])).toBe(
       false,
     );
+  });
+
+  it("describes and represents the bufferEqualTo matcher", () => {
+    const matcher = bufferEqualTo(new Uint8Array([1, 2, 3]));
+
+    expect(desc(matcher)).toBe("buffer equal to object Uint8Array(3)");
+    expect(repr(matcher)).toBe("Uint8Array(3)");
   });
 });
