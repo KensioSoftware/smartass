@@ -3,6 +3,7 @@
 set -Eeuo pipefail
 
 pnpm install
+pnpm build:index
 pnpm lint
 pnpm test:coverage
 pnpm build
