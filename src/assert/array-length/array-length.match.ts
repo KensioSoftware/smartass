@@ -1,4 +1,8 @@
-import { createMatcher, type AssertionMatcher } from "../../match/match.js";
+import {
+  createMatcher,
+  type AssertionMatcher,
+  type refinement,
+} from "../../match/match.js";
 import { repr } from "../../describe/describe.js";
 
 export type ArrayOfLength<T, N extends number> = N extends 0
@@ -27,12 +31,24 @@ export type ArrayOfLength<T, N extends number> = N extends 0
                           length: N;
                         };
 
+type ArrayElement<T> = T extends readonly (infer E)[] ? E : unknown;
+
+export type ArrayOfLengthMatcher<N extends number> = AssertionMatcher<
+  ArrayOfLength<unknown, N>
+> & {
+  readonly [refinement]?: <TActual>(
+    actual: TActual,
+  ) => NonNullable<TActual> extends readonly unknown[]
+    ? ArrayOfLength<ArrayElement<NonNullable<TActual>>, N>
+    : ArrayOfLength<unknown, N>;
+};
+
 /**
  * Matcher for an array with exactly the expected length.
  */
 export function arrayOfLength<const N extends number>(
   expectedLength: N,
-): AssertionMatcher<ArrayOfLength<unknown, N>> {
+): ArrayOfLengthMatcher<N> {
   return createMatcher(
     (value): value is ArrayOfLength<unknown, N> =>
       Array.isArray(value) && value.length === expectedLength,

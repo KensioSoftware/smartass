@@ -155,6 +155,7 @@ export default defineConfig(
       "import-x/no-default-export": "off",
       "unicorn/no-null": "off",
       "unicorn/no-useless-undefined": "off",
+      "unicorn/consistent-function-scoping": "off",
     },
   },
 

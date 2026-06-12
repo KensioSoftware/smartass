@@ -1,7 +1,11 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { findObjectComparisonMismatch } from "../../compare/object-comparison.js";
-import type { AssertionMatcher } from "../../match/match.js";
+import type { AssertionMatcher, RefinedMatch } from "../../match/match.js";
+import type {
+  ArrayOfLength,
+  ArrayOfLengthMatcher,
+} from "../array-length/array-length.match.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -15,16 +19,44 @@ type ObjectMatchLeaf =
   | WeakSet<object>
   | Promise<unknown>;
 
-type DeepObjectMatch<T> =
-  T extends AssertionMatcher<infer TMatched>
-    ? TMatched
-    : T extends ObjectMatchLeaf
-      ? T
-      : T extends readonly unknown[]
-        ? { readonly [K in keyof T]: DeepObjectMatch<T[K]> }
-        : T extends object
-          ? { [K in keyof T]: DeepObjectMatch<T[K]> }
-          : T;
+type ActualProperty<
+  TActual,
+  TKey extends PropertyKey,
+> = TKey extends keyof NonNullable<TActual>
+  ? NonNullable<TActual>[TKey]
+  : unknown;
+
+type ArrayElement<T> = T extends readonly (infer TElement)[]
+  ? TElement
+  : unknown;
+
+type ArrayOfLengthRefine<TActual, N extends number> =
+  NonNullable<TActual> extends readonly unknown[]
+    ? TActual & ArrayOfLength<ArrayElement<NonNullable<TActual>>, N>
+    : TActual & ArrayOfLength<unknown, N>;
+
+type DeepObjectRefine<TActual, TExpected> =
+  TExpected extends ArrayOfLengthMatcher<infer N>
+    ? ArrayOfLengthRefine<TActual, N>
+    : TExpected extends AssertionMatcher<unknown>
+      ? RefinedMatch<TExpected, TActual>
+      : TExpected extends ObjectMatchLeaf
+        ? TActual & TExpected
+        : TExpected extends readonly unknown[]
+          ? TActual & {
+              readonly [K in keyof TExpected]: DeepObjectRefine<
+                ActualProperty<TActual, K>,
+                TExpected[K]
+              >;
+            }
+          : TExpected extends object
+            ? TActual & {
+                [K in keyof TExpected]: DeepObjectRefine<
+                  ActualProperty<TActual, K>,
+                  TExpected[K]
+                >;
+              }
+            : TActual & TExpected;
 
 /**
  * Assert that an object matches a partial deep object structure, with
@@ -43,7 +75,7 @@ export function assertObjectMatches<
   actual: TActual,
   expected: TExpected,
   message?: string,
-): asserts actual is TActual & DeepObjectMatch<TExpected> {
+): asserts actual is DeepObjectRefine<TActual, TExpected> {
   const mismatch = findObjectComparisonMismatch(actual, expected, {
     exactObjectKeys: false,
     plainActualObjectsOnly: false,
