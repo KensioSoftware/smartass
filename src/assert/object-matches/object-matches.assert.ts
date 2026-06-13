@@ -22,6 +22,10 @@ import type {
   NonEmptyArray,
   NonEmptyArrayMatcher,
 } from "../array-not-empty/array-not-empty.match.js";
+import type {
+  ObjectWithProperty,
+  ObjectWithPropertyMatcher,
+} from "../object-has-property/object-has-property.match.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -69,6 +73,11 @@ type ArrayIncludingAllRefine<TActual, E extends readonly unknown[]> = Omit<
 type NonEmptyArrayRefine<TActual> = TActual &
   NonEmptyArray<ActualArrayElement<TActual>>;
 
+type ObjectWithPropertyRefine<
+  TActual,
+  K extends PropertyKey,
+> = ObjectWithProperty<K, TActual>;
+
 type MatcherRefine<TActual, TExpected> =
   TExpected extends ArrayOfLengthMatcher<infer N>
     ? ArrayOfLengthRefine<TActual, N>
@@ -80,9 +89,11 @@ type MatcherRefine<TActual, TExpected> =
           ? ArrayIncludingRefine<TActual, E>
           : TExpected extends ArrayIncludingAllMatcher<infer E>
             ? ArrayIncludingAllRefine<TActual, E>
-            : TExpected extends AssertionMatcher<unknown>
-              ? RefinedMatch<TExpected, TActual>
-              : never;
+            : TExpected extends ObjectWithPropertyMatcher<infer K>
+              ? ObjectWithPropertyRefine<TActual, K>
+              : TExpected extends AssertionMatcher<unknown>
+                ? RefinedMatch<TExpected, TActual>
+                : never;
 
 type AssertedRefine<TActual, TRefined> = TRefined extends TActual
   ? TRefined

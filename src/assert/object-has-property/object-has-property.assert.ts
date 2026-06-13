@@ -16,7 +16,7 @@ export function assertObjectHasProperty<
   value: T,
   key: K,
   message?: string,
-): asserts value is T & ObjectWithProperty<K> {
+): asserts value is T & ObjectWithProperty<K, T> {
   const matcher = objectWithProperty(key);
 
   if (!matcher.matches(value)) {
