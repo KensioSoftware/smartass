@@ -11,7 +11,7 @@ export default defineConfig({
     environment: "node",
     include: ["src/**/*.test.ts"],
     typecheck: {
-      enabled: false,
+      enabled: true,
       tsconfig: "./tsconfig.json",
       include: ["src/**/*.test.ts"],
     },
