@@ -11,7 +11,9 @@ export default defineConfig({
     environment: "node",
     include: ["src/**/*.test.ts"],
     typecheck: {
+      enabled: false,
       tsconfig: "./tsconfig.json",
+      include: ["src/**/*.test.ts"],
     },
     coverage: {
       provider: "v8",
