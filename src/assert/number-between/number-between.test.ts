@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertNumberBetween } from "./number-between.assert.js";
 import { numberBetween } from "./number-between.match.js";
 import { desc, repr } from "../../describe/describe.js";
@@ -131,8 +131,8 @@ describe("number-between", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is a number.
-      const foobar: number = foo.bar.foobar;
-      expect(foobar).toBeTypeOf("number");
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<number>();
+      expect(foo.bar.foobar).toBeTypeOf("number");
     });
 
     describe("with numbers", () => {
