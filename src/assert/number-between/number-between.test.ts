@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { assertNumberBetween } from "./number-between.assert.js";
 import { numberBetween } from "./number-between.match.js";
 import { desc, repr } from "../../describe/describe.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("number-between", () => {
   describe("with numbers", () => {
@@ -113,6 +114,27 @@ describe("number-between", () => {
   });
 
   describe("numberBetween", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { foobar?: number | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: 123 } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: numberBetween(100, 150) },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is a number.
+      const foobar: number = foo.bar.foobar;
+      expect(foobar).toBeTypeOf("number");
+    });
+
     describe("with numbers", () => {
       it("matches values within range", () => {
         const matcher = numberBetween(1, 10);

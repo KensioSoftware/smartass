@@ -28,7 +28,7 @@ describe("desc", () => {
     expect(desc(-Infinity)).toBe("number -Infinity");
   });
 
-  it("describes bigints", () => {
+  it("describes bigint", () => {
     expect(desc(42n)).toBe("bigint 42n");
     expect(desc(0n)).toBe("bigint 0n");
     expect(desc(-123n)).toBe("bigint -123n");
@@ -139,7 +139,7 @@ describe("repr", () => {
     expect(repr(-Infinity)).toBe("-Infinity");
   });
 
-  it("represents bigints", () => {
+  it("represents bigint", () => {
     expect(repr(42n)).toBe("42n");
     expect(repr(0n)).toBe("0n");
     expect(repr(-999n)).toBe("-999n");
