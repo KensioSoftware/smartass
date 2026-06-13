@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertArrayIncludes } from "./array-includes.assert.js";
 import { arrayIncluding } from "./array-includes.match.js";
 import { desc, repr } from "../../describe/describe.js";
@@ -85,13 +85,10 @@ describe("array-includes", () => {
       assertObjectMatches(foo, { bar: { foobar: arrayIncluding("b") } });
 
       // Null-chain operator ? is not required after type narrowing.
-      // TypeScript knows foo.bar.foobar is an array including an element "b".
-      const foobarIncludesA: boolean = foo.bar.foobar.includes("a");
-      const foobarIncludesB: true = foo.bar.foobar.includes("b");
-      const foobarIncludesC: boolean = foo.bar.foobar.includes("c");
-      expect(foobarIncludesA).toBeTypeOf("boolean");
-      expect(foobarIncludesB).toBe(true);
-      expect(foobarIncludesC).toBeTypeOf("boolean");
+      // TypeScript knows foo.bar.foobar is an array of strings with at least one element.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<[string, ...string[]]>();
+      expectTypeOf(foo.bar.foobar.includes("b")).toEqualTypeOf<boolean>();
+      expect(foo.bar.foobar.includes("b")).toBe(true);
     });
 
     it("describes the arrayIncluding matcher", () => {

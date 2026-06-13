@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertStringLength } from "./string-length.assert.js";
-import { stringOfLength } from "./string-length.match.js";
+import { type StringOfLength, stringOfLength } from "./string-length.match.js";
 import { desc, repr } from "../../describe/describe.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("string-length", () => {
   describe("assertStringLength", () => {
@@ -89,6 +90,33 @@ describe("string-length", () => {
   });
 
   describe("stringOfLength", () => {
+    it("works as composable matcher", () => {
+      interface User {
+        id?: string;
+        username?: string | null;
+      }
+
+      function getUser(): User {
+        return { id: "user123", username: "FooUser" };
+      }
+
+      const user = getUser();
+
+      assertObjectMatches(user, {
+        username: stringOfLength(7),
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows user.username is a string of exactly 7 characters.
+      expectTypeOf(user.username).toExtend<string>();
+      expectTypeOf(user.username).toEqualTypeOf<StringOfLength<7>>();
+      expectTypeOf(user.username[3]).toEqualTypeOf<string>();
+      expectTypeOf(user.username[7]).toEqualTypeOf<string | undefined>();
+      expect(user.username).toHaveLength(7);
+      expect(user.username[3]).toBeTypeOf("string");
+      expect(user.username[7]).toBeUndefined();
+    });
+
     it("matches strings with expected length", () => {
       const matcher = stringOfLength(5);
       expect(matcher.matches("hello")).toBe(true);

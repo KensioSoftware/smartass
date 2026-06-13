@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeString } from "./type-string.assert.js";
 import { desc, repr } from "../../describe/describe.js";
 import { typeString } from "./type-string.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("type-string", () => {
   describe("assertTypeString", () => {
@@ -37,9 +38,53 @@ describe("type-string", () => {
         assertTypeString({});
       }).toThrow("Expected object {} to be of type string.");
     });
+
+    it("accurately narrows type", () => {
+      interface Foo {
+        bar?: { foobar?: "hello" | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: "hello" } };
+      }
+
+      const foo = getFoo();
+
+      assertTypeString(foo.bar?.foobar);
+      expectTypeOf(foo.bar.foobar).toExtend<string>();
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<"hello">();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expect(foo.bar.foobar).toBeTypeOf("string");
+      expect(foo.bar.foobar).toBe("hello");
+    });
   });
 
   describe("typeString", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { foobar?: "hello" | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: "hello" } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: typeString() },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is a string.
+      // TypeScript can then infer that foo.bar.foobar is literal "hello".
+      expectTypeOf(foo.bar.foobar).toExtend<string>();
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<"hello">();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expect(foo.bar.foobar).toBeTypeOf("string");
+      expect(foo.bar.foobar).toBe("hello");
+    });
+
     it("matches string values", () => {
       const matcher = typeString();
       expect(matcher.matches("hello")).toBe(true);

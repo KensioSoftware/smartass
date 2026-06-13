@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertBufferEqual } from "./buffer-equal.assert.js";
 import { bufferEqualTo } from "./buffer-equal.match.js";
 import { desc, repr } from "../../describe/describe.js";
@@ -183,8 +183,8 @@ describe("assertBufferEqual", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is a Buffer.
-      const foobar: Buffer = foo.bar.foobar;
-      expect(foobar).toBeInstanceOf(Buffer);
+      expectTypeOf(foo.bar.foobar).toExtend<Buffer>();
+      expect(foo.bar.foobar).toBeInstanceOf(Buffer);
     });
 
     it("matches equal TypedArrays", () => {

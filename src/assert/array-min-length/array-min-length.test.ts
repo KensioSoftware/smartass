@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertArrayMinLength } from "./array-min-length.assert.js";
 import { arrayOfMinLength } from "./array-min-length.match.js";
 import { desc, repr } from "../../describe/describe.js";
@@ -92,14 +92,15 @@ describe("array-min-length", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is an array of at least 2 strings.
-      const firstFoobar: string = foo.bar.foobar[0];
-      const secondFoobar: string = foo.bar.foobar[1];
-      const thirdFoobar: string | undefined = foo.bar.foobar[2];
-      const fourthFoobar: string | undefined = foo.bar.foobar[3];
-      expect(firstFoobar).toBeTypeOf("string");
-      expect(secondFoobar).toBeTypeOf("string");
-      expect(thirdFoobar).toBeTypeOf("string");
-      expect(fourthFoobar).toBeUndefined();
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<
+        [string, string, ...string[]]
+      >();
+      expectTypeOf(foo.bar.foobar[0]).toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar[1]).toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar[2]).toEqualTypeOf<string | undefined>();
+      expect(foo.bar.foobar[0]).toBeTypeOf("string");
+      expect(foo.bar.foobar[1]).toBeTypeOf("string");
+      expect(["string", "undefined"]).toContain(typeof foo.bar.foobar[2]);
     });
 
     it("matches arrays with exactly the minimum length", () => {

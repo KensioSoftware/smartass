@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeTypedArray } from "./type-typed-array.assert.js";
-import { typeTypedArray } from "./type-typed-array.match.js";
+import { type TypedArray, typeTypedArray } from "./type-typed-array.match.js";
 import { desc, repr } from "../../describe/describe.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("type-typed-array", () => {
   describe("assertTypeTypedArray", () => {
@@ -115,6 +116,27 @@ describe("type-typed-array", () => {
   });
 
   describe("typeTypedArray", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { foobar?: Buffer | string };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: Buffer.from("foobar") } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: typeTypedArray() },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is a TypedArray.
+      expectTypeOf(foo.bar.foobar).toExtend<TypedArray>();
+      expect(foo.bar.foobar).toBeInstanceOf(Uint8Array);
+    });
+
     it("matches Uint8Array values", () => {
       const matcher = typeTypedArray();
       expect(matcher.matches(new Uint8Array([1, 2, 3]))).toBe(true);

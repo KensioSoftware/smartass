@@ -1,8 +1,9 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeBigInt } from "./type-bigint.assert.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { typeBigInt } from "./type-bigint.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("type-bigint", () => {
   describe("assertTypeBigInt", () => {
@@ -59,6 +60,29 @@ describe("type-bigint", () => {
   });
 
   describe("typeBigInt", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { foobar?: bigint | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: 42n } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: typeBigInt() },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is a bigint.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<bigint>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<number>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("bigint");
+    });
+
     it("matches bigint values", () => {
       const matcher = typeBigInt();
       expect(matcher.matches(0n)).toBe(true);

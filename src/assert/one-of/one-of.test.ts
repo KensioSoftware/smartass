@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { desc, repr } from "../../describe/describe.js";
 import { assertOneOf } from "./one-of.assert.js";
 import { oneOf } from "./one-of.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("one-of", () => {
   describe("assertOneOf", () => {
@@ -34,6 +35,29 @@ describe("one-of", () => {
   });
 
   describe("oneOf", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { status?: "draft" | "published" | "archived" | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { status: "published" } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { status: oneOf(["draft", "published"]) },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.status is one of "draft" or "published".
+      expectTypeOf(foo.bar.status).toEqualTypeOf<"draft" | "published">();
+      expectTypeOf(foo.bar.status).not.toEqualTypeOf<string>();
+      expect(foo.bar.status).toBeTypeOf("string");
+      expect(["draft", "published"]).toContain("published");
+    });
+
     it("matches when value is in allowed list", () => {
       const matcher = oneOf(["foo", "bar", "baz"]);
       expect(matcher.matches("foo")).toBe(true);

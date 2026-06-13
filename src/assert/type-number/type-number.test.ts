@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeNumber } from "./type-number.assert.js";
 import { desc, repr } from "../../describe/describe.js";
 import { typeNumber } from "./type-number.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("type-number", () => {
   describe("assertTypeNumber", () => {
@@ -58,6 +59,29 @@ describe("type-number", () => {
   });
 
   describe("typeNumber", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { foobar?: number | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: 42 } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: typeNumber() },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is a number.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<number>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<bigint>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("number");
+    });
+
     it("matches number values", () => {
       const matcher = typeNumber();
       expect(matcher.matches(123)).toBe(true);

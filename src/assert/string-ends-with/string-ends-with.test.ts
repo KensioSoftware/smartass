@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertStringEndsWith } from "./string-ends-with.assert.js";
 import { stringEndingWith } from "./string-ends-with.match.js";
 import { desc, repr } from "../../describe/describe.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("string-ends-with", () => {
   describe("assertStringEndsWith", () => {
@@ -53,6 +54,29 @@ describe("string-ends-with", () => {
   });
 
   describe("stringEndingWith", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { filename?: string | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { filename: "foobar.json" } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { filename: stringEndingWith(".json") },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.filename is a string ending with ".json".
+      expectTypeOf(foo.bar.filename).toEqualTypeOf<`${string}.json`>();
+      expectTypeOf(foo.bar.filename).not.toEqualTypeOf<string>();
+      expect(foo.bar.filename).toBeTypeOf("string");
+      expect(foo.bar.filename.endsWith(".json")).toBe(true);
+    });
+
     it("matches strings that end with suffix", () => {
       const matcher = stringEndingWith("world");
       expect(matcher.matches("hello world")).toBe(true);

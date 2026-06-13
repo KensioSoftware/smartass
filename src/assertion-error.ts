@@ -5,7 +5,6 @@
  */
 export class AssertionError extends Error {
   override name = "AssertionError" as const;
-  showDiff = true;
 
   constructor(
     message: string,

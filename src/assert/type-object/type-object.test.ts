@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeObject } from "./type-object.assert.js";
 import { desc, repr } from "../../describe/describe.js";
 import { typeObject } from "./type-object.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("type-object", () => {
   describe("assertTypeObject", () => {
@@ -23,7 +24,7 @@ describe("type-object", () => {
       }).not.toThrow();
       expect(() => {
         assertTypeObject(null);
-      }).not.toThrow();
+      }).toThrow();
     });
 
     it("throws with custom message", () => {
@@ -49,6 +50,30 @@ describe("type-object", () => {
   });
 
   describe("typeObject", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { foobar?: { something: "hello" } | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: { something: "hello" } } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: typeObject() },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is an object.
+      // TypeScript can then infer that foo.bar.foobar is {something: "hello"}.
+      expectTypeOf(foo.bar.foobar).toExtend<object>();
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<{ something: "hello" }>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<object>();
+      expect(foo.bar.foobar).toBeTypeOf("object");
+    });
+
     it("matches object values", () => {
       const matcher = typeObject();
       expect(matcher.matches({})).toBe(true);
@@ -59,7 +84,7 @@ describe("type-object", () => {
     it("does not match non-object values", () => {
       const matcher = typeObject();
       expect(matcher.matches("not an object")).toBe(false);
-      expect(matcher.matches(null)).toBe(true); // wat
+      expect(matcher.matches(null)).toBe(false);
       expect(matcher.matches(undefined)).toBe(false);
       expect(matcher.matches(true)).toBe(false);
       expect(matcher.matches(123)).toBe(false);

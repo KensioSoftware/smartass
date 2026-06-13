@@ -12,7 +12,7 @@ export function assertArrayIncludes<T, const E extends T>(
   value: readonly T[],
   element: E,
   message?: string,
-): asserts value is ArrayIncluding<T, E> {
+): asserts value is ArrayIncluding<E> {
   const matcher = arrayIncluding(element);
   if (!matcher.matches(value)) {
     throw new AssertionError(
