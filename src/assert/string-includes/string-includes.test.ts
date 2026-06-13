@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertStringIncludes } from "./string-includes.assert.js";
 import { stringIncluding } from "./string-includes.match.js";
 import { desc, repr } from "../../describe/describe.js";
@@ -81,9 +81,10 @@ describe("string-includes", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows file.content is a string containing "keywords".
-      const content: `${string}keywords${string}` = file.content;
-      expect(content).toBeTypeOf("string");
-      expect(content.includes("keywords")).toBe(true);
+      expectTypeOf(file.content).toEqualTypeOf<`${string}keywords${string}`>();
+      expectTypeOf(file.content).not.toEqualTypeOf<string>();
+      expect(file.content).toBeTypeOf("string");
+      expect(file.content.includes("keywords")).toBe(true);
     });
 
     it("matches strings that include substring", () => {
