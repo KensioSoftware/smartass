@@ -17,7 +17,7 @@ type ApplyRefinement<TRefinement, TActual> = TRefinement extends (
 export type RefinedMatch<TMatcher, TActual> = TMatcher extends {
   readonly [refinement]?: infer TRefinement;
 }
-  ? TActual & ApplyRefinement<TRefinement, TActual>
+  ? ApplyRefinement<TRefinement, TActual>
   : TMatcher extends AssertionMatcher<infer TMatched>
     ? TActual & TMatched
     : TActual & InferMatch<TMatcher>;

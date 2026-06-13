@@ -1,7 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertUuidV4 } from "./uuid-v4.assert.js";
 import { desc, repr } from "../../describe/describe.js";
-import { uuidV4 } from "./uuid-v4.match.js";
+import { type UuidV4, uuidV4 } from "./uuid-v4.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
+import type { UUID as NodeUuid } from "node:crypto";
 
 describe("uuid-v4", () => {
   describe("assertUuidV4", () => {
@@ -53,6 +55,31 @@ describe("uuid-v4", () => {
   });
 
   describe("uuidV4", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { foobar?: NodeUuid | UuidV4 | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: "878c58e7-c62c-4217-8d74-f57134093345" } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: uuidV4() },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is a uuidv4 string.
+      expectTypeOf(foo.bar.foobar).toExtend<NodeUuid>();
+      expectTypeOf(foo.bar.foobar).toExtend<string>();
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<UuidV4>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<NodeUuid>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expect(foo.bar.foobar).toBeTypeOf("string");
+    });
+
     it("matches UUID v4 values", () => {
       const matcher = uuidV4();
       expect(matcher.matches("123e4567-e89b-42d3-a456-426614174000")).toBe(
