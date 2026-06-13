@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertArrayLength } from "./array-length.assert.js";
 import { arrayOfLength } from "./array-length.match.js";
 import { desc, repr } from "../../describe/describe.js";
@@ -83,14 +83,14 @@ describe("array-length", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is an array of 3 strings.
-      const firstFoobar: string = foo.bar.foobar[0];
-      const secondFoobar: string = foo.bar.foobar[1];
-      const thirdFoobar: string = foo.bar.foobar[2];
-      const fourthFoobar: string | undefined = foo.bar.foobar[3];
-      expect(firstFoobar).toBeTypeOf("string");
-      expect(secondFoobar).toBeTypeOf("string");
-      expect(thirdFoobar).toBeTypeOf("string");
-      expect(fourthFoobar).toBeUndefined();
+      expectTypeOf(foo.bar.foobar[0]).toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar[1]).toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar[2]).toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar[3]).toEqualTypeOf<string | undefined>();
+      expect(foo.bar.foobar[0]).toBeTypeOf("string");
+      expect(foo.bar.foobar[1]).toBeTypeOf("string");
+      expect(foo.bar.foobar[2]).toBeTypeOf("string");
+      expect(foo.bar.foobar[3]).toBeUndefined();
     });
 
     it("matches arrays with the expected length", () => {
