@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { assertStringIncludes } from "./string-includes.assert.js";
 import { stringIncluding } from "./string-includes.match.js";
 import { desc, repr } from "../../describe/describe.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("string-includes", () => {
   describe("assertStringIncludes", () => {
@@ -59,6 +60,32 @@ describe("string-includes", () => {
   });
 
   describe("stringIncluding", () => {
+    it("works as composable matcher", () => {
+      interface File {
+        name?: string;
+        content?: string | null;
+      }
+
+      function getFile(): File {
+        return {
+          name: "document",
+          content: "This is a document with keywords",
+        };
+      }
+
+      const file = getFile();
+
+      assertObjectMatches(file, {
+        content: stringIncluding("keywords"),
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows file.content is a string containing "keywords".
+      const content: `${string}keywords${string}` = file.content;
+      expect(content).toBeTypeOf("string");
+      expect(content.includes("keywords")).toBe(true);
+    });
+
     it("matches strings that include substring", () => {
       const matcher = stringIncluding("world");
       expect(matcher.matches("hello world")).toBe(true);

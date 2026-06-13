@@ -1,4 +1,8 @@
-import { type AssertionMatcher, createMatcher } from "../../match/match.js";
+import {
+  type AssertionMatcher,
+  createMatcher,
+  type refinement,
+} from "../../match/match.js";
 import { repr } from "../../describe/describe.js";
 
 export type StringOfLength<N extends number> = N extends 0
@@ -95,12 +99,18 @@ export type StringOfLength<N extends number> = N extends 0
                           10: string;
                         };
 
+export type StringOfLengthMatcher<N extends number> = AssertionMatcher<
+  StringOfLength<N>
+> & {
+  readonly [refinement]?: (actual: unknown) => StringOfLength<N>;
+};
+
 /**
  * Matcher for a string with exactly the expected length.
  */
 export function stringOfLength<const N extends number>(
   expectedLength: N,
-): AssertionMatcher<StringOfLength<N>> {
+): StringOfLengthMatcher<N> {
   return createMatcher(
     (value): value is StringOfLength<N> =>
       typeof value === "string" && value.length === expectedLength,
