@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { desc, repr } from "../../describe/describe.js";
 import { assertNumberToNearest } from "./number-to-nearest.assert.js";
 import { numberToNearest } from "./number-to-nearest.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("number-to-nearest", () => {
   describe("assertNumberToNearest", () => {
@@ -75,6 +76,27 @@ describe("number-to-nearest", () => {
   });
 
   describe("numberToNearest", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { foobar?: number | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: 47 } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: numberToNearest(10, 50) },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is a number.
+      const foobar: number = foo.bar.foobar;
+      expect(foobar).toBeTypeOf("number");
+    });
+
     it("matches when value rounds to expected", () => {
       const matcher = numberToNearest(1, 12);
 
