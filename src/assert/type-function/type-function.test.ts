@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeFunction } from "./type-function.assert.js";
 import { desc, repr } from "../../describe/describe.js";
 import { typeFunction } from "./type-function.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("type-function", () => {
   describe("assertTypeFunction", () => {
@@ -55,6 +56,34 @@ describe("type-function", () => {
   });
 
   describe("typeFunction", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+        bar?: { foobar?: Function | null };
+      }
+
+      function getFoo(): Foo {
+        return {
+          bar: {
+            foobar: () => 42,
+          },
+        };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: typeFunction() },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.foobar is a function.
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<Function>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("function");
+    });
+
     it("matches function values", () => {
       const matcher = typeFunction();
       expect(
