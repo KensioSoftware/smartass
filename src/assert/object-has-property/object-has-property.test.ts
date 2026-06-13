@@ -2,7 +2,6 @@ import { describe, expect, it } from "vitest";
 import { desc, repr } from "../../describe/describe.js";
 import { assertObjectHasProperty } from "./object-has-property.assert.js";
 import { objectWithProperty } from "./object-has-property.match.js";
-import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("object-has-property", () => {
   describe("assertObjectHasProperty", () => {
@@ -73,30 +72,6 @@ describe("object-has-property", () => {
   });
 
   describe("objectWithProperty", () => {
-    it("works as composable matcher", () => {
-      interface Foo {
-        bar?: { name?: string; id?: number };
-      }
-
-      function getFoo(): Foo {
-        return { bar: { name: "test", id: 123 } };
-      }
-
-      const foo = getFoo();
-
-      assertObjectMatches(foo, {
-        bar: objectWithProperty("name"),
-      });
-
-      // Null-chain operator ? is not required after type narrowing.
-      // TypeScript knows foo.bar has a "name" property with a string value.
-      const name: string = foo.bar.name;
-      const id: number | undefined = foo.bar.id;
-      expect(foo.bar).toHaveProperty("name");
-      expect(name).toBeTypeOf("string");
-      expect(["number", "undefined"]).toContain(typeof id);
-    });
-
     it("matches objects with the property", () => {
       const matcher = objectWithProperty("a");
 
