@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertArrayNotEmpty } from "./array-not-empty.assert.js";
 import type { AssertionError } from "../../assertion-error.js";
 import { nonEmptyArray } from "./array-not-empty.match.js";
@@ -53,12 +53,11 @@ describe("not-empty", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is an array of at least 1 string.
-      const firstFoobar: string = foo.bar.foobar[0];
-      const secondFoobar: string | undefined = foo.bar.foobar[1];
-      const thirdFoobar: string | undefined = foo.bar.foobar[2];
-      expect(firstFoobar).toBeTypeOf("string");
-      expect(secondFoobar).toBeTypeOf("string");
-      expect(thirdFoobar).toBeTypeOf("string");
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<[string, ...string[]]>();
+      expectTypeOf(foo.bar.foobar[0]).toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar[1]).toEqualTypeOf<string | undefined>();
+      expect(foo.bar.foobar[0]).toBeTypeOf("string");
+      expect(["string", "undefined"]).toContain(typeof foo.bar.foobar[1]);
     });
 
     it("matches non-empty arrays", () => {

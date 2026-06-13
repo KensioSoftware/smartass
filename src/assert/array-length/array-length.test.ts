@@ -83,13 +83,16 @@ describe("array-length", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is an array of 3 strings.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<[string, string, string]>();
       expectTypeOf(foo.bar.foobar[0]).toEqualTypeOf<string>();
       expectTypeOf(foo.bar.foobar[1]).toEqualTypeOf<string>();
       expectTypeOf(foo.bar.foobar[2]).toEqualTypeOf<string>();
-      expectTypeOf(foo.bar.foobar[3]).toEqualTypeOf<string | undefined>();
+      // @ts-expect-error Tuple type has no element at index 3.
+      expectTypeOf(foo.bar.foobar[3]).toEqualTypeOf<undefined>();
       expect(foo.bar.foobar[0]).toBeTypeOf("string");
       expect(foo.bar.foobar[1]).toBeTypeOf("string");
       expect(foo.bar.foobar[2]).toBeTypeOf("string");
+      // @ts-expect-error Tuple type has no element at index 3.
       expect(foo.bar.foobar[3]).toBeUndefined();
     });
 

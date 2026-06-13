@@ -92,6 +92,9 @@ describe("array-min-length", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is an array of at least 2 strings.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<
+        [string, string, ...string[]]
+      >();
       expectTypeOf(foo.bar.foobar[0]).toEqualTypeOf<string>();
       expectTypeOf(foo.bar.foobar[1]).toEqualTypeOf<string>();
       expectTypeOf(foo.bar.foobar[2]).toEqualTypeOf<string | undefined>();

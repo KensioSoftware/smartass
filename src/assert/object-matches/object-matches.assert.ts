@@ -47,11 +47,15 @@ type ActualArrayElement<TActual> =
     ? ArrayElement<NonNullable<TActual>>
     : unknown;
 
-type ArrayOfLengthRefine<TActual, N extends number> = TActual &
-  ArrayOfLength<ActualArrayElement<TActual>, N>;
+type ArrayOfLengthRefine<TActual, N extends number> = ArrayOfLength<
+  ActualArrayElement<TActual>,
+  N
+>;
 
-type ArrayOfMinLengthRefine<TActual, N extends number> = TActual &
-  ArrayOfMinLength<ActualArrayElement<TActual>, N>;
+type ArrayOfMinLengthRefine<TActual, N extends number> = ArrayOfMinLength<
+  ActualArrayElement<TActual>,
+  N
+>;
 
 type ArrayIncludingAllRefine<TActual, N extends number> = ArrayIncludingAll<
   ActualArrayElement<TActual>,

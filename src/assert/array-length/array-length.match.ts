@@ -1,47 +1,35 @@
-import {
-  createMatcher,
-  type AssertionMatcher,
-  type refinement,
-} from "../../match/match.js";
+import { createMatcher, type AssertionMatcher } from "../../match/match.js";
 import { repr } from "../../describe/describe.js";
 
 export type ArrayOfLength<T, N extends number> = N extends 0
-  ? readonly []
+  ? []
   : N extends 1
-    ? readonly [T]
+    ? [T]
     : N extends 2
-      ? readonly [T, T]
+      ? [T, T]
       : N extends 3
-        ? readonly [T, T, T]
+        ? [T, T, T]
         : N extends 4
-          ? readonly [T, T, T, T]
+          ? [T, T, T, T]
           : N extends 5
-            ? readonly [T, T, T, T, T]
+            ? [T, T, T, T, T]
             : N extends 6
-              ? readonly [T, T, T, T, T, T]
+              ? [T, T, T, T, T, T]
               : N extends 7
-                ? readonly [T, T, T, T, T, T, T]
+                ? [T, T, T, T, T, T, T]
                 : N extends 8
-                  ? readonly [T, T, T, T, T, T, T, T]
+                  ? [T, T, T, T, T, T, T, T]
                   : N extends 9
-                    ? readonly [T, T, T, T, T, T, T, T, T]
+                    ? [T, T, T, T, T, T, T, T, T]
                     : N extends 10
-                      ? readonly [T, T, T, T, T, T, T, T, T, T]
-                      : readonly [T, T, T, T, T, T, T, T, T, T, ...T[]] & {
+                      ? [T, T, T, T, T, T, T, T, T, T]
+                      : [T, T, T, T, T, T, T, T, T, T, ...T[]] & {
                           length: N;
                         };
 
-type ArrayElement<T> = T extends readonly (infer E)[] ? E : unknown;
-
 export type ArrayOfLengthMatcher<N extends number> = AssertionMatcher<
   ArrayOfLength<unknown, N>
-> & {
-  readonly [refinement]?: <TActual>(
-    actual: TActual,
-  ) => NonNullable<TActual> extends readonly unknown[]
-    ? ArrayOfLength<ArrayElement<NonNullable<TActual>>, N>
-    : ArrayOfLength<unknown, N>;
-};
+>;
 
 /**
  * Matcher for an array with exactly the expected length.
