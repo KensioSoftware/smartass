@@ -1,7 +1,8 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertStringStartsWith } from "./string-starts-with.assert.js";
 import { stringStartingWith } from "./string-starts-with.match.js";
 import { desc, repr } from "../../describe/describe.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("string-starts-with", () => {
   describe("assertStringStartsWith", () => {
@@ -53,6 +54,29 @@ describe("string-starts-with", () => {
   });
 
   describe("stringStartingWith", () => {
+    it("works as composable matcher", () => {
+      interface Foo {
+        bar?: { filename?: string | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { filename: "foobar.json" } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { filename: stringStartingWith("foobar") },
+      });
+
+      // Null-chain operator ? is not required after type narrowing.
+      // TypeScript knows foo.bar.filename is a string ending with ".json".
+      expectTypeOf(foo.bar.filename).toEqualTypeOf<`foobar${string}`>();
+      expectTypeOf(foo.bar.filename).not.toEqualTypeOf<string>();
+      expect(foo.bar.filename).toBeTypeOf("string");
+      expect(foo.bar.filename.startsWith("foobar")).toBe(true);
+    });
+
     it("matches strings that start with prefix", () => {
       const matcher = stringStartingWith("hello");
       expect(matcher.matches("hello world")).toBe(true);
