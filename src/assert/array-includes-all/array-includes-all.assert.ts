@@ -14,7 +14,7 @@ export function assertArrayIncludesAll<T, const E extends readonly T[]>(
   value: readonly T[],
   elements: E,
   message?: string,
-): asserts value is ArrayIncludingAll<T, E> {
+): asserts value is ArrayIncludingAll<T, E["length"]> {
   const matcher = arrayIncludingAll(elements);
   if (!matcher.matches(value)) {
     const missing = elements.filter((element) => !value.includes(element));

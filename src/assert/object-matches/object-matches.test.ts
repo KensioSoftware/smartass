@@ -1,9 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertObjectMatches } from "./object-matches.assert.js";
-import {
-  type ArrayIncluding,
-  arrayIncluding,
-} from "../array-includes/array-includes.match.js";
+import { arrayIncluding } from "../array-includes/array-includes.match.js";
 import { arrayOfLength } from "../array-length/array-length.match.js";
 import { stringOfLength } from "../string-length/string-length.match.js";
 
@@ -133,8 +130,10 @@ describe("object-matches", () => {
         tags: arrayIncluding("foobar"),
       });
 
+      expectTypeOf(actual.tags).toEqualTypeOf<[unknown, ...unknown[]]>();
+
       const id: 1 = actual.id;
-      const tags: ArrayIncluding<unknown, "foobar"> = actual.tags;
+      const tags = actual.tags;
 
       expect(id).toBe(1);
       expect(tags.includes("foobar")).toBe(true);

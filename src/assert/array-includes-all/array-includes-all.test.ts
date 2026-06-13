@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertArrayIncludesAll } from "./array-includes-all.assert.js";
 import { desc, repr } from "../../describe/describe.js";
 import { arrayIncludingAll } from "./array-includes-all.match.js";
@@ -108,13 +108,16 @@ describe("array-includes-all", () => {
       });
 
       // Null-chain operator ? is not required after type narrowing.
-      // TypeScript knows foo.bar.foobar is an array including "a" and "b".
-      const foobarIncludesA: true = foo.bar.foobar.includes("a");
-      const foobarIncludesB: true = foo.bar.foobar.includes("b");
-      const foobarIncludesC: boolean = foo.bar.foobar.includes("c");
-      expect(foobarIncludesA).toBe(true);
-      expect(foobarIncludesB).toBe(true);
-      expect(foobarIncludesC).toBeTypeOf("boolean");
+      // TypeScript knows foo.bar.foobar is an array of strings with at least two elements.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<
+        [string, string, ...string[]]
+      >();
+      expectTypeOf(foo.bar.foobar.includes("a")).toEqualTypeOf<boolean>();
+      expect(foo.bar.foobar.includes("a")).toBe(true);
+      expectTypeOf(foo.bar.foobar.includes("b")).toEqualTypeOf<boolean>();
+      expect(foo.bar.foobar.includes("b")).toBe(true);
+      expectTypeOf(foo.bar.foobar.includes("c")).toEqualTypeOf<boolean>();
+      expect(foo.bar.foobar.includes("c")).toBe(true);
     });
 
     it("matches arrays including all required elements", () => {

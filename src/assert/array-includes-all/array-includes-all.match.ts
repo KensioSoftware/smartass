@@ -1,16 +1,23 @@
 import { createMatcher, type AssertionMatcher } from "../../match/match.js";
 import { desc, repr } from "../../describe/describe.js";
 
-export type ArrayIncludingAll<T, E extends readonly T[]> = Omit<
-  readonly [T, ...T[]],
-  "includes"
-> & {
-  includes(searchElement: E[number], fromIndex?: number): true;
-  includes(searchElement: T, fromIndex?: number): boolean;
-};
+export type ArrayIncludingAll<T, N extends number> = N extends 0
+  ? T[]
+  : N extends 1
+    ? [T, ...T[]]
+    : N extends 2
+      ? [T, T, ...T[]]
+      : N extends 3
+        ? [T, T, T, ...T[]]
+        : N extends 4
+          ? [T, T, T, T, ...T[]]
+          : N extends 5
+            ? [T, T, T, T, T, ...T[]]
+            : [T, T, T, T, T, ...T[]];
 
-export type ArrayIncludingAllMatcher<E extends readonly unknown[]> =
-  AssertionMatcher<ArrayIncludingAll<unknown, E>>;
+export type ArrayIncludingAllMatcher<N extends number> = AssertionMatcher<
+  ArrayIncludingAll<unknown, N>
+>;
 
 /**
  * Matcher for an array including all specified elements.
@@ -19,9 +26,9 @@ export type ArrayIncludingAllMatcher<E extends readonly unknown[]> =
  */
 export function arrayIncludingAll<const E extends readonly unknown[]>(
   elements: E,
-): ArrayIncludingAllMatcher<E> {
+): ArrayIncludingAllMatcher<E["length"]> {
   return createMatcher(
-    (value): value is ArrayIncludingAll<unknown, E> =>
+    (value): value is ArrayIncludingAll<unknown, E["length"]> =>
       Array.isArray(value) &&
       elements.every((element) => value.includes(element)),
     () => `array including all of ${desc(elements)}`,
