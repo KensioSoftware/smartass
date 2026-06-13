@@ -43,7 +43,7 @@ describe("non-nullable", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar.something is a literal string "hello".
-      // expectTypeOf(foo.bar.foobar).toMatchObjectType<{ something: "hello" }>(); // TODO
+      expectTypeOf(foo.bar.foobar).toMatchObjectType<{ something: "hello" }>();
       expectTypeOf(foo.bar.foobar.something).not.toEqualTypeOf<null>();
       expectTypeOf(foo.bar.foobar.something).not.toEqualTypeOf<string>();
       expectTypeOf(foo.bar.foobar.something).toEqualTypeOf<"hello">();

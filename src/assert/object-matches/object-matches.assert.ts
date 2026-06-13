@@ -108,14 +108,14 @@ type DeepObjectRefine<TActual, TExpected> =
       ? TActual & TExpected
       : TExpected extends readonly unknown[]
         ? TActual & {
-            readonly [K in keyof TExpected]: DeepObjectRefine<
+            -readonly [K in keyof TExpected]: DeepObjectRefine<
               ActualProperty<TActual, K>,
               TExpected[K]
             >;
           }
         : TExpected extends object
           ? Omit<NonNullable<TActual>, keyof TExpected> & {
-              [K in keyof TExpected]: DeepObjectRefine<
+              -readonly [K in keyof TExpected]: DeepObjectRefine<
                 ActualProperty<TActual, K>,
                 TExpected[K]
               >;
