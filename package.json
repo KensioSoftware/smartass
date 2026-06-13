@@ -29,6 +29,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "build:check": "tsc -p tsconfig.json --noEmit",
     "build:index": "bash scripts/build-index.sh",
     "fmt": "eslint --fix '{src,test}/**/*.ts' && prettier --write '{src,test}/**/*.{ts,json,md,css,html,yml,yaml}'",
     "lint": "eslint '{src,test}/**/*.ts' && prettier --check '{src,test}/**/*.{ts,json,md,css,html,yml,yaml}'",
