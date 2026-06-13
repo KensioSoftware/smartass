@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { desc, repr } from "../../describe/describe.js";
 import { assertNumberToNearest } from "./number-to-nearest.assert.js";
 import { numberToNearest } from "./number-to-nearest.match.js";
@@ -93,8 +93,8 @@ describe("number-to-nearest", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is a number.
-      const foobar: number = foo.bar.foobar;
-      expect(foobar).toBeTypeOf("number");
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<number>();
+      expect(foo.bar.foobar).toBeTypeOf("number");
     });
 
     it("matches when value rounds to expected", () => {
