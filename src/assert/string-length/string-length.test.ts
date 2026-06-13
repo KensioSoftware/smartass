@@ -1,6 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertStringLength } from "./string-length.assert.js";
-import { stringOfLength } from "./string-length.match.js";
+import { type StringOfLength, stringOfLength } from "./string-length.match.js";
 import { desc, repr } from "../../describe/describe.js";
 import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
@@ -108,11 +108,13 @@ describe("string-length", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows user.username is a string of exactly 7 characters.
-      const fourthChar: string = user.username[3];
-      const eighthChar: string | undefined = user.username[7];
+      expectTypeOf(user.username).toExtend<string>();
+      expectTypeOf(user.username).toEqualTypeOf<StringOfLength<7>>();
+      expectTypeOf(user.username[3]).toEqualTypeOf<string>();
+      expectTypeOf(user.username[7]).toEqualTypeOf<string | undefined>();
       expect(user.username).toHaveLength(7);
-      expect(fourthChar).toBeTypeOf("string");
-      expect(eighthChar).toBeUndefined();
+      expect(user.username[3]).toBeTypeOf("string");
+      expect(user.username[7]).toBeUndefined();
     });
 
     it("matches strings with expected length", () => {
