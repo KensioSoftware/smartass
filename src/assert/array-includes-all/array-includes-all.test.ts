@@ -64,16 +64,17 @@ describe("array-includes-all", () => {
       );
     });
 
-    it("works with duplicate elements in required array", () => {
-      expect(() => {
-        assertArrayIncludesAll([1, 2, 3], [2, 2, 3]);
-      }).not.toThrow();
+    it("requires duplicate elements in matcher input to appear repeatedly", () => {
+      const matcher = arrayIncludingAll([2, 2, 3]);
+
+      expect(matcher.matches([1, 2, 3])).toBe(false);
+      expect(matcher.matches([1, 2, 2, 3])).toBe(true);
     });
 
-    it("works when value has duplicates", () => {
-      expect(() => {
-        assertArrayIncludesAll([1, 2, 2, 3], [2, 3]);
-      }).not.toThrow();
+    it("does not match arrays missing required elements", () => {
+      const matcher = arrayIncludingAll([2, 4]);
+
+      expect(matcher.matches([1, 2, 3])).toBe(false);
     });
 
     it("works with objects using reference equality", () => {
@@ -88,6 +89,18 @@ describe("array-includes-all", () => {
       }).toThrow(
         'Expected array [{"id":1},{"id":2}] (len 2) to include all of [{"id":1}], but missing [{"id":1}].',
       );
+    });
+
+    it("requires duplicate elements in required array to appear repeatedly", () => {
+      expect(() => {
+        assertArrayIncludesAll([1, 2, 3], [2, 2, 3]);
+      }).toThrow(
+        "Expected array [1,2,3] (len 3) to include all of [2,2,3], but missing [2].",
+      );
+
+      expect(() => {
+        assertArrayIncludesAll([1, 2, 2, 3], [2, 2, 3]);
+      }).not.toThrow();
     });
   });
 
@@ -135,7 +148,7 @@ describe("array-includes-all", () => {
     it("matches arrays including duplicate required elements when the element exists", () => {
       const matcher = arrayIncludingAll([2, 2, 3]);
 
-      expect(matcher.matches([1, 2, 3])).toBe(true);
+      expect(matcher.matches([1, 2, 2, 3])).toBe(true);
     });
 
     it("does not match arrays missing required elements", () => {
