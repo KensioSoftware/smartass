@@ -18,6 +18,7 @@ import type {
   ArrayIncludingAll,
   ArrayIncludingAllMatcher,
 } from "../array-includes-all/array-includes-all.match.js";
+import type { InstanceOfMatcher } from "../instance-of/instance-of.match.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -62,6 +63,12 @@ type ArrayIncludingAllRefine<TActual, N extends number> = ArrayIncludingAll<
   N
 >;
 
+type InstanceOfRefine<TActual, TInstance> = [
+  Extract<NonNullable<TActual>, TInstance>,
+] extends [never]
+  ? TInstance
+  : Extract<NonNullable<TActual>, TInstance>;
+
 type ObjectWithPropertyRefine<TActual, K extends PropertyKey> =
   NonNullable<TActual> extends object
     ? Omit<NonNullable<TActual>, K> &
@@ -82,7 +89,9 @@ type RefineMatcherResult<TActual, TExpected extends AssertionMatcher<unknown>> =
             ? [ActualArrayElement<TActual>, ...ActualArrayElement<TActual>[]]
             : TExpected extends AssertionMatcher<readonly unknown[]>
               ? ActualArrayElement<TActual>[]
-              : RefinedMatch<TExpected, TActual>;
+              : TExpected extends InstanceOfMatcher<infer TInstance>
+                ? InstanceOfRefine<TActual, TInstance>
+                : RefinedMatch<TExpected, TActual>;
 
 type MatcherRefine<TActual, TExpected> =
   TExpected extends AssertionMatcher<unknown>

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertInstanceOf } from "./instance-of.assert.js";
 import { instanceOf } from "./instance-of.match.js";
 import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
@@ -85,10 +85,10 @@ describe("instance-of", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is an instance of TestClass.
-      const value: number = foo.bar.foobar.value;
-      const foobar: TestClass = foo.bar.foobar;
-      expect(value).toBeTypeOf("number");
-      expect(foobar).toBeInstanceOf(TestClass);
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<TestClass>();
+      expectTypeOf(foo.bar.foobar.value).toEqualTypeOf<number>();
+      expect(foo.bar.foobar).toBeInstanceOf(TestClass);
+      expect(foo.bar.foobar.value).toBeTypeOf("number");
     });
 
     it("explains failed composition", () => {
