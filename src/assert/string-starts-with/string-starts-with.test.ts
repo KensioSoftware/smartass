@@ -70,7 +70,7 @@ describe("string-starts-with", () => {
       });
 
       // Null-chain operator ? is not required after type narrowing.
-      // TypeScript knows foo.bar.filename is a string ending with ".json".
+      // TypeScript knows foo.bar.filename is a string starting with "foobar".
       expectTypeOf(foo.bar.filename).toEqualTypeOf<`foobar${string}`>();
       expectTypeOf(foo.bar.filename).not.toEqualTypeOf<string>();
       expect(foo.bar.filename).toBeTypeOf("string");
