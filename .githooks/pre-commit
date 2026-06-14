@@ -1,3 +1,5 @@
 #!/usr/bin/env bash
 
+pnpm run build:index
+pnpm run build:readme
 pnpm run check
