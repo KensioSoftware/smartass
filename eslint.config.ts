@@ -21,7 +21,13 @@ const securityRecommended = security.configs.recommended as Parameters<
 export default defineConfig(
   // ── Global ignores ──────────────────────────────────────
   {
-    ignores: ["dist/", "coverage/", "node_modules/", "*.config.ts"],
+    ignores: [
+      "dist/",
+      "coverage/",
+      "test/.coverage/",
+      "node_modules/",
+      "**/*.config.ts",
+    ],
   },
 
   // ── Base ESLint recommended ─────────────────────────────
