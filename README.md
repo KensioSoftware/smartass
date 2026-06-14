@@ -70,7 +70,6 @@ npm install @kensio/smartass
 - [assertTypeNumber](src/assert/type-number/type-number.assert.ts)
 - [assertTypeNumeric](src/assert/type-numeric/type-numeric.assert.ts)
 - [assertTypeObject](src/assert/type-object/type-object.assert.ts)
-- [assertTypeOf](src/assert/typeof/typeof.assert.ts)
 - [assertTypeString](src/assert/type-string/type-string.assert.ts)
 - [assertTypeTypedArray](src/assert/type-typed-array/type-typed-array.assert.ts)
 - [assertUndefined](src/assert/undefined/undefined.assert.ts)

@@ -57,7 +57,6 @@ export * from "./assert/type-string/type-string.assert.js";
 export * from "./assert/type-string/type-string.match.js";
 export * from "./assert/type-typed-array/type-typed-array.assert.js";
 export * from "./assert/type-typed-array/type-typed-array.match.js";
-export * from "./assert/typeof/typeof.assert.js";
 export * from "./assert/undefined/undefined.assert.js";
 export * from "./assert/uuid/uuid-v4.assert.js";
 export * from "./assert/uuid/uuid-v4.match.js";
