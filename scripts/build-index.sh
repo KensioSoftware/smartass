@@ -19,7 +19,7 @@ INDEX_FILE="${SRC_DIR}/index.ts"
 
 (
   cd "${ROOT_DIR}"
-  pnpm run fmt
+  prettier --write "${INDEX_FILE}"
 )
 
 echo "Built ${INDEX_FILE}"
