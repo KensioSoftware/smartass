@@ -37,6 +37,25 @@ to_pascal_case() {
     awk -F- '{for (i=1;i<=NF;i++) printf toupper(substr($i,1,1)) substr($i,2)}'
 }
 
+get_exported_function_name() {
+  local file="$1"
+
+  local names
+  names="$(
+    perl -ne 'print "$1\n" if /^\s*export\s+(?:async\s+)?function\s+([A-Za-z_\$][A-Za-z0-9_\$]*)/' "$file"
+  )"
+
+  local count
+  count="$(printf '%s\n' "$names" | sed '/^$/d' | wc -l | tr -d ' ')"
+
+  if [[ "$count" != "1" ]]; then
+    echo "Expected exactly one exported function in $file, found $count" >&2
+    exit 1
+  fi
+
+  printf '%s' "$names"
+}
+
 build_list() {
   local suffix="$1"
   local transform="$2"
@@ -46,20 +65,10 @@ build_list() {
     | sed "s#^${ROOT_DIR}/##" \
     | sort \
     | while read -r file; do
-        name="$(basename "$file" ".${suffix}.ts")"
 
         case "$transform" in
-          assert)
-            fn="assert$(to_pascal_case "$name")"
-            ;;
-          matcher)
-            fn="$(printf '%s' "$name" |
-              awk -F- '{
-                printf "%s", $1
-                for (i=2;i<=NF;i++) {
-                  printf "%s%s", toupper(substr($i,1,1)), substr($i,2)
-                }
-              }')"
+          assert | matcher)
+            fn="$(get_exported_function_name "${ROOT_DIR}/${file}")"
             ;;
           *)
             echo "Unknown transform: $transform" >&2

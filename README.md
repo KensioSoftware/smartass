@@ -3,6 +3,14 @@
 TypeScript-first test assertion functions with precise type narrowing via
 assertion signatures.
 
+## Installation
+
+```bash
+npm install @kensio/smartass
+```
+
+## Type narrowing with assertion signatures
+
 See
 [TypeScript assertion functions / assertion signatures](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions)
 
@@ -30,11 +38,35 @@ assertOneOf(status, ["pending", "active", "completed"]);
 // TypeScript now knows status is of type 'pending' | 'active' | 'completed'
 ```
 
-## Installation
+## Composable type narrowing matchers
 
-```bash
-npm install @kensio/smartass
+As well as the standalone assertion functions, you can also use type narrowing matcher functions to
+compose an object structure.
+
+```typescript
+import {
+  assertObjectMatches,
+  arrayIncluding,
+  oneOf,
+  stringOfLength,
+} from "@kensio/smartass";
+
+const user = getUser();
+
+assertObjectMatches(user, {
+  role: oneOf(["admin", "editor", "viewer"]),
+  tags: arrayIncluding("beta"),
+  id: stringOfLength(8),
+});
+
+// TypeScript knows:
+//   user.role is 'admin' | 'editor' | 'viewer'
+//   user.tags is an array with at least one string element
+//   user.id is a string of length 8 with safe indexing
 ```
+
+This applies the same type narrowing effect as the assertion functions but in a composable object
+structure.
 
 ## Assertion functions
 
@@ -66,7 +98,7 @@ npm install @kensio/smartass
 - [assertThrowsErrorLike](src/assert/throws-error-like/throws-error-like.assert.ts)
 - [assertThrowsError](src/assert/throws-error/throws-error.assert.ts)
 - [assertTrue](src/assert/true/true.assert.ts)
-- [assertTypeBigint](src/assert/type-bigint/type-bigint.assert.ts)
+- [assertTypeBigInt](src/assert/type-bigint/type-bigint.assert.ts)
 - [assertTypeBoolean](src/assert/type-boolean/type-boolean.assert.ts)
 - [assertTypeFunction](src/assert/type-function/type-function.assert.ts)
 - [assertTypeNumber](src/assert/type-number/type-number.assert.ts)
@@ -83,24 +115,24 @@ npm install @kensio/smartass
 
 <!-- matcher-functions:start -->
 
-- [arrayIncludesAll](src/assert/array-includes-all/array-includes-all.match.ts)
-- [arrayIncludes](src/assert/array-includes/array-includes.match.ts)
-- [arrayLength](src/assert/array-length/array-length.match.ts)
-- [arrayMinLength](src/assert/array-min-length/array-min-length.match.ts)
-- [arrayNotEmpty](src/assert/array-not-empty/array-not-empty.match.ts)
-- [bufferEqual](src/assert/buffer-equal/buffer-equal.match.ts)
+- [arrayIncludingAll](src/assert/array-includes-all/array-includes-all.match.ts)
+- [arrayIncluding](src/assert/array-includes/array-includes.match.ts)
+- [arrayOfLength](src/assert/array-length/array-length.match.ts)
+- [arrayOfMinLength](src/assert/array-min-length/array-min-length.match.ts)
+- [nonEmptyArray](src/assert/array-not-empty/array-not-empty.match.ts)
+- [bufferEqualTo](src/assert/buffer-equal/buffer-equal.match.ts)
 - [instanceOf](src/assert/instance-of/instance-of.match.ts)
 - [nonNullable](src/assert/non-nullable/non-nullable.match.ts)
 - [numberBetween](src/assert/number-between/number-between.match.ts)
 - [numberToNearest](src/assert/number-to-nearest/number-to-nearest.match.ts)
-- [objectHasProperty](src/assert/object-has-property/object-has-property.match.ts)
+- [objectWithProperty](src/assert/object-has-property/object-has-property.match.ts)
 - [oneOf](src/assert/one-of/one-of.match.ts)
-- [stringEndsWith](src/assert/string-ends-with/string-ends-with.match.ts)
-- [stringIncludes](src/assert/string-includes/string-includes.match.ts)
-- [stringLength](src/assert/string-length/string-length.match.ts)
-- [stringNotIncludes](src/assert/string-not-includes/string-not-includes.match.ts)
-- [stringStartsWith](src/assert/string-starts-with/string-starts-with.match.ts)
-- [typeBigint](src/assert/type-bigint/type-bigint.match.ts)
+- [stringEndingWith](src/assert/string-ends-with/string-ends-with.match.ts)
+- [stringIncluding](src/assert/string-includes/string-includes.match.ts)
+- [stringOfLength](src/assert/string-length/string-length.match.ts)
+- [stringNotIncluding](src/assert/string-not-includes/string-not-includes.match.ts)
+- [stringStartingWith](src/assert/string-starts-with/string-starts-with.match.ts)
+- [typeBigInt](src/assert/type-bigint/type-bigint.match.ts)
 - [typeBoolean](src/assert/type-boolean/type-boolean.match.ts)
 - [typeFunction](src/assert/type-function/type-function.match.ts)
 - [typeNumber](src/assert/type-number/type-number.match.ts)
