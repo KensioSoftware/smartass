@@ -3,6 +3,7 @@ import { assertObjectMatches } from "./object-matches.assert.js";
 import { arrayIncluding } from "../array-includes/array-includes.match.js";
 import { arrayOfLength } from "../array-length/array-length.match.js";
 import { stringOfLength } from "../string-length/string-length.match.js";
+import { oneOf } from "../one-of/one-of.match.js";
 
 describe("object-matches", () => {
   describe("matching literals", () => {
@@ -200,5 +201,53 @@ describe("object-matches", () => {
       const yes: "yes" = foo.somethingElse.hello;
       expect(yes).toBe("yes");
     });
+  });
+
+  it("works with example from README", () => {
+    interface User {
+      role?: string | null;
+      tags?: string[] | null;
+      id?: string | null;
+    }
+
+    function getUser(): User {
+      return {
+        role: "editor",
+        tags: ["beta", "pro"],
+        id: "123",
+      };
+    }
+
+    const user = getUser();
+    expectTypeOf(user).toEqualTypeOf<User>();
+    expectTypeOf(user.role).toEqualTypeOf<string | null | undefined>();
+    expectTypeOf(user.tags).toEqualTypeOf<string[] | null | undefined>();
+    expectTypeOf(user.id).toEqualTypeOf<string | null | undefined>();
+
+    assertObjectMatches(user, {
+      role: oneOf(["admin", "editor", "viewer"]),
+      tags: arrayIncluding("beta"),
+      id: stringOfLength(3),
+    });
+
+    expectTypeOf(user).not.toEqualTypeOf<User>();
+    expectTypeOf(user.role).not.toEqualTypeOf<string>();
+    expectTypeOf(user.tags).not.toEqualTypeOf<string[]>();
+    expectTypeOf(user.id).not.toEqualTypeOf<string>();
+
+    expectTypeOf(user).toExtend<{
+      role: "admin" | "editor" | "viewer";
+      tags: [string, ...string[]];
+      id: string & { length: 3; 0: string; 1: string; 2: string };
+    }>();
+    expectTypeOf(user.role).toEqualTypeOf<"admin" | "editor" | "viewer">();
+    expectTypeOf(user.tags).toEqualTypeOf<[string, ...string[]]>();
+    expectTypeOf(user.id).toEqualTypeOf<
+      string & { length: 3; 0: string; 1: string; 2: string }
+    >();
+
+    expect(user.role).toBeTypeOf("string");
+    expect(user.tags).toBeTypeOf("object");
+    expect(user.id).toBeTypeOf("string");
   });
 });
