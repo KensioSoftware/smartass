@@ -55,6 +55,8 @@ export * from "./assert/type-object/type-object.assert.js";
 export * from "./assert/type-object/type-object.match.js";
 export * from "./assert/type-string/type-string.assert.js";
 export * from "./assert/type-string/type-string.match.js";
+export * from "./assert/type-symbol/type-symbol.assert.js";
+export * from "./assert/type-symbol/type-symbol.match.js";
 export * from "./assert/type-typed-array/type-typed-array.assert.js";
 export * from "./assert/type-typed-array/type-typed-array.match.js";
 export * from "./assert/undefined/undefined.assert.js";

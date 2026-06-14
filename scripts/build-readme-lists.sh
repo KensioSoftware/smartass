@@ -97,4 +97,9 @@ mv "$README_TMP_2" "$README_FILE"
 
 rm "$ASSERT_LIST_FILE" "$MATCHER_LIST_FILE" "$README_TMP_1"
 
+(
+  cd "${ROOT_DIR}"
+  prettier --write "${README_FILE}"
+)
+
 echo "Updated ${README_FILE}"
