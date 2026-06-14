@@ -1,8 +1,8 @@
-import { type AssertionMatcher, createMatcher } from "../../match/match.js";
-
-export type NonEmptyArray<T> = readonly [T, ...T[]];
-
-export type NonEmptyArrayMatcher = AssertionMatcher<NonEmptyArray<unknown>>;
+import { createMatcher } from "../../match/match.js";
+import type {
+  NonEmptyArray,
+  NonEmptyArrayMatcher,
+} from "./array-not-empty.type.js";
 
 /**
  * Matcher for a non-empty array.

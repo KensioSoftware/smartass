@@ -1,19 +1,8 @@
-import type { UUID } from "node:crypto";
-import {
-  createMatcher,
-  type AssertionMatcher,
-  type refinement,
-} from "../../match/match.js";
+import { createMatcher } from "../../match/match.js";
+import type { UuidV4, UuidV4Matcher } from "./uuid-v4.type.js";
 
 const uuidV4Regex =
   /^[\da-f]{8}-[\da-f]{4}-4[\da-f]{3}-[89ab][\da-f]{3}-[\da-f]{12}$/i;
-
-export type UuidV4 = UUID &
-  `${string}-${string}-4${string}-${"8" | "9" | "a" | "b"}${string}-${string}`;
-
-export type UuidV4Matcher = AssertionMatcher<UuidV4> & {
-  readonly [refinement]?: <TActual>(actual: TActual) => UuidV4;
-};
 
 /**
  * Matcher for a UUID v4 string value.

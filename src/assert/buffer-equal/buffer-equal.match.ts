@@ -1,7 +1,8 @@
 import { desc, repr } from "../../describe/describe.js";
 import { createMatcher, type AssertionMatcher } from "../../match/match.js";
 import { assertTypeTypedArray } from "../type-typed-array/type-typed-array.assert.js";
-import type { TypedArray } from "../type-typed-array/type-typed-array.match.js";
+
+import type { TypedArray } from "../type-typed-array/type-typed-array.type.js";
 
 /**
  * Matcher for a TypedArray equal to an expected TypedArray, comparing byte by byte.

@@ -1,13 +1,8 @@
-import { type AssertionMatcher, createMatcher } from "../../match/match.js";
-
-/**
- * Unique symbol to reliably identify the InstanceOfMatcher type.
- */
-export const instanceOfMatcher = Symbol("smartass.instanceOfMatcher");
-
-export type InstanceOfMatcher<T> = AssertionMatcher<T> & {
-  readonly [instanceOfMatcher]: T;
-};
+import { createMatcher } from "../../match/match.js";
+import {
+  instanceOfMatcher,
+  type InstanceOfMatcher,
+} from "./instance-of.type.js";
 
 /**
  * Matcher for a value being an instance of a given class.

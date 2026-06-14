@@ -1,16 +1,9 @@
 import { desc, repr } from "../../describe/describe.js";
-import { type AssertionMatcher, createMatcher } from "../../match/match.js";
-
-declare const objectWithPropertyMatcher: unique symbol;
-
-export type ObjectWithProperty<K extends PropertyKey> = object &
-  Record<K, unknown>;
-
-export type ObjectWithPropertyMatcher<K extends PropertyKey> = AssertionMatcher<
-  ObjectWithProperty<K>
-> & {
-  readonly [objectWithPropertyMatcher]: K;
-};
+import { createMatcher } from "../../match/match.js";
+import type {
+  ObjectWithProperty,
+  ObjectWithPropertyMatcher,
+} from "./object-has-property.type.js";
 
 /**
  * Matcher for an object with a certain named property.

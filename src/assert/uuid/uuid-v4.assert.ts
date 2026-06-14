@@ -1,6 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
-import { uuidV4, type UuidV4 } from "./uuid-v4.match.js";
+import { uuidV4 } from "./uuid-v4.match.js";
+import type { UuidV4 } from "./uuid-v4.type.js";
 
 /**
  * Assert that a value is a UUID v4 string, with type-narrowing.

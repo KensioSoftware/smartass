@@ -1,9 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
-import {
-  objectWithProperty,
-  type ObjectWithProperty,
-} from "./object-has-property.match.js";
+import { objectWithProperty } from "./object-has-property.match.js";
+import type { ObjectWithProperty } from "./object-has-property.type.js";
 
 /**
  * Assert that an object has a certain named property.

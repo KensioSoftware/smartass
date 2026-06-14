@@ -1,10 +1,8 @@
-import {
-  arrayOfMinLength,
-  type ArrayOfMinLength,
-} from "./array-min-length.match.js";
+import { arrayOfMinLength } from "./array-min-length.match.js";
 import { assertNonNullable } from "../non-nullable/non-nullable.assert.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
+import type { ArrayOfMinLength } from "./array-min-length.type.js";
 
 /**
  * Assert that an array has at least the expected minimum length, with type narrowing.

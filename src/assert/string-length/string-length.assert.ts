@@ -1,6 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
-import { stringOfLength, type StringOfLength } from "./string-length.match.js";
+import { stringOfLength } from "./string-length.match.js";
+import type { StringOfLength } from "./string-length.type.js";
 
 /**
  * Assert that a string has exactly the expected length, with type narrowing.

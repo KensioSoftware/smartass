@@ -1,7 +1,8 @@
-import { arrayOfLength, type ArrayOfLength } from "./array-length.match.js";
+import { arrayOfLength } from "./array-length.match.js";
 import { assertNonNullable } from "../non-nullable/non-nullable.assert.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
+import type { ArrayOfLength } from "./array-length.type.js";
 
 /**
  * Assert that an array has exactly the expected length, with type narrowing.

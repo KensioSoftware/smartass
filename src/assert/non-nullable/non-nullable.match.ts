@@ -1,6 +1,5 @@
-import { type AssertionMatcher, createMatcher } from "../../match/match.js";
-
-export type NonNullableMatcher = AssertionMatcher<NonNullable<unknown>>;
+import { createMatcher } from "../../match/match.js";
+import type { NonNullableMatcher } from "./non-nullable.type.js";
 
 /**
  * Matcher for a non-nullable value.
