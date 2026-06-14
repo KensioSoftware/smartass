@@ -3,6 +3,14 @@
 TypeScript-first test assertion functions with precise type narrowing via
 assertion signatures.
 
+## Installation
+
+```bash
+npm install @kensio/smartass
+```
+
+## Type narrowing with assertion signatures
+
 See
 [TypeScript assertion functions / assertion signatures](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions)
 
@@ -30,11 +38,35 @@ assertOneOf(status, ["pending", "active", "completed"]);
 // TypeScript now knows status is of type 'pending' | 'active' | 'completed'
 ```
 
-## Installation
+## Composable type narrowing matchers
 
-```bash
-npm install @kensio/smartass
+As well as the standalone assertion functions, you can also use type narrowing matcher functions to
+compose an object structure.
+
+```typescript
+import {
+  assertObjectMatches,
+  arrayIncluding,
+  oneOf,
+  stringOfLength,
+} from "@kensio/smartass";
+
+const user = getUser();
+
+assertObjectMatches(user, {
+  role: oneOf(["admin", "editor", "viewer"]),
+  tags: arrayIncluding("beta"),
+  id: stringOfLength(8),
+});
+
+// TypeScript knows:
+//   user.role is 'admin' | 'editor' | 'viewer'
+//   user.tags is an array with at least one string element
+//   user.id is a string of length 8 with safe indexing
 ```
+
+This applies the same type narrowing effect as the assertion functions but in a composable object
+structure.
 
 ## Assertion functions
 
