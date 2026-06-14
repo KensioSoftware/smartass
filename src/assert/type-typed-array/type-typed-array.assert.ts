@@ -1,6 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
-import { type TypedArray, typeTypedArray } from "./type-typed-array.match.js";
+import { typeTypedArray } from "./type-typed-array.match.js";
+import type { TypedArray } from "./type-typed-array.type.js";
 
 /**
  * Assert that a value is a TypedArray, with type-narrowing.

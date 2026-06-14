@@ -1,9 +1,9 @@
-import { createMatcher, type AssertionMatcher } from "../../match/match.js";
+import { createMatcher } from "../../match/match.js";
 import { desc, repr } from "../../describe/describe.js";
-
-export type ArrayIncluding<T> = [T, ...T[]];
-
-export type ArrayIncludingMatcher = AssertionMatcher<ArrayIncluding<unknown>>;
+import type {
+  ArrayIncluding,
+  ArrayIncludingMatcher,
+} from "./array-includes.type.js";
 
 /**
  * Matcher for an array including a specific single element.

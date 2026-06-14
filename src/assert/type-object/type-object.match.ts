@@ -1,20 +1,5 @@
-import {
-  type AssertionMatcher,
-  createMatcher,
-  type refinement,
-} from "../../match/match.js";
-
-type ObjectRefinement<TActual> = [
-  Extract<NonNullable<TActual>, object>,
-] extends [never]
-  ? object
-  : Extract<NonNullable<TActual>, object>;
-
-export type TypeObjectMatcher = AssertionMatcher<object> & {
-  readonly [refinement]?: <TActual>(
-    actual: TActual,
-  ) => ObjectRefinement<TActual>;
-};
+import { createMatcher } from "../../match/match.js";
+import type { TypeObjectMatcher } from "./type-object.type.js";
 
 /**
  * Matcher for an object value.
