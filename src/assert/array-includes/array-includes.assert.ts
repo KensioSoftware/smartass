@@ -1,6 +1,7 @@
-import { arrayIncluding, type ArrayIncluding } from "./array-includes.match.js";
+import { arrayIncluding } from "./array-includes.match.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
+import type { ArrayIncluding } from "./array-includes.type.js";
 
 /**
  * Assert that an array includes a specific element, with type narrowing.

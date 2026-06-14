@@ -1,7 +1,8 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
 import { bufferEqualTo } from "./buffer-equal.match.js";
-import type { TypedArray } from "../type-typed-array/type-typed-array.match.js";
+
+import type { TypedArray } from "../type-typed-array/type-typed-array.type.js";
 
 /**
  * Assert that two buffers (TypedArrays) are equal, comparing element by element.

@@ -1,11 +1,6 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
-
-export interface ErrorLike {
-  name: string;
-  message: string;
-  stack?: string;
-}
+import type { ErrorLike } from "./throws-error-like.type.js";
 
 /**
  * Assertion function that verifies a given function throws something that

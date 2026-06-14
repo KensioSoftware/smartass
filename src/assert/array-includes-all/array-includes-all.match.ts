@@ -1,23 +1,9 @@
-import { createMatcher, type AssertionMatcher } from "../../match/match.js";
+import { createMatcher } from "../../match/match.js";
 import { desc, repr } from "../../describe/describe.js";
-
-export type ArrayIncludingAll<T, N extends number> = N extends 0
-  ? T[]
-  : N extends 1
-    ? [T, ...T[]]
-    : N extends 2
-      ? [T, T, ...T[]]
-      : N extends 3
-        ? [T, T, T, ...T[]]
-        : N extends 4
-          ? [T, T, T, T, ...T[]]
-          : N extends 5
-            ? [T, T, T, T, T, ...T[]]
-            : [T, T, T, T, T, ...T[]];
-
-export type ArrayIncludingAllMatcher<N extends number> = AssertionMatcher<
-  ArrayIncludingAll<unknown, N>
->;
+import type {
+  ArrayIncludingAll,
+  ArrayIncludingAllMatcher,
+} from "./array-includes-all.type.js";
 
 /**
  * Matcher for an array including all specified elements.

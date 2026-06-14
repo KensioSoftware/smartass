@@ -1,8 +1,9 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertStringLength } from "./string-length.assert.js";
-import { type StringOfLength, stringOfLength } from "./string-length.match.js";
+import { stringOfLength } from "./string-length.match.js";
 import { desc, repr } from "../../describe/describe.js";
 import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
+import type { StringOfLength } from "./string-length.type.js";
 
 describe("string-length", () => {
   describe("assertStringLength", () => {

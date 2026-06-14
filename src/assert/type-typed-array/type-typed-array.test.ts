@@ -1,8 +1,9 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeTypedArray } from "./type-typed-array.assert.js";
-import { type TypedArray, typeTypedArray } from "./type-typed-array.match.js";
+import { typeTypedArray } from "./type-typed-array.match.js";
 import { desc, repr } from "../../describe/describe.js";
 import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
+import type { TypedArray } from "./type-typed-array.type.js";
 
 describe("type-typed-array", () => {
   describe("assertTypeTypedArray", () => {

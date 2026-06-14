@@ -1,9 +1,10 @@
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertUuidV4 } from "./uuid-v4.assert.js";
 import { desc, repr } from "../../describe/describe.js";
-import { type UuidV4, uuidV4 } from "./uuid-v4.match.js";
+import { uuidV4 } from "./uuid-v4.match.js";
 import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 import type { UUID as NodeUuid } from "node:crypto";
+import type { UuidV4 } from "./uuid-v4.type.js";
 
 describe("uuid-v4", () => {
   describe("assertUuidV4", () => {

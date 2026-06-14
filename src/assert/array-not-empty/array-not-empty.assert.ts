@@ -1,6 +1,7 @@
 import { assertNonNullable } from "../non-nullable/non-nullable.assert.js";
-import { type NonEmptyArray, nonEmptyArray } from "./array-not-empty.match.js";
+import { nonEmptyArray } from "./array-not-empty.match.js";
 import { AssertionError } from "../../assertion-error.js";
+import type { NonEmptyArray } from "./array-not-empty.type.js";
 
 /**
  * Assert that an array has at least one element, with type-narrowing.
