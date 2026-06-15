@@ -188,6 +188,37 @@ describe("type-typed-array", () => {
       expect(foo.bar.foobar).toBeInstanceOf(Uint8Array);
     });
 
+    it("preserves specific TypedArray union overlap in object matches", () => {
+      interface Foo {
+        bar?: {
+          foobar?: Uint8Array | Float32Array | DataView | string | null;
+        };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: new Uint8Array([1, 2, 3]) } };
+      }
+
+      // Given an object property whose static type includes specific
+      // TypedArray variants and non-TypedArray alternatives.
+      const foo = getFoo();
+
+      // When the property is matched with the composable TypedArray matcher.
+      assertObjectMatches(foo, {
+        bar: { foobar: typeTypedArray() },
+      });
+
+      // Then the property should keep the known TypedArray overlap instead
+      // of widening to the less precise TypedArray union type.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<Uint8Array | Float32Array>();
+      expectTypeOf(foo.bar.foobar).toExtend<TypedArray>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<TypedArray>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<DataView>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeInstanceOf(Uint8Array);
+    });
+
     it("matches Uint8Array values", () => {
       const matcher = typeTypedArray();
       expect(matcher.matches(new Uint8Array([1, 2, 3]))).toBe(true);
