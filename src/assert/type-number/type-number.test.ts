@@ -56,6 +56,56 @@ describe("type-number", () => {
         assertTypeNumber(Infinity);
       }).not.toThrow();
     });
+
+    it("narrows unknown values to number", () => {
+      const value: unknown = 42;
+
+      assertTypeNumber(value);
+
+      expectTypeOf(value).toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<bigint>();
+      expect(value).toBeTypeOf("number");
+    });
+
+    it("narrows primitive unions to number", () => {
+      function getValue():
+        | string
+        | number
+        | boolean
+        | bigint
+        | null
+        | undefined {
+        return 42;
+      }
+
+      const value = getValue();
+
+      assertTypeNumber(value);
+
+      expectTypeOf(value).toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("number");
+    });
+
+    it("preserves number literal union overlap", () => {
+      function getValue(): 1 | 2 | "not number" {
+        return 1;
+      }
+
+      const value = getValue();
+
+      assertTypeNumber(value);
+
+      expectTypeOf(value).toEqualTypeOf<1 | 2>();
+      expectTypeOf(value).toExtend<number>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expect(value).toBeTypeOf("number");
+    });
   });
 
   describe("typeNumber", () => {
