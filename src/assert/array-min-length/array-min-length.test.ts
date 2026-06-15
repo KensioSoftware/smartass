@@ -46,13 +46,21 @@ describe("array-min-length", () => {
     it("throws on null", () => {
       expect(() => {
         assertArrayMinLength(null, 1);
-      }).toThrow("Expected null not to be null.");
+      }).toThrow("Expected null to be an array of at least 1 elements.");
     });
 
     it("throws on undefined", () => {
       expect(() => {
         assertArrayMinLength(undefined, 1);
-      }).toThrow("Expected undefined not to be undefined.");
+      }).toThrow("Expected undefined to be an array of at least 1 elements.");
+    });
+
+    it("throws on non-arrays", () => {
+      expect(() => {
+        assertArrayMinLength("abc", 3);
+      }).toThrow(
+        'Expected string "abc" to be an array of at least 3 elements.',
+      );
     });
 
     it("works with different minimum lengths", () => {
@@ -71,6 +79,31 @@ describe("array-min-length", () => {
       expect(() => {
         assertArrayMinLength([1, 2, 3, 4, 5, 6], 3);
       }).not.toThrow();
+    });
+
+    it("preserves specific array type information when value is already an array", () => {
+      const value: ("foo" | "bar")[] = ["foo", "bar"];
+
+      assertArrayMinLength(value, 2);
+
+      expectTypeOf(value).toEqualTypeOf<
+        ("foo" | "bar")[] & ["foo" | "bar", "foo" | "bar", ...("foo" | "bar")[]]
+      >();
+      expectTypeOf(value).toExtend<("foo" | "bar")[]>();
+      expectTypeOf(value).toExtend<
+        ["foo" | "bar", "foo" | "bar", ...("foo" | "bar")[]]
+      >();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("narrows unknown values to an array with at least the expected length", () => {
+      const value: unknown = ["foo", "bar"];
+
+      assertArrayMinLength(value, 2);
+
+      expectTypeOf(value).toEqualTypeOf<[unknown, unknown, ...unknown[]]>();
+      expectTypeOf(value).toExtend<unknown[]>();
+      expect(value).toBeTypeOf("object");
     });
   });
 
