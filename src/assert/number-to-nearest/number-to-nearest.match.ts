@@ -6,8 +6,8 @@ import { type AssertionMatcher, createMatcher } from "../../match/match.js";
  * equals the expected value.
  */
 export function numberToNearest(
-  toNearest: number,
   expected: number,
+  toNearest = 1,
 ): AssertionMatcher<number> {
   return createMatcher(
     (value): value is number =>
