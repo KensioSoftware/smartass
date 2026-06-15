@@ -110,6 +110,32 @@ describe("string-starts-with", () => {
       expect(foo.bar.filename.startsWith("foobar")).toBe(true);
     });
 
+    it("preserves overlap detail for existing string unions in object matches", () => {
+      interface Foo {
+        bar?: {
+          filename?: "package.json" | "config.json" | "package.txt" | null;
+        };
+      }
+
+      const foo: Foo = {
+        bar: {
+          filename: "package.json",
+        },
+      };
+
+      assertObjectMatches(foo, {
+        bar: { filename: stringStartingWith("package") },
+      });
+
+      expectTypeOf(foo.bar.filename).toEqualTypeOf<
+        "package.json" | "package.txt"
+      >();
+      expectTypeOf(foo.bar.filename).not.toEqualTypeOf<`package${string}`>();
+      expectTypeOf(foo.bar.filename).not.toEqualTypeOf<string>();
+      expect(foo.bar.filename).toBeTypeOf("string");
+      expect(foo.bar.filename.startsWith("package")).toBe(true);
+    });
+
     it("matches strings that start with prefix", () => {
       const matcher = stringStartingWith("hello");
       expect(matcher.matches("hello world")).toBe(true);

@@ -48,6 +48,10 @@ import type {
   StringNotIncludingMatch,
   StringNotIncludingMatcher,
 } from "../string-not-includes/string-not-includes.type.js";
+import type {
+  StringStartingWithMatch,
+  StringStartingWithMatcher,
+} from "../string-starts-with/string-starts-with.type.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -122,26 +126,32 @@ type RefineMatcherResult<TActual, TExpected extends AssertionMatcher<unknown>> =
                           infer TSubstring
                         >
                       ? StringNotIncludingMatch<TActual, TSubstring>
-                      : TExpected extends StringOfLengthMatcher<infer N>
-                        ? StringOfLengthMatch<TActual, N>
-                        : TExpected extends {
-                              readonly [refinement]?: unknown;
-                            }
-                          ? RefinedMatch<TExpected, TActual>
-                          : TExpected extends ObjectWithPropertyMatcher<infer K>
-                            ? ObjectWithPropertyRefine<TActual, K>
-                            : TExpected extends AssertionMatcher<
-                                  readonly [unknown, ...unknown[]]
+                      : TExpected extends StringStartingWithMatcher<
+                            infer TPrefix
+                          >
+                        ? StringStartingWithMatch<TActual, TPrefix>
+                        : TExpected extends StringOfLengthMatcher<infer N>
+                          ? StringOfLengthMatch<TActual, N>
+                          : TExpected extends {
+                                readonly [refinement]?: unknown;
+                              }
+                            ? RefinedMatch<TExpected, TActual>
+                            : TExpected extends ObjectWithPropertyMatcher<
+                                  infer K
                                 >
-                              ? [
-                                  ActualArrayElement<TActual>,
-                                  ...ActualArrayElement<TActual>[],
-                                ]
+                              ? ObjectWithPropertyRefine<TActual, K>
                               : TExpected extends AssertionMatcher<
-                                    readonly unknown[]
+                                    readonly [unknown, ...unknown[]]
                                   >
-                                ? ActualArrayElement<TActual>[]
-                                : RefinedMatch<TExpected, TActual>;
+                                ? [
+                                    ActualArrayElement<TActual>,
+                                    ...ActualArrayElement<TActual>[],
+                                  ]
+                                : TExpected extends AssertionMatcher<
+                                      readonly unknown[]
+                                    >
+                                  ? ActualArrayElement<TActual>[]
+                                  : RefinedMatch<TExpected, TActual>;
 
 type MatcherRefine<TActual, TExpected> =
   TExpected extends AssertionMatcher<unknown>
