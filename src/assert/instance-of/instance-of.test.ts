@@ -86,7 +86,7 @@ describe("instance-of", () => {
       expect(value).toBeInstanceOf(TestClass);
     });
 
-    it("preservers specific structural intersection where possible", () => {
+    it("preserves specific structural intersection where possible", () => {
       type NamedTestClass = TestClass & { name: string };
 
       function getValue(): NamedTestClass | OtherClass {
