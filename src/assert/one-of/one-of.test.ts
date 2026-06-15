@@ -92,6 +92,27 @@ describe("one-of", () => {
       expect(["draft", "published"]).toContain("published");
     });
 
+    it("preserves actual union overlap in composable matcher", () => {
+      interface Foo {
+        bar?: { status?: "draft" | "archived" | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { status: "draft" } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { status: oneOf(["draft", "published"]) },
+      });
+
+      expectTypeOf(foo.bar.status).toEqualTypeOf<"draft">();
+      expectTypeOf(foo.bar.status).not.toEqualTypeOf<"draft" | "published">();
+      expectTypeOf(foo.bar.status).not.toEqualTypeOf<"draft" | "archived">();
+      expect(foo.bar.status).toBe("draft");
+    });
+
     it("matches when value is in allowed list", () => {
       const matcher = oneOf(["foo", "bar", "baz"]);
       expect(matcher.matches("foo")).toBe(true);
