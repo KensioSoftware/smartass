@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTrue } from "./true.assert.js";
 
 describe("assertTrue", () => {
@@ -45,5 +45,43 @@ describe("assertTrue", () => {
     expect(() => {
       assertTrue(false, "Custom error message");
     }).toThrow("Custom error message");
+  });
+
+  it("narrows unknown values to true", () => {
+    const value: unknown = true;
+
+    assertTrue(value);
+
+    expectTypeOf(value).toEqualTypeOf<true>();
+    expectTypeOf(value).not.toEqualTypeOf<boolean>();
+    expect(value).toBe(true);
+  });
+
+  it("narrows boolean values to true", () => {
+    function getValue(): boolean {
+      return true;
+    }
+
+    const value = getValue();
+
+    assertTrue(value);
+
+    expectTypeOf(value).toEqualTypeOf<true>();
+    expectTypeOf(value).not.toEqualTypeOf<boolean>();
+    expect(value).toBeTypeOf("boolean");
+  });
+
+  it("narrows boolean literal unions to true", () => {
+    function getValue(): true | false {
+      return true;
+    }
+
+    const value = getValue();
+
+    assertTrue(value);
+
+    expectTypeOf(value).toEqualTypeOf<true>();
+    expectTypeOf(value).not.toEqualTypeOf<boolean>();
+    expect(value).toBeTypeOf("boolean");
   });
 });
