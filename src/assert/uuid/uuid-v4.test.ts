@@ -53,6 +53,55 @@ describe("uuid-v4", () => {
         assertUuidV4("not-a-uuid", "Custom error message");
       }).toThrow("Custom error message");
     });
+
+    it("narrows unknown values to UUID v4", () => {
+      const value: unknown = "123e4567-e89b-42d3-a456-426614174000";
+
+      assertUuidV4(value);
+
+      expectTypeOf(value).toEqualTypeOf<UuidV4>();
+      expectTypeOf(value).toExtend<NodeUuid>();
+      expectTypeOf(value).toExtend<string>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+    });
+
+    it("narrows string values to UUID v4", () => {
+      function getValue(): string {
+        return "123e4567-e89b-42d3-a456-426614174000";
+      }
+
+      const value = getValue();
+
+      assertUuidV4(value);
+
+      expectTypeOf(value).toEqualTypeOf<UuidV4>();
+      expectTypeOf(value).toExtend<NodeUuid>();
+      expectTypeOf(value).toExtend<string>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+    });
+
+    it("preserves known string information when possible", () => {
+      function getValue():
+        | "123e4567-e89b-42d3-a456-426614174000"
+        | "not-a-uuid" {
+        return "123e4567-e89b-42d3-a456-426614174000";
+      }
+
+      const value = getValue();
+
+      assertUuidV4(value);
+
+      expectTypeOf(value).toEqualTypeOf<
+        "123e4567-e89b-42d3-a456-426614174000" & UuidV4
+      >();
+      expectTypeOf(value).toExtend<UuidV4>();
+      expectTypeOf(value).toExtend<NodeUuid>();
+      expectTypeOf(value).toExtend<string>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+    });
   });
 
   describe("uuidV4", () => {
