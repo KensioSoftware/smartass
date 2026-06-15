@@ -1,4 +1,22 @@
-import type { AssertionMatcher } from "../../match/match.js";
+import type { AssertionMatcher, refinement } from "../../match/match.js";
+
+/**
+ * Unique symbol to reliably identify the ArrayOfLengthMatcher type.
+ *
+ * TypeScript is structurally typed, so matcher types with similar predicates
+ * can otherwise accidentally satisfy each other's conditional branches.
+ */
+export const arrayOfLengthMatcher = Symbol("smartass.arrayOfLengthMatcher");
+
+type ArrayElementOf<T> = T extends readonly (infer TElement)[]
+  ? TElement
+  : unknown;
+
+type ArrayMatchElement<TActual> = [
+  Extract<NonNullable<TActual>, readonly unknown[]>,
+] extends [never]
+  ? unknown
+  : ArrayElementOf<Extract<NonNullable<TActual>, readonly unknown[]>>;
 
 export type ArrayOfLength<T, N extends number> = N extends 0
   ? []
@@ -26,6 +44,32 @@ export type ArrayOfLength<T, N extends number> = N extends 0
                           length: N;
                         };
 
+/**
+ * Type produced when an actual value is matched by arrayOfLength().
+ *
+ * The primary goal is to expose clean, readable user-facing types in IDE
+ * tooltips and TypeScript errors. When the calling scope already knows the
+ * actual value is an array, we preserve its element type. Otherwise, we fall
+ * back to unknown elements.
+ */
+export type ArrayOfLengthMatch<TActual, N extends number> = ArrayOfLength<
+  ArrayMatchElement<TActual>,
+  N
+>;
+
 export type ArrayOfLengthMatcher<N extends number> = AssertionMatcher<
   ArrayOfLength<unknown, N>
->;
+> & {
+  readonly [arrayOfLengthMatcher]: N;
+
+  /**
+   * Optional type-level hook used by compositional assertions such as
+   * assertObjectMatches().
+   *
+   * This lets the matcher describe how it refines an existing actual type,
+   * rather than only exposing the standalone matches() predicate type.
+   */
+  readonly [refinement]?: <TActual>(
+    actual: TActual,
+  ) => ArrayOfLengthMatch<TActual, N>;
+};

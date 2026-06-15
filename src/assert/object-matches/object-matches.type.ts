@@ -1,5 +1,5 @@
 import type {
-  ArrayOfLength,
+  ArrayOfLengthMatch,
   ArrayOfLengthMatcher,
 } from "../array-length/array-length.type.js";
 import type {
@@ -53,11 +53,6 @@ type ActualArrayElement<TActual> =
     ? ArrayElement<NonNullable<TActual>>
     : unknown;
 
-type ArrayOfLengthRefine<TActual, N extends number> = ArrayOfLength<
-  ActualArrayElement<TActual>,
-  N
->;
-
 type ArrayOfMinLengthRefine<TActual, N extends number> = ArrayOfMinLength<
   ActualArrayElement<TActual>,
   N
@@ -76,17 +71,32 @@ type ObjectWithPropertyRefine<TActual, K extends PropertyKey> =
         Record<Exclude<K, keyof NonNullable<TActual>>, unknown>
     : ObjectWithProperty<K>;
 
+/**
+ * Apply a matcher to an actual type within assertObjectMatches().
+ *
+ * The main design goal here is user-facing readability: narrowed types should
+ * appear in IDE tooltips and compiler errors as straightforward TypeScript
+ * types, e.g. ["beta", ...string[]] or [string, string], rather than as opaque
+ * internal helper/intersection types.
+ *
+ * In principle, matchers expose a [refinement] hook describing how they refine
+ * an existing actual type. In practice, TypeScript cannot always apply generic
+ * refinement hooks precisely enough through conditional inference, so some
+ * matchers have explicit branches here. Those branches should delegate to the
+ * matcher module's exported semantic *Match type instead of duplicating the
+ * refinement logic.
+ */
 type RefineMatcherResult<TActual, TExpected extends AssertionMatcher<unknown>> =
   TExpected extends ArrayIncludingMatcher<infer TElement>
     ? ArrayIncludingMatch<TActual, TElement>
     : TExpected extends ArrayIncludingAllMatcher<infer TElement, infer N>
       ? ArrayIncludingAllMatch<TActual, TElement, N>
-      : TExpected extends {
-            readonly [refinement]?: unknown;
-          }
-        ? RefinedMatch<TExpected, TActual>
-        : TExpected extends ArrayOfLengthMatcher<infer N>
-          ? ArrayOfLengthRefine<TActual, N>
+      : TExpected extends ArrayOfLengthMatcher<infer N>
+        ? ArrayOfLengthMatch<TActual, N>
+        : TExpected extends {
+              readonly [refinement]?: unknown;
+            }
+          ? RefinedMatch<TExpected, TActual>
           : TExpected extends ArrayOfMinLengthMatcher<infer N>
             ? ArrayOfMinLengthRefine<TActual, N>
             : TExpected extends ObjectWithPropertyMatcher<infer K>

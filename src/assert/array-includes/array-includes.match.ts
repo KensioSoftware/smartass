@@ -17,6 +17,8 @@ export function arrayIncluding<const E>(element: E): ArrayIncludingMatcher<E> {
       () => `array including ${desc(element)}`,
       () => `[…,${repr(element)},…]`,
     ),
+    // Runtime marker used only to make the matcher type nominal for type-level
+    // refinement dispatch. It is not part of the user-facing matcher behaviour.
     [arrayIncludingMatcher]: element,
   };
 }

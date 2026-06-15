@@ -61,6 +61,19 @@ export type ArrayIncludingAll<T, N extends number> = N extends 0
             ? [T, T, T, T, T, ...T[]]
             : [T, T, T, T, T, ...T[]];
 
+/**
+ * Type produced when an actual value is matched by arrayIncludingAll().
+ *
+ * The leading tuple elements are type-level witnesses that the array includes
+ * the required number of matching values. They do not claim those values are at
+ * those runtime indexes. This keeps user-facing types readable while still
+ * communicating the useful facts: the array has enough elements, and those
+ * witness elements match the requested element type.
+ *
+ * When the calling scope already knows the actual value is an array, we
+ * preserve its element type for the rest of the tuple. Otherwise, the rest is
+ * unknown[].
+ */
 export type ArrayIncludingAllMatch<TActual, TElement, N extends number> = [
   Extract<NonNullable<TActual>, readonly unknown[]>,
 ] extends [never]
@@ -78,6 +91,13 @@ export type ArrayIncludingAllMatcher<
   T = unknown,
   N extends number = number,
 > = AssertionMatcher<ArrayIncludingAll<T, N>> & {
+  /**
+   * Optional type-level hook used by compositional assertions such as
+   * assertObjectMatches().
+   *
+   * This lets the matcher describe how it refines an existing actual type,
+   * rather than only exposing the standalone matches() predicate type.
+   */
   readonly [refinement]?: <TActual>(
     actual: TActual,
   ) => ArrayIncludingAllMatch<TActual, T, N>;
