@@ -53,6 +53,64 @@ describe("type-function", () => {
         assertTypeFunction({});
       }).toThrow("Expected object {} to be of type function.");
     });
+
+    it("narrows unknown values to Function", () => {
+      const value: unknown = () => 42;
+
+      assertTypeFunction(value);
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      expectTypeOf(value).toEqualTypeOf<Function>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expect(value).toBeTypeOf("function");
+    });
+
+    it("narrows primitive and function unions to Function", () => {
+      function getValue():
+        | string
+        | number
+        | boolean
+        | null
+        | undefined
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+        | Function {
+        return () => 42;
+      }
+
+      const value = getValue();
+
+      assertTypeFunction(value);
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      expectTypeOf(value).toEqualTypeOf<Function>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("function");
+    });
+
+    it("preserves specific function-type overlap", () => {
+      type StringFactory = () => string;
+      type NumberFactory = () => number;
+
+      function getValue(): StringFactory | NumberFactory | "not function" {
+        return () => "hello";
+      }
+
+      const value = getValue();
+
+      assertTypeFunction(value);
+
+      expectTypeOf(value).toEqualTypeOf<StringFactory | NumberFactory>();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      expectTypeOf(value).toExtend<Function>();
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+      expectTypeOf(value).not.toEqualTypeOf<Function>();
+      expect(value).toBeTypeOf("function");
+    });
   });
 
   describe("typeFunction", () => {
