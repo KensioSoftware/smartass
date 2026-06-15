@@ -129,6 +129,42 @@ describe("type-symbol", () => {
       expect(foo.bar.foobar).toBeTypeOf("symbol");
     });
 
+    it("preserves unique symbol union overlap in object matches", () => {
+      const first = Symbol("first");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const second = Symbol("second");
+
+      interface Foo {
+        bar?: {
+          foobar?: typeof first | typeof second | "not symbol" | null;
+        };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: first } };
+      }
+
+      // Given an object property whose static type includes unique symbols
+      // and non-symbol alternatives.
+      const foo = getFoo();
+
+      // When the property is matched with the composable symbol matcher.
+      assertObjectMatches(foo, {
+        bar: { foobar: typeSymbol() },
+      });
+
+      // Then the property should keep the known unique symbol overlap instead
+      // of widening to the less precise symbol type.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<
+        typeof first | typeof second
+      >();
+      expectTypeOf(foo.bar.foobar).toExtend<symbol>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<symbol>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("symbol");
+    });
+
     it("matches symbol values", () => {
       const matcher = typeSymbol();
       expect(matcher.matches(Symbol("foo"))).toBe(true);

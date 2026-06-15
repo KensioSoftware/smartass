@@ -80,6 +80,10 @@ import type {
   TypeStringMatch,
   TypeStringMatcher,
 } from "../type-string/type-string.type.js";
+import type {
+  TypeSymbolMatch,
+  TypeSymbolMatcher,
+} from "../type-symbol/type-symbol.type.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -216,7 +220,9 @@ type TypeMatcherRefine<
             ? TypeObjectMatch<TActual>
             : TExpected extends TypeStringMatcher
               ? TypeStringMatch<TActual>
-              : never;
+              : TExpected extends TypeSymbolMatcher
+                ? TypeSymbolMatch<TActual>
+                : never;
 
 /**
  * Explicit refinement branches for matchers that do not fit a larger family.
