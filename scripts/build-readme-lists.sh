@@ -42,14 +42,15 @@ get_exported_function_name() {
 
   local names
   names="$(
-    perl -ne 'print "$1\n" if /^\s*export\s+(?:async\s+)?function\s+([A-Za-z_\$][A-Za-z0-9_\$]*)/' "$file"
+    perl -ne 'print "$1\n" if /^\s*export\s+(?:async\s+)?function\s+([A-Za-z_\$][A-Za-z0-9_\$]*)/' "$file" |
+      sort -u
   )"
 
   local count
   count="$(printf '%s\n' "$names" | sed '/^$/d' | wc -l | tr -d ' ')"
 
   if [[ "$count" != "1" ]]; then
-    echo "Expected exactly one exported function in $file, found $count" >&2
+    echo "Expected exactly one unique exported function in $file, found $count" >&2
     exit 1
   fi
 

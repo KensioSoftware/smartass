@@ -68,6 +68,29 @@ describe("array-includes", () => {
         'Expected array [{"id":1},{"id":2}] (len 2) to include object {"id":1}, but it did not.',
       );
     });
+
+    it("preserves specific array type information when value is already an array", () => {
+      const value: readonly ("foo" | "bar")[] = ["foo", "bar"];
+
+      assertArrayIncludes(value, "foo");
+
+      expectTypeOf(value).toEqualTypeOf<
+        readonly ("foo" | "bar")[] & ["foo", ...unknown[]]
+      >();
+      expectTypeOf(value).toExtend<readonly ("foo" | "bar")[]>();
+      expectTypeOf(value).toExtend<["foo", ...unknown[]]>();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("narrows unknown values to an array including the specified element", () => {
+      const value: unknown = ["foo", "bar"];
+
+      assertArrayIncludes(value, "foo");
+
+      expectTypeOf(value).toEqualTypeOf<["foo", ...unknown[]]>();
+      expectTypeOf(value).toExtend<unknown[]>();
+      expect(value).toBeTypeOf("object");
+    });
   });
 
   describe("arrayIncluding", () => {
