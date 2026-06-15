@@ -51,6 +51,39 @@ describe("string-starts-with", () => {
         assertStringStartsWith("hi", "hello");
       }).toThrow('Expected string "hi" to start with "hello", but it did not.');
     });
+
+    it("throws when value is not a string", () => {
+      expect(() => {
+        assertStringStartsWith(123, "foo");
+      }).toThrow('Expected number 123 to be a string starting with "foo".');
+    });
+
+    it("narrows unknown values to strings starting with prefix", () => {
+      const value: unknown = "package.json";
+
+      assertStringStartsWith(value, "package");
+
+      expectTypeOf(value).toEqualTypeOf<`package${string}`>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+      expect(value.startsWith("package")).toBe(true);
+    });
+
+    it("preserves overlap detail for existing string unions", () => {
+      function getValue(): "package.json" | "config.json" | "package.txt" {
+        return "package.json";
+      }
+
+      const value = getValue();
+
+      assertStringStartsWith(value, "package");
+
+      expectTypeOf(value).toEqualTypeOf<"package.json" | "package.txt">();
+      expectTypeOf(value).not.toEqualTypeOf<`package${string}`>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+      expect(value.startsWith("package")).toBe(true);
+    });
   });
 
   describe("stringStartingWith", () => {
