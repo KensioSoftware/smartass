@@ -88,6 +88,7 @@ import type {
   TypeTypedArrayMatch,
   TypeTypedArrayMatcher,
 } from "../type-typed-array/type-typed-array.type.js";
+import type { UuidV4Match, UuidV4Matcher } from "../uuid/uuid-v4.type.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -238,7 +239,9 @@ type MiscMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
     ? InstanceOfMatch<TActual, TInstance>
     : TExpected extends OneOfMatcher<infer TAllowed>
       ? OneOfMatch<TActual, TAllowed>
-      : never;
+      : TExpected extends UuidV4Matcher
+        ? UuidV4Match<TActual>
+        : never;
 
 /**
  * Run all explicit matcher refinements before trying generic fallbacks.
