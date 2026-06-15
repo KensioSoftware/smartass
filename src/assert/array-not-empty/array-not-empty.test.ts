@@ -123,4 +123,31 @@ describe("not-empty", () => {
       expect(repr(matcher)).toBe("[…]");
     });
   });
+
+  it("uses unknown element type when the actual property is unknown", () => {
+    interface Foo {
+      bar?: unknown;
+    }
+
+    function getFoo(): Foo {
+      return { bar: ["a", "b", "c"] };
+    }
+
+    const foo = getFoo();
+
+    assertObjectMatches(foo, {
+      bar: nonEmptyArray(),
+    });
+
+    expectTypeOf(foo.bar).toEqualTypeOf<[unknown, ...unknown[]]>();
+    expectTypeOf(foo.bar[0]).toEqualTypeOf<unknown>();
+    expectTypeOf(foo.bar[1]).toEqualTypeOf<unknown>();
+    expect(foo.bar[0]).toBe("a");
+  });
+
+  it("matches non-empty arrays", () => {
+    const matcher = nonEmptyArray();
+
+    expect(matcher.matches([1])).toBe(true);
+  });
 });
