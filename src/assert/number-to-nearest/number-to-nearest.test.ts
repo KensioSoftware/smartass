@@ -8,26 +8,26 @@ describe("number-to-nearest", () => {
   describe("assertNumberToNearest", () => {
     it("does not throw when value rounds to expected", () => {
       expect(() => {
-        assertNumberToNearest(12.3, 1, 12);
+        assertNumberToNearest(12.3, 12, 1);
       }).not.toThrow();
     });
 
     it("rounds to nearest 10", () => {
       expect(() => {
-        assertNumberToNearest(47, 10, 50);
+        assertNumberToNearest(47, 50, 10);
       }).not.toThrow();
       expect(() => {
-        assertNumberToNearest(43, 10, 40);
+        assertNumberToNearest(43, 40, 10);
       }).not.toThrow();
     });
 
     it("rounds to nearest 0.1", () => {
       expect(() => {
-        assertNumberToNearest(1.234, 0.1, 1.2);
+        assertNumberToNearest(1.234, 1.2, 0.1);
       }).not.toThrow();
 
       expect(() => {
-        assertNumberToNearest(1.267, 0.1, 1.3);
+        assertNumberToNearest(1.267, 1.3, 0.1);
       }).not.toThrow();
     });
 
@@ -37,40 +37,40 @@ describe("number-to-nearest", () => {
       }).not.toThrow();
 
       expect(() => {
-        assertNumberToNearest(8, 5, 10);
+        assertNumberToNearest(8, 10, 5);
       }).not.toThrow();
     });
 
     it("throws when rounded value does not match expected", () => {
       expect(() => {
-        assertNumberToNearest(47, 10, 40);
+        assertNumberToNearest(47, 40, 10);
       }).toThrow("Expected 47 to equal 40 to nearest 10.");
     });
 
     it("throws with custom message", () => {
       expect(() => {
-        assertNumberToNearest(47, 10, 40, "Custom error message");
+        assertNumberToNearest(47, 40, 10, "Custom error message");
       }).toThrow("Custom error message");
     });
 
     it("handles exact values", () => {
       expect(() => {
-        assertNumberToNearest(50, 10, 50);
+        assertNumberToNearest(50, 50, 10);
       }).not.toThrow();
     });
 
     it("handles negative numbers", () => {
       expect(() => {
-        assertNumberToNearest(-47, 10, -50);
+        assertNumberToNearest(-47, -50, 10);
       }).not.toThrow();
       expect(() => {
-        assertNumberToNearest(-43, 10, -40);
+        assertNumberToNearest(-43, -40, 10);
       }).not.toThrow();
     });
 
     it("throws when value is not a number", () => {
       expect(() => {
-        assertNumberToNearest("47", 10, 50);
+        assertNumberToNearest("47", 50, 10);
       }).toThrow('Expected string "47" to be of type number.');
     });
   });
@@ -88,7 +88,7 @@ describe("number-to-nearest", () => {
       const foo = getFoo();
 
       assertObjectMatches(foo, {
-        bar: { foobar: numberToNearest(10, 50) },
+        bar: { foobar: numberToNearest(50, 10) },
       });
 
       // Null-chain operator ? is not required after type narrowing.
@@ -98,47 +98,47 @@ describe("number-to-nearest", () => {
     });
 
     it("matches when value rounds to expected", () => {
-      const matcher = numberToNearest(1, 12);
+      const matcher = numberToNearest(12, 1);
 
       expect(matcher.matches(12.3)).toBe(true);
     });
 
     it("matches to nearest 10", () => {
-      const matcher = numberToNearest(10, 50);
+      const matcher = numberToNearest(50, 10);
 
       expect(matcher.matches(47)).toBe(true);
       expect(matcher.matches(43)).toBe(false);
     });
 
     it("matches to nearest 0.1", () => {
-      const matcher = numberToNearest(0.1, 1.2);
+      const matcher = numberToNearest(1.2, 0.1);
 
       expect(matcher.matches(1.234)).toBe(true);
       expect(matcher.matches(1.267)).toBe(false);
     });
 
     it("matches to nearest 5", () => {
-      const matcher = numberToNearest(5, 10);
+      const matcher = numberToNearest(10, 5);
 
       expect(matcher.matches(8)).toBe(true);
       expect(matcher.matches(7)).toBe(false);
     });
 
     it("matches exact values", () => {
-      const matcher = numberToNearest(10, 50);
+      const matcher = numberToNearest(50, 10);
 
       expect(matcher.matches(50)).toBe(true);
     });
 
     it("matches negative numbers", () => {
-      const matcher = numberToNearest(10, -50);
+      const matcher = numberToNearest(-50, 10);
 
       expect(matcher.matches(-47)).toBe(true);
       expect(matcher.matches(-43)).toBe(false);
     });
 
     it("does not match non-number values", () => {
-      const matcher = numberToNearest(10, 50);
+      const matcher = numberToNearest(50, 10);
 
       expect(matcher.matches("47")).toBe(false);
       expect(matcher.matches(null)).toBe(false);
@@ -146,19 +146,19 @@ describe("number-to-nearest", () => {
     });
 
     it("describes the matcher", () => {
-      const matcher = numberToNearest(10, 50);
+      const matcher = numberToNearest(50, 10);
 
       expect(desc(matcher)).toBe("equal 50 to nearest 10");
     });
 
     it("represents the matcher", () => {
-      const matcher = numberToNearest(10, 50);
+      const matcher = numberToNearest(50, 10);
 
       expect(repr(matcher)).toBe("≈₍10₎50");
     });
 
     it("describes and represents decimal increments", () => {
-      const matcher = numberToNearest(0.1, 1.2);
+      const matcher = numberToNearest(1.2, 0.1);
 
       expect(desc(matcher)).toBe("equal 1.2 to nearest 0.1");
       expect(repr(matcher)).toBe("≈₍0.1₎1.2");

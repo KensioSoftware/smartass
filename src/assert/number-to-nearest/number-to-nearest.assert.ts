@@ -9,13 +9,13 @@ import { numberToNearest } from "./number-to-nearest.match.js";
  */
 export function assertNumberToNearest(
   value: unknown,
-  toNearest: number,
   expected: number,
+  toNearest = 1,
   message?: string,
 ): asserts value is number {
   assertTypeNumber(value);
 
-  const matcher = numberToNearest(toNearest, expected);
+  const matcher = numberToNearest(expected, toNearest);
 
   if (!matcher.matches(value)) {
     throw new AssertionError(
