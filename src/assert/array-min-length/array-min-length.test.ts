@@ -177,4 +177,33 @@ describe("array-min-length", () => {
       expect(repr(matcher)).toBe("Array(>=3)");
     });
   });
+
+  it("uses unknown element type when the actual property is unknown", () => {
+    interface Foo {
+      bar?: unknown;
+    }
+
+    function getFoo(): Foo {
+      return { bar: ["a", "b", "c"] };
+    }
+
+    const foo = getFoo();
+
+    assertObjectMatches(foo, {
+      bar: arrayOfMinLength(2),
+    });
+
+    expectTypeOf(foo.bar).toEqualTypeOf<[unknown, unknown, ...unknown[]]>();
+    expectTypeOf(foo.bar[0]).toEqualTypeOf<unknown>();
+    expectTypeOf(foo.bar[1]).toEqualTypeOf<unknown>();
+    expectTypeOf(foo.bar[2]).toEqualTypeOf<unknown>();
+    expect(foo.bar).toHaveLength(3);
+  });
+
+  it("describes the arrayOfMinLength matcher", () => {
+    const matcher = arrayOfMinLength(3);
+
+    expect(desc(matcher)).toBe("array of at least 3 elements");
+    expect(repr(matcher)).toBe("Array(>=3)");
+  });
 });

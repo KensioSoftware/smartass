@@ -12,7 +12,7 @@ import type {
   refinement,
 } from "../../match/match.js";
 import type {
-  ArrayOfMinLength,
+  ArrayOfMinLengthMatch,
   ArrayOfMinLengthMatcher,
 } from "../array-min-length/array-min-length.type.js";
 import type {
@@ -53,11 +53,6 @@ type ActualArrayElement<TActual> =
     ? ArrayElement<NonNullable<TActual>>
     : unknown;
 
-type ArrayOfMinLengthRefine<TActual, N extends number> = ArrayOfMinLength<
-  ActualArrayElement<TActual>,
-  N
->;
-
 type InstanceOfRefine<TActual, TInstance> = [
   Extract<NonNullable<TActual>, TInstance>,
 ] extends [never]
@@ -93,12 +88,12 @@ type RefineMatcherResult<TActual, TExpected extends AssertionMatcher<unknown>> =
       ? ArrayIncludingAllMatch<TActual, TElement, N>
       : TExpected extends ArrayOfLengthMatcher<infer N>
         ? ArrayOfLengthMatch<TActual, N>
-        : TExpected extends {
-              readonly [refinement]?: unknown;
-            }
-          ? RefinedMatch<TExpected, TActual>
-          : TExpected extends ArrayOfMinLengthMatcher<infer N>
-            ? ArrayOfMinLengthRefine<TActual, N>
+        : TExpected extends ArrayOfMinLengthMatcher<infer N>
+          ? ArrayOfMinLengthMatch<TActual, N>
+          : TExpected extends {
+                readonly [refinement]?: unknown;
+              }
+            ? RefinedMatch<TExpected, TActual>
             : TExpected extends ObjectWithPropertyMatcher<infer K>
               ? ObjectWithPropertyRefine<TActual, K>
               : TExpected extends AssertionMatcher<
