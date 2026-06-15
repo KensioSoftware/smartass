@@ -9,7 +9,7 @@ export function assertIdentical<const TExpected>(
   value: unknown,
   expected: TExpected,
   message = `Expected ${desc(value)} to be identical to ${desc(expected)}.`,
-): asserts value is typeof expected {
+): asserts value is TExpected {
   if (value !== expected) {
     throw new AssertionError(message, value, expected);
   }
