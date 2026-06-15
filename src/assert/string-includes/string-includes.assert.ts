@@ -1,11 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { stringIncluding } from "./string-includes.match.js";
-
-type StringIncluding<
-  TActual extends string,
-  TSubstring extends string,
-> = TActual extends `${string}${TSubstring}${string}` ? TActual : never;
+import type { StringIncludingAssertion } from "./string-includes.type.js";
 
 export function assertStringIncludes<
   TActual extends string,
@@ -14,7 +10,7 @@ export function assertStringIncludes<
   value: TActual,
   substring: TSubstring,
   message?: string,
-): asserts value is StringIncluding<TActual, TSubstring>;
+): asserts value is StringIncludingAssertion<TActual, TSubstring>;
 
 export function assertStringIncludes<const TSubstring extends string>(
   value: unknown,

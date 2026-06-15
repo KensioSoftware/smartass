@@ -36,6 +36,10 @@ import type {
   StringEndingWithMatch,
   StringEndingWithMatcher,
 } from "../string-ends-with/string-ends-with.type.js";
+import type {
+  StringIncludingMatch,
+  StringIncludingMatcher,
+} from "../string-includes/string-includes.type.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -104,22 +108,26 @@ type RefineMatcherResult<TActual, TExpected extends AssertionMatcher<unknown>> =
                 ? OneOfMatch<TActual, TAllowed>
                 : TExpected extends StringEndingWithMatcher<infer TSuffix>
                   ? StringEndingWithMatch<TActual, TSuffix>
-                  : TExpected extends {
-                        readonly [refinement]?: unknown;
-                      }
-                    ? RefinedMatch<TExpected, TActual>
-                    : TExpected extends ObjectWithPropertyMatcher<infer K>
-                      ? ObjectWithPropertyRefine<TActual, K>
-                      : TExpected extends AssertionMatcher<
-                            readonly [unknown, ...unknown[]]
-                          >
-                        ? [
-                            ActualArrayElement<TActual>,
-                            ...ActualArrayElement<TActual>[],
-                          ]
-                        : TExpected extends AssertionMatcher<readonly unknown[]>
-                          ? ActualArrayElement<TActual>[]
-                          : RefinedMatch<TExpected, TActual>;
+                  : TExpected extends StringIncludingMatcher<infer TSubstring>
+                    ? StringIncludingMatch<TActual, TSubstring>
+                    : TExpected extends {
+                          readonly [refinement]?: unknown;
+                        }
+                      ? RefinedMatch<TExpected, TActual>
+                      : TExpected extends ObjectWithPropertyMatcher<infer K>
+                        ? ObjectWithPropertyRefine<TActual, K>
+                        : TExpected extends AssertionMatcher<
+                              readonly [unknown, ...unknown[]]
+                            >
+                          ? [
+                              ActualArrayElement<TActual>,
+                              ...ActualArrayElement<TActual>[],
+                            ]
+                          : TExpected extends AssertionMatcher<
+                                readonly unknown[]
+                              >
+                            ? ActualArrayElement<TActual>[]
+                            : RefinedMatch<TExpected, TActual>;
 
 type MatcherRefine<TActual, TExpected> =
   TExpected extends AssertionMatcher<unknown>
