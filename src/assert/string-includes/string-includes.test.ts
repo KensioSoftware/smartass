@@ -120,6 +120,31 @@ describe("string-includes", () => {
       expect(file.content.includes("keywords")).toBe(true);
     });
 
+    it("preserves string literal union overlap in composable matcher", () => {
+      interface File {
+        content?: "hello world" | "goodbye world" | "hello friend" | null;
+      }
+
+      function getFile(): File {
+        return {
+          content: "hello world",
+        };
+      }
+
+      const file = getFile();
+
+      assertObjectMatches(file, {
+        content: stringIncluding("hello"),
+      });
+
+      expectTypeOf(file.content).toEqualTypeOf<
+        "hello world" | "hello friend"
+      >();
+      expectTypeOf(file.content).not.toEqualTypeOf<`${string}hello${string}`>();
+      expectTypeOf(file.content).not.toEqualTypeOf<string>();
+      expect(file.content.includes("hello")).toBe(true);
+    });
+
     it("matches strings that include substring", () => {
       const matcher = stringIncluding("world");
       expect(matcher.matches("hello world")).toBe(true);

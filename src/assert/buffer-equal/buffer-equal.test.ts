@@ -205,8 +205,34 @@ describe("assertBufferEqual", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is a Buffer.
-      expectTypeOf(foo.bar.foobar).toExtend<Buffer>();
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<Buffer<ArrayBuffer>>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
       expect(foo.bar.foobar).toBeInstanceOf(Buffer);
+    });
+
+    it("uses the expected buffer type when the actual property is unknown", () => {
+      interface Foo {
+        bar?: unknown;
+      }
+
+      function getFoo(): Foo {
+        return { bar: new Uint8Array([1, 2, 3]) };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: bufferEqualTo(new Uint8Array([1, 2, 3])),
+      });
+
+      expectTypeOf(foo.bar).toEqualTypeOf<Uint8Array<ArrayBuffer>>();
+      expect(foo.bar).toBeInstanceOf(Uint8Array);
+    });
+
+    it("does not match a different TypedArray class with equal bytes", () => {
+      const matcher = bufferEqualTo(new Uint8Array([255]));
+
+      expect(matcher.matches(new Int8Array([-1]))).toBe(false);
     });
 
     it("matches equal TypedArrays", () => {

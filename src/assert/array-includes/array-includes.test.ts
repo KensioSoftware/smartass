@@ -108,10 +108,27 @@ describe("array-includes", () => {
       assertObjectMatches(foo, { bar: { foobar: arrayIncluding("b") } });
 
       // Null-chain operator ? is not required after type narrowing.
-      // TypeScript knows foo.bar.foobar is an array of strings with at least one element.
-      expectTypeOf(foo.bar.foobar).toEqualTypeOf<[string, ...string[]]>();
+      // TypeScript knows foo.bar.foobar is an array of strings including "b".
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<["b", ...string[]]>();
       expectTypeOf(foo.bar.foobar.includes("b")).toEqualTypeOf<boolean>();
       expect(foo.bar.foobar.includes("b")).toBe(true);
+    });
+
+    it("uses the matcher element type when the actual property is unknown", () => {
+      interface Foo {
+        bar?: unknown;
+      }
+
+      function getFoo(): Foo {
+        return { bar: ["a", "b", "c"] };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, { bar: arrayIncluding("b") });
+
+      expectTypeOf(foo.bar).toEqualTypeOf<["b", ...unknown[]]>();
+      expect(foo.bar.includes("b")).toBe(true);
     });
 
     it("describes the arrayIncluding matcher", () => {

@@ -2,6 +2,7 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeBoolean } from "./type-boolean.assert.js";
 import { desc, repr } from "../../describe/describe.js";
 import { typeBoolean } from "./type-boolean.match.js";
+import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 describe("type-boolean", () => {
   describe("assertTypeBoolean", () => {
@@ -94,6 +95,36 @@ describe("type-boolean", () => {
   });
 
   describe("typeBoolean", () => {
+    it("preserves boolean literal overlap in object matches", () => {
+      interface Foo {
+        bar?: {
+          enabled?: true | "disabled" | null;
+        };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { enabled: true } };
+      }
+
+      // Given an object property whose static type includes one boolean
+      // literal and several non-boolean alternatives.
+      const foo = getFoo();
+
+      // When the property is matched with the composable boolean matcher.
+      assertObjectMatches(foo, {
+        bar: { enabled: typeBoolean() },
+      });
+
+      // Then the property should narrow to the existing boolean literal
+      // overlap, rather than widening to boolean.
+      expectTypeOf(foo.bar.enabled).toEqualTypeOf<true>();
+      expectTypeOf(foo.bar.enabled).toExtend<boolean>();
+      expectTypeOf(foo.bar.enabled).not.toEqualTypeOf<boolean>();
+      expectTypeOf(foo.bar.enabled).not.toEqualTypeOf<"disabled">();
+      expectTypeOf(foo.bar.enabled).not.toEqualTypeOf<null>();
+      expect(foo.bar.enabled).toBeTypeOf("boolean");
+    });
+
     it("matches boolean values", () => {
       const matcher = typeBoolean();
       expect(matcher.matches(true)).toBe(true);

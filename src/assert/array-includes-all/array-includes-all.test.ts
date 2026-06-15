@@ -176,7 +176,7 @@ describe("array-includes-all", () => {
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is an array of strings with at least two elements.
       expectTypeOf(foo.bar.foobar).toEqualTypeOf<
-        [string, string, ...string[]]
+        ["a" | "b", "a" | "b", ...string[]]
       >();
       expectTypeOf(foo.bar.foobar.includes("a")).toEqualTypeOf<boolean>();
       expect(foo.bar.foobar.includes("a")).toBe(true);

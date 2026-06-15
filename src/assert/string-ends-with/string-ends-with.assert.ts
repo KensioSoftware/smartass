@@ -1,6 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { stringEndingWith } from "./string-ends-with.match.js";
+import type { StringEndingWithAssertion } from "./string-ends-with.type.js";
 
 export function assertStringEndsWith<
   TActual extends string,
@@ -9,7 +10,7 @@ export function assertStringEndsWith<
   value: TActual,
   suffix: TSuffix,
   message?: string,
-): asserts value is TActual & `${string}${TSuffix}`;
+): asserts value is StringEndingWithAssertion<TActual, TSuffix>;
 
 export function assertStringEndsWith<const TSuffix extends string>(
   value: unknown,

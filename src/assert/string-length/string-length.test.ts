@@ -160,6 +160,25 @@ describe("string-length", () => {
       expect(user.username[7]).toBeUndefined();
     });
 
+    it("preserves exact empty-string information in composable matcher", () => {
+      interface User {
+        username?: string | null;
+      }
+
+      function getUser(): User {
+        return { username: "" };
+      }
+
+      const user = getUser();
+
+      assertObjectMatches(user, {
+        username: stringOfLength(0),
+      });
+
+      expectTypeOf(user.username).toEqualTypeOf<"">();
+      expect(user.username).toBe("");
+    });
+
     it("matches strings with expected length", () => {
       const matcher = stringOfLength(5);
       expect(matcher.matches("hello")).toBe(true);

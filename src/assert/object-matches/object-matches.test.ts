@@ -131,7 +131,7 @@ describe("object-matches", () => {
         tags: arrayIncluding("foobar"),
       });
 
-      expectTypeOf(actual.tags).toEqualTypeOf<[unknown, ...unknown[]]>();
+      expectTypeOf(actual.tags).toEqualTypeOf<["foobar", ...unknown[]]>();
 
       const id: 1 = actual.id;
       const tags = actual.tags;
@@ -237,11 +237,11 @@ describe("object-matches", () => {
 
     expectTypeOf(user).toExtend<{
       role: "admin" | "editor" | "viewer";
-      tags: [string, ...string[]];
+      tags: ["beta", ...string[]];
       id: string & { length: 3; 0: string; 1: string; 2: string };
     }>();
     expectTypeOf(user.role).toEqualTypeOf<"admin" | "editor" | "viewer">();
-    expectTypeOf(user.tags).toEqualTypeOf<[string, ...string[]]>();
+    expectTypeOf(user.tags).toEqualTypeOf<["beta", ...string[]]>();
     expectTypeOf(user.id).toEqualTypeOf<
       string & { length: 3; 0: string; 1: string; 2: string }
     >();

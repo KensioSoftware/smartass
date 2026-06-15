@@ -133,6 +133,29 @@ describe("type-bigint", () => {
       expect(foo.bar.foobar).toBeTypeOf("bigint");
     });
 
+    it("preserves bigint literal union overlap in object matches", () => {
+      interface Foo {
+        bar?: { foobar?: 1n | 2n | "not bigint" | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: 1n } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: typeBigInt() },
+      });
+
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<1n | 2n>();
+      expectTypeOf(foo.bar.foobar).toExtend<bigint>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<bigint>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("bigint");
+    });
+
     it("matches bigint values", () => {
       const matcher = typeBigInt();
       expect(matcher.matches(0n)).toBe(true);

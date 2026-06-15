@@ -135,6 +135,25 @@ describe("string-not-includes", () => {
       expect(file.content.includes("keywords")).toBe(true);
     });
 
+    it("preserves overlap detail for existing string unions in object matches", () => {
+      interface File {
+        content?: "hello world" | "goodbye world" | "safe text" | null;
+      }
+
+      const file: File = {
+        content: "safe text",
+      };
+
+      assertObjectMatches(file, {
+        content: stringNotIncluding("hello"),
+      });
+
+      expectTypeOf(file.content).toEqualTypeOf<"goodbye world" | "safe text">();
+      expectTypeOf(file.content).not.toEqualTypeOf<string>();
+      expect(file.content).toBeTypeOf("string");
+      expect(file.content.includes("hello")).toBe(false);
+    });
+
     it("matches strings that do not include substring", () => {
       const matcher = stringNotIncluding("world");
       expect(matcher.matches("hello")).toBe(true);

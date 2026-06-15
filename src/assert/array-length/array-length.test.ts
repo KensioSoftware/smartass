@@ -125,6 +125,25 @@ describe("array-length", () => {
       expect(foo.bar.foobar[3]).toBeUndefined();
     });
 
+    it("uses unknown element type when the actual property is unknown", () => {
+      interface Foo {
+        bar?: unknown;
+      }
+
+      function getFoo(): Foo {
+        return { bar: ["a", "b"] };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: arrayOfLength(2),
+      });
+
+      expectTypeOf(foo.bar).toEqualTypeOf<[unknown, unknown]>();
+      expect(foo.bar).toHaveLength(2);
+    });
+
     it("matches arrays with the expected length", () => {
       const matcher = arrayOfLength(3);
 

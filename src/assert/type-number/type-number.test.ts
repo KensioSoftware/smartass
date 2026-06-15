@@ -132,6 +132,36 @@ describe("type-number", () => {
       expect(foo.bar.foobar).toBeTypeOf("number");
     });
 
+    it("preserves number literal union overlap in object matches", () => {
+      interface Foo {
+        bar?: {
+          foobar?: 1 | 2 | "not number" | null;
+        };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: 1 } };
+      }
+
+      // Given an object property whose static type includes number literals
+      // and non-number alternatives.
+      const foo = getFoo();
+
+      // When the property is matched with the composable number matcher.
+      assertObjectMatches(foo, {
+        bar: { foobar: typeNumber() },
+      });
+
+      // Then the property should keep the known number literal overlap instead
+      // of widening to the less precise number type.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<1 | 2>();
+      expectTypeOf(foo.bar.foobar).toExtend<number>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<number>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("number");
+    });
+
     it("matches number values", () => {
       const matcher = typeNumber();
       expect(matcher.matches(123)).toBe(true);

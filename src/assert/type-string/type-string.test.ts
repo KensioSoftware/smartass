@@ -137,6 +137,36 @@ describe("type-string", () => {
       expect(foo.bar.foobar).toBe("hello");
     });
 
+    it("preserves string literal union overlap in object matches", () => {
+      interface Foo {
+        bar?: {
+          foobar?: "hello" | "world" | 123 | null;
+        };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { foobar: "hello" } };
+      }
+
+      // Given an object property whose static type includes string literals
+      // and non-string alternatives.
+      const foo = getFoo();
+
+      // When the property is matched with the composable string matcher.
+      assertObjectMatches(foo, {
+        bar: { foobar: typeString() },
+      });
+
+      // Then the property should keep the known string literal overlap instead
+      // of widening to the less precise string type.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<"hello" | "world">();
+      expectTypeOf(foo.bar.foobar).toExtend<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<number>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("string");
+    });
+
     it("matches string values", () => {
       const matcher = typeString();
       expect(matcher.matches("hello")).toBe(true);

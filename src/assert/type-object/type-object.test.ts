@@ -145,6 +145,46 @@ describe("type-object", () => {
       expect(foo.bar.foobar).toBeTypeOf("object");
     });
 
+    it("preserves object union overlap in object matches", () => {
+      interface Foo {
+        bar?: {
+          foobar?:
+            | { kind: "plain"; value: string }
+            | string[]
+            | "not object"
+            | null;
+        };
+      }
+
+      function getFoo(): Foo {
+        return {
+          bar: {
+            foobar: { kind: "plain", value: "hello" },
+          },
+        };
+      }
+
+      // Given an object property whose static type includes object shapes,
+      // arrays, and non-object alternatives.
+      const foo = getFoo();
+
+      // When the property is matched with the composable object matcher.
+      assertObjectMatches(foo, {
+        bar: { foobar: typeObject() },
+      });
+
+      // Then the property should keep the known object overlap, including
+      // arrays, instead of widening to the less precise object type.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<
+        { kind: "plain"; value: string } | string[]
+      >();
+      expectTypeOf(foo.bar.foobar).toExtend<object>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<object>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("object");
+    });
+
     it("matches object values", () => {
       const matcher = typeObject();
       expect(matcher.matches({})).toBe(true);

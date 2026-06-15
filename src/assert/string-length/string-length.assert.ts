@@ -1,7 +1,10 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { stringOfLength } from "./string-length.match.js";
-import type { StringOfLength } from "./string-length.type.js";
+import type {
+  StringOfLength,
+  StringOfLengthAssertion,
+} from "./string-length.type.js";
 
 export function assertStringLength<
   TActual extends string,
@@ -10,7 +13,7 @@ export function assertStringLength<
   value: TActual,
   expectedLength: N,
   message?: string,
-): asserts value is TActual & StringOfLength<N>;
+): asserts value is StringOfLengthAssertion<TActual, N>;
 
 export function assertStringLength<const N extends number>(
   value: unknown,

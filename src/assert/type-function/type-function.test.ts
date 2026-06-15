@@ -59,7 +59,6 @@ describe("type-function", () => {
 
       assertTypeFunction(value);
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       expectTypeOf(value).toEqualTypeOf<Function>();
       expectTypeOf(value).not.toEqualTypeOf<string>();
       expectTypeOf(value).not.toEqualTypeOf<number>();
@@ -73,7 +72,6 @@ describe("type-function", () => {
         | boolean
         | null
         | undefined
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
         | Function {
         return () => 42;
       }
@@ -82,7 +80,6 @@ describe("type-function", () => {
 
       assertTypeFunction(value);
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
       expectTypeOf(value).toEqualTypeOf<Function>();
       expectTypeOf(value).not.toEqualTypeOf<string>();
       expectTypeOf(value).not.toEqualTypeOf<number>();
@@ -105,9 +102,9 @@ describe("type-function", () => {
       assertTypeFunction(value);
 
       expectTypeOf(value).toEqualTypeOf<StringFactory | NumberFactory>();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+
       expectTypeOf(value).toExtend<Function>();
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+
       expectTypeOf(value).not.toEqualTypeOf<Function>();
       expect(value).toBeTypeOf("function");
     });
@@ -116,7 +113,6 @@ describe("type-function", () => {
   describe("typeFunction", () => {
     it("works as composable matcher", () => {
       interface Foo {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
         bar?: { foobar?: Function | null };
       }
 
@@ -136,8 +132,47 @@ describe("type-function", () => {
 
       // Null-chain operator ? is not required after type narrowing.
       // TypeScript knows foo.bar.foobar is a function.
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+
       expectTypeOf(foo.bar.foobar).toEqualTypeOf<Function>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("function");
+    });
+
+    it("preserves specific function-type overlap in object matches", () => {
+      type StringFactory = () => string;
+      type NumberFactory = () => number;
+
+      interface Foo {
+        bar?: {
+          foobar?: StringFactory | NumberFactory | "not function" | null;
+        };
+      }
+
+      function getFoo(): Foo {
+        return {
+          bar: {
+            foobar: () => "hello",
+          },
+        };
+      }
+
+      // Given an object property whose static type includes specific function
+      // signatures plus non-function alternatives.
+      const foo = getFoo();
+
+      // When the property is matched with the composable function matcher.
+      assertObjectMatches(foo, {
+        bar: { foobar: typeFunction() },
+      });
+
+      // Then the property should keep the known function signatures instead
+      // of widening to the less useful Function type.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<
+        StringFactory | NumberFactory
+      >();
+      expectTypeOf(foo.bar.foobar).toExtend<Function>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<Function>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<"not function">();
       expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
       expect(foo.bar.foobar).toBeTypeOf("function");
     });

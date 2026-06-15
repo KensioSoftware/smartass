@@ -130,6 +130,49 @@ describe("uuid-v4", () => {
       expect(foo.bar.foobar).toBeTypeOf("string");
     });
 
+    it("preserves UUID v4 string overlap in object matches", () => {
+      interface Foo {
+        bar?: {
+          foobar?:
+            | "123e4567-e89b-42d3-a456-426614174000"
+            | "123e4567-e89b-12d3-a456-426614174000"
+            | "not-a-uuid"
+            | null;
+        };
+      }
+
+      function getFoo(): Foo {
+        return {
+          bar: {
+            foobar: "123e4567-e89b-42d3-a456-426614174000",
+          },
+        };
+      }
+
+      // Given an object property whose static type includes a UUID v4 string
+      // literal and non-UUID-v4 alternatives.
+      const foo = getFoo();
+
+      // When the property is matched with the composable UUID v4 matcher.
+      assertObjectMatches(foo, {
+        bar: { foobar: uuidV4() },
+      });
+
+      // Then the property should keep the known UUID v4-compatible overlap
+      // instead of widening to the less precise UuidV4 type.
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<
+        "123e4567-e89b-42d3-a456-426614174000" & UuidV4
+      >();
+      expectTypeOf(foo.bar.foobar).toExtend<UuidV4>();
+      expectTypeOf(foo.bar.foobar).toExtend<NodeUuid>();
+      expectTypeOf(foo.bar.foobar).toExtend<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<UuidV4>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<NodeUuid>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<string>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<null>();
+      expect(foo.bar.foobar).toBeTypeOf("string");
+    });
+
     it("matches UUID v4 values", () => {
       const matcher = uuidV4();
       expect(matcher.matches("123e4567-e89b-42d3-a456-426614174000")).toBe(

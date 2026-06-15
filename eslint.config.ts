@@ -79,6 +79,7 @@ export default defineConfig(
       "@typescript-eslint/prefer-readonly": "error", // flags private fields that are never reassigned
       "@typescript-eslint/require-array-sort-compare": "error", // prevents [1, 10, 2].sort() (lexicographic surprise)
       "@typescript-eslint/no-unnecessary-type-parameters": "off",
+      "@typescript-eslint/no-unsafe-function-type": "off",
       "@typescript-eslint/naming-convention": [
         "error",
         {
