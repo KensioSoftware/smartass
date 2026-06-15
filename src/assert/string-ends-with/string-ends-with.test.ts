@@ -51,6 +51,35 @@ describe("string-ends-with", () => {
         assertStringEndsWith("hi", "hello");
       }).toThrow('Expected string "hi" to end with "hello", but it did not.');
     });
+
+    it("throws when value is not a string", () => {
+      expect(() => {
+        assertStringEndsWith(123, "foo");
+      }).toThrow('Expected number 123 to end with "foo", but it did not.');
+    });
+
+    it("narrows unknown values to strings ending with suffix", () => {
+      const value: unknown = "package.json";
+
+      assertStringEndsWith(value, ".json");
+
+      expectTypeOf(value).toEqualTypeOf<`${string}.json`>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+      expect(value.endsWith(".json")).toBe(true);
+    });
+
+    it("preserves overlap detail for existing string unions", () => {
+      const value: "package.json" | "package.txt" = "package.json";
+
+      assertStringEndsWith(value, ".json");
+
+      expectTypeOf(value).toEqualTypeOf<"package.json">();
+      expectTypeOf(value).not.toEqualTypeOf<`${string}.json`>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+      expect(value.endsWith(".json")).toBe(true);
+    });
   });
 
   describe("stringEndingWith", () => {

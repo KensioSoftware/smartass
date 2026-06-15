@@ -4,9 +4,10 @@ import type { NonNullableMatcher } from "./non-nullable.type.js";
 /**
  * Matcher for a non-nullable value.
  */
-export function nonNullable<T>(): NonNullableMatcher {
+export function nonNullable(): NonNullableMatcher {
   return createMatcher(
-    (value): value is NonNullable<T> => value !== null && value !== undefined,
+    (value): value is NonNullable<unknown> =>
+      value !== null && value !== undefined,
     () => "non-null defined value",
     () => `NonNullable`,
   );

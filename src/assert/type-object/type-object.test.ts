@@ -47,6 +47,77 @@ describe("type-object", () => {
         assertTypeObject("foobar");
       }).toThrow('Expected string "foobar" to be of type object.');
     });
+
+    it("narrows unknown values to object", () => {
+      const value: unknown = { foo: "bar" };
+
+      assertTypeObject(value);
+
+      expectTypeOf(value).toEqualTypeOf<object>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("narrows primitive and object unions to object", () => {
+      function getValue():
+        | { foo: string }
+        | string
+        | number
+        | boolean
+        | null
+        | undefined {
+        return { foo: "bar" };
+      }
+
+      const value = getValue();
+
+      assertTypeObject(value);
+
+      expectTypeOf(value).toEqualTypeOf<{ foo: string }>();
+      expectTypeOf(value).toExtend<object>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("preserves object union overlap", () => {
+      function getValue():
+        | { kind: "object"; value: string }
+        | { kind: "array"; value: string[] }
+        | "not object"
+        | null {
+        return { kind: "object", value: "bar" };
+      }
+
+      const value = getValue();
+
+      assertTypeObject(value);
+
+      expectTypeOf(value).toEqualTypeOf<
+        { kind: "object"; value: string } | { kind: "array"; value: string[] }
+      >();
+      expectTypeOf(value).toExtend<object>();
+      expectTypeOf(value).not.toEqualTypeOf<object>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("narrows unknown arrays to object", () => {
+      const value: unknown = ["foo", "bar"];
+
+      assertTypeObject(value);
+
+      expectTypeOf(value).toEqualTypeOf<object>();
+      expectTypeOf(value).not.toEqualTypeOf<unknown[]>();
+      expect(value).toBeTypeOf("object");
+      expect(Array.isArray(value)).toBe(true);
+    });
   });
 
   describe("typeObject", () => {

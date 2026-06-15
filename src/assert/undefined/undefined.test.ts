@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertUndefined } from "./undefined.assert.js";
 
 describe("assertUndefined", () => {
@@ -45,5 +45,46 @@ describe("assertUndefined", () => {
     expect(() => {
       assertUndefined(null, "Custom error message");
     }).toThrow("Custom error message");
+  });
+
+  it("narrows unknown values to undefined", () => {
+    const value: unknown = undefined;
+
+    assertUndefined(value);
+
+    expectTypeOf(value).toEqualTypeOf<undefined>();
+    expectTypeOf(value).not.toEqualTypeOf<null>();
+    expectTypeOf(value).not.toEqualTypeOf<string>();
+    expect(value).toBeUndefined();
+  });
+
+  it("narrows optional values to undefined", () => {
+    function getValue(): string | undefined {
+      return undefined;
+    }
+
+    const value = getValue();
+
+    assertUndefined(value);
+
+    expectTypeOf(value).toEqualTypeOf<undefined>();
+    expectTypeOf(value).not.toEqualTypeOf<string>();
+    expect(value).toBeUndefined();
+  });
+
+  it("preserves undefined overlap in wider unions", () => {
+    function getValue(): string | number | null | undefined {
+      return undefined;
+    }
+
+    const value = getValue();
+
+    assertUndefined(value);
+
+    expectTypeOf(value).toEqualTypeOf<undefined>();
+    expectTypeOf(value).not.toEqualTypeOf<string>();
+    expectTypeOf(value).not.toEqualTypeOf<number>();
+    expectTypeOf(value).not.toEqualTypeOf<null>();
+    expect(value).toBeUndefined();
   });
 });

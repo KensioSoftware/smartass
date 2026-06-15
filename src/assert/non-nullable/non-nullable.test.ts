@@ -18,10 +18,44 @@ describe("non-nullable", () => {
       }).toThrow("Expected undefined not to be undefined.");
     });
 
-    it("OK on non-nullable", () => {
+    it("is OK on non-nullable", () => {
       expect(() => {
         assertNonNullable("foobar");
       }).not.toThrow();
+    });
+
+    it("removes null and undefined from known types", () => {
+      const value: string | null | undefined = "foobar";
+
+      assertNonNullable(value);
+
+      expectTypeOf(value).toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBe("foobar");
+    });
+
+    it("narrows unknown values to a defined value", () => {
+      const value: unknown = "foobar";
+
+      assertNonNullable(value);
+
+      expectTypeOf(value).toEqualTypeOf<NonNullable<unknown>>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBe("foobar");
+    });
+
+    it("narrows optional chained types", () => {
+      const value: { foo?: { bar?: { foobar?: string | null | undefined } } } =
+        { foo: { bar: { foobar: "foobar" } } };
+
+      assertNonNullable(value.foo?.bar?.foobar);
+
+      expectTypeOf(value.foo.bar.foobar).toEqualTypeOf<string>();
+      expectTypeOf(value.foo.bar.foobar).not.toEqualTypeOf<null>();
+      expectTypeOf(value.foo.bar.foobar).not.toEqualTypeOf<undefined>();
+      expect(value.foo.bar.foobar).toBeTypeOf("string");
     });
   });
 

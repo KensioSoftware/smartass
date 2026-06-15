@@ -2,6 +2,7 @@ import { createMatcher } from "../../match/match.js";
 import { desc, repr } from "../../describe/describe.js";
 import type {
   ArrayIncludingAll,
+  ArrayIncludingAllElement,
   ArrayIncludingAllMatcher,
 } from "./array-includes-all.type.js";
 
@@ -12,9 +13,11 @@ import type {
  */
 export function arrayIncludingAll<const E extends readonly unknown[]>(
   elements: E,
-): ArrayIncludingAllMatcher<E["length"]> {
+): ArrayIncludingAllMatcher<ArrayIncludingAllElement<E>, E["length"]> {
   return createMatcher(
-    (value): value is ArrayIncludingAll<unknown, E["length"]> =>
+    (
+      value,
+    ): value is ArrayIncludingAll<ArrayIncludingAllElement<E>, E["length"]> =>
       Array.isArray(value) && includesAll(value, elements),
     () => `array including all of ${desc(elements)}`,
     () => `[…,${reprArrayElements(elements)},…]`,

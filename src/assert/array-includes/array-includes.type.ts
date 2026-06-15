@@ -1,4 +1,6 @@
 import type { AssertionMatcher } from "../../match/match.js";
 
-export type ArrayIncluding<T> = [T, ...T[]];
-export type ArrayIncludingMatcher = AssertionMatcher<ArrayIncluding<unknown>>;
+export type ArrayIncluding<T> = [T, ...unknown[]];
+export type ArrayIncludingMatcher<T = unknown> = AssertionMatcher<
+  ArrayIncluding<T>
+>;

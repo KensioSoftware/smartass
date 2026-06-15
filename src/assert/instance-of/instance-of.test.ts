@@ -4,7 +4,7 @@ import { instanceOf } from "./instance-of.match.js";
 import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
 
 class TestClass {
-  value = 42;
+  constructor(public readonly value = 42) {}
 }
 
 class OtherClass {
@@ -64,6 +64,47 @@ describe("instance-of", () => {
       expect(() => {
         assertInstanceOf("string", Date);
       }).toThrow("Expected value to be instance of Date, but it was not.");
+    });
+
+    it("narrows unknown values to the expected instance type", () => {
+      const value: unknown = new TestClass();
+
+      assertInstanceOf(value, TestClass);
+
+      expectTypeOf(value).toEqualTypeOf<TestClass>();
+      expectTypeOf(value.value).toEqualTypeOf<number>();
+      expect(value).toBeInstanceOf(TestClass);
+    });
+
+    it("preserves specific union information where possible", () => {
+      const value: TestClass | OtherClass = new TestClass();
+
+      assertInstanceOf(value, TestClass);
+
+      expectTypeOf(value).toEqualTypeOf<TestClass>();
+      expectTypeOf(value.value).toEqualTypeOf<number>();
+      expect(value).toBeInstanceOf(TestClass);
+    });
+
+    it("preserves specific structural intersection where possible", () => {
+      type NamedTestClass = TestClass & { name: string };
+
+      function getValue(): NamedTestClass | OtherClass {
+        const value = new TestClass() as NamedTestClass;
+        value.name = "test";
+        return value;
+      }
+
+      const value = getValue();
+
+      assertInstanceOf(value, TestClass);
+
+      expectTypeOf(value).toExtend<TestClass>();
+      expectTypeOf(value).toEqualTypeOf<NamedTestClass>();
+      expectTypeOf(value).not.toEqualTypeOf<TestClass>();
+      expectTypeOf(value.value).toEqualTypeOf<number>();
+      expectTypeOf(value.name).toEqualTypeOf<string>();
+      expect(value).toBeInstanceOf(TestClass);
     });
   });
 

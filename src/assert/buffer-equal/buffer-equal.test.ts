@@ -163,6 +163,28 @@ describe("assertBufferEqual", () => {
         "Expected object Uint8Array(4) to equal object Uint8Array(4).",
       );
     });
+
+    it("narrows unknown values to the expected buffer type", () => {
+      const actual: unknown = new Uint8Array([1, 2, 3]);
+      const expected = new Uint8Array([1, 2, 3]);
+
+      assertBufferEqual(actual, expected);
+
+      expectTypeOf(actual).toEqualTypeOf<Uint8Array<ArrayBuffer>>();
+      expectTypeOf(actual).not.toEqualTypeOf<Int8Array>();
+      expect(actual).toBeInstanceOf(Uint8Array);
+    });
+
+    it("narrows to the specific TypedArray class used as expected", () => {
+      const actual: unknown = new BigInt64Array([1n, 2n, 3n]);
+      const expected = new BigInt64Array([1n, 2n, 3n]);
+
+      assertBufferEqual(actual, expected);
+
+      expectTypeOf(actual).toEqualTypeOf<BigInt64Array<ArrayBuffer>>();
+      expectTypeOf(actual).not.toEqualTypeOf<BigUint64Array>();
+      expect(actual).toBeInstanceOf(BigInt64Array);
+    });
   });
 
   describe("bufferEqualTo", () => {

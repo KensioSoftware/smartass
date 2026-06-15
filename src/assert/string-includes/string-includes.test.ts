@@ -57,6 +57,39 @@ describe("string-includes", () => {
         assertStringIncludes("hello world", "o w");
       }).not.toThrow();
     });
+
+    it("throws when value is not a string", () => {
+      expect(() => {
+        assertStringIncludes(123, "foo");
+      }).toThrow('Expected number 123 to include "foo", but it did not.');
+    });
+
+    it("narrows unknown values to strings including substring", () => {
+      const value: unknown = "hello world";
+
+      assertStringIncludes(value, "world");
+
+      expectTypeOf(value).toEqualTypeOf<`${string}world${string}`>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+      expect(value.includes("world")).toBe(true);
+    });
+
+    it("preserves overlap detail for existing string unions", () => {
+      function getValue(): "hello world" | "goodbye world" | "hello friend" {
+        return "hello world";
+      }
+
+      const value = getValue();
+
+      assertStringIncludes(value, "hello");
+
+      expectTypeOf(value).toEqualTypeOf<"hello world" | "hello friend">();
+      expectTypeOf(value).not.toEqualTypeOf<`${string}hello${string}`>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+      expect(value.includes("hello")).toBe(true);
+    });
   });
 
   describe("stringIncluding", () => {

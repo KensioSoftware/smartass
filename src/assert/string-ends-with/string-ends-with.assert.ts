@@ -2,14 +2,29 @@ import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { stringEndingWith } from "./string-ends-with.match.js";
 
+export function assertStringEndsWith<
+  TActual extends string,
+  const TSuffix extends string,
+>(
+  value: TActual,
+  suffix: TSuffix,
+  message?: string,
+): asserts value is TActual & `${string}${TSuffix}`;
+
+export function assertStringEndsWith<const TSuffix extends string>(
+  value: unknown,
+  suffix: TSuffix,
+  message?: string,
+): asserts value is `${string}${TSuffix}`;
+
 /**
  * Assert that a string ends with a given suffix, with type narrowing.
  */
-export function assertStringEndsWith<const T extends string>(
-  value: string,
-  suffix: T,
+export function assertStringEndsWith(
+  value: unknown,
+  suffix: string,
   message?: string,
-): asserts value is `${string}${T}` {
+): void {
   const matcher = stringEndingWith(suffix);
   if (!matcher.matches(value)) {
     throw new AssertionError(

@@ -25,13 +25,42 @@ describe("not-empty", () => {
     it("throws on null", () => {
       expect(() => {
         assertArrayNotEmpty(null);
-      }).toThrow("Expected null not to be null.");
+      }).toThrow("Expected null to be a non-empty array.");
     });
 
     it("throws on undefined", () => {
       expect(() => {
         assertArrayNotEmpty(undefined);
-      }).toThrow("Expected undefined not to be undefined.");
+      }).toThrow("Expected undefined to be a non-empty array.");
+    });
+
+    it("throws on non-arrays", () => {
+      expect(() => {
+        assertArrayNotEmpty("abc");
+      }).toThrow('Expected string "abc" to be a non-empty array.');
+    });
+
+    it("preserves specific array type information when value is already an array", () => {
+      const value: ("foo" | "bar")[] = ["foo", "bar"];
+
+      assertArrayNotEmpty(value);
+
+      expectTypeOf(value).toEqualTypeOf<
+        ("foo" | "bar")[] & ["foo" | "bar", ...("foo" | "bar")[]]
+      >();
+      expectTypeOf(value).toExtend<("foo" | "bar")[]>();
+      expectTypeOf(value).toExtend<["foo" | "bar", ...("foo" | "bar")[]]>();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("narrows unknown values to a non-empty array", () => {
+      const value: unknown = ["foo", "bar"];
+
+      assertArrayNotEmpty(value);
+
+      expectTypeOf(value).toEqualTypeOf<[unknown, ...unknown[]]>();
+      expectTypeOf(value).toExtend<unknown[]>();
+      expect(value).toBeTypeOf("object");
     });
   });
 

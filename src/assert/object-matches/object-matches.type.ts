@@ -78,7 +78,7 @@ type RefineMatcherResult<TActual, TExpected extends AssertionMatcher<unknown>> =
     ? ArrayOfLengthRefine<TActual, N>
     : TExpected extends ArrayOfMinLengthMatcher<infer N>
       ? ArrayOfMinLengthRefine<TActual, N>
-      : TExpected extends ArrayIncludingAllMatcher<infer N>
+      : TExpected extends ArrayIncludingAllMatcher<infer _TElement, infer N>
         ? ArrayIncludingAllRefine<TActual, N>
         : TExpected extends ObjectWithPropertyMatcher<infer K>
           ? ObjectWithPropertyRefine<TActual, K>

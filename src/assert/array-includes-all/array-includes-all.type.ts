@@ -1,4 +1,18 @@
-import type { AssertionMatcher } from "../../match/match.js";
+import type { AssertionMatcher, refinement } from "../../match/match.js";
+
+export type ArrayIncludingAllElement<E extends readonly unknown[]> =
+  E[number] extends never ? unknown : E[number];
+
+export type ArrayElement<TArray extends readonly unknown[]> = TArray[number];
+
+type ArrayIncludingAllRefinement<TElement, N extends number, TActual> = [
+  Extract<NonNullable<TActual>, readonly unknown[]>,
+] extends [never]
+  ? ArrayIncludingAll<TElement, N>
+  : ArrayIncludingAll<
+      Extract<NonNullable<TActual>, readonly unknown[]>[number],
+      N
+    >;
 
 export type ArrayIncludingAll<T, N extends number> = N extends 0
   ? T[]
@@ -14,6 +28,11 @@ export type ArrayIncludingAll<T, N extends number> = N extends 0
             ? [T, T, T, T, T, ...T[]]
             : [T, T, T, T, T, ...T[]];
 
-export type ArrayIncludingAllMatcher<N extends number> = AssertionMatcher<
-  ArrayIncludingAll<unknown, N>
->;
+export type ArrayIncludingAllMatcher<
+  T = unknown,
+  N extends number = number,
+> = AssertionMatcher<ArrayIncludingAll<T, N>> & {
+  readonly [refinement]?: <TActual>(
+    actual: TActual,
+  ) => ArrayIncludingAllRefinement<T, N, TActual>;
+};

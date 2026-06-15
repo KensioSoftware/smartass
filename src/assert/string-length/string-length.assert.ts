@@ -3,6 +3,21 @@ import { desc, repr } from "../../describe/describe.js";
 import { stringOfLength } from "./string-length.match.js";
 import type { StringOfLength } from "./string-length.type.js";
 
+export function assertStringLength<
+  TActual extends string,
+  const N extends number,
+>(
+  value: TActual,
+  expectedLength: N,
+  message?: string,
+): asserts value is TActual & StringOfLength<N>;
+
+export function assertStringLength<const N extends number>(
+  value: unknown,
+  expectedLength: N,
+  message?: string,
+): asserts value is StringOfLength<N>;
+
 /**
  * Assert that a string has exactly the expected length, with type narrowing.
  *
@@ -15,18 +30,28 @@ import type { StringOfLength } from "./string-length.type.js";
  * Note that this models JavaScript string indexing and length (UTF-16 code units),
  * not Unicode grapheme clusters.
  */
-export function assertStringLength<const N extends number>(
-  value: string,
-  expectedLength: N,
+export function assertStringLength(
+  value: unknown,
+  expectedLength: number,
   message?: string,
-): asserts value is StringOfLength<N> {
+): void {
   const matcher = stringOfLength(expectedLength);
   if (!matcher.matches(value)) {
     throw new AssertionError(
-      message ??
-        `Expected ${desc(value)} to have length ${repr(expectedLength)}, but it had length ${repr(value.length)}.`,
+      message ?? buildStringLengthMessage(value, expectedLength),
       value,
       matcher.represent(),
     );
   }
+}
+
+function buildStringLengthMessage(
+  value: unknown,
+  expectedLength: number,
+): string {
+  if (typeof value !== "string") {
+    return `Expected ${desc(value)} to be a string of length ${repr(expectedLength)}.`;
+  }
+
+  return `Expected ${desc(value)} to have length ${repr(expectedLength)}, but it had length ${repr(value.length)}.`;
 }

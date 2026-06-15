@@ -114,6 +114,56 @@ describe("type-typed-array", () => {
         assertTypeTypedArray(new Uint8Array([]));
       }).not.toThrow();
     });
+
+    it("narrows unknown values to TypedArray", () => {
+      const value: unknown = new Uint8Array([1, 2, 3]);
+
+      assertTypeTypedArray(value);
+
+      expectTypeOf(value).toEqualTypeOf<TypedArray>();
+      expectTypeOf(value).not.toEqualTypeOf<unknown[]>();
+      expectTypeOf(value).not.toEqualTypeOf<DataView>();
+      expect(value).toBeInstanceOf(Uint8Array);
+    });
+
+    it("narrows object unions to TypedArray", () => {
+      function getValue():
+        | Uint8Array
+        | Int16Array
+        | string[]
+        | DataView
+        | null {
+        return new Uint8Array([1, 2, 3]);
+      }
+
+      const value = getValue();
+
+      assertTypeTypedArray(value);
+
+      expectTypeOf(value).toEqualTypeOf<Uint8Array | Int16Array>();
+      expectTypeOf(value).toExtend<TypedArray>();
+      expectTypeOf(value).not.toEqualTypeOf<TypedArray>();
+      expectTypeOf(value).not.toEqualTypeOf<string[]>();
+      expectTypeOf(value).not.toEqualTypeOf<DataView>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expect(value).toBeInstanceOf(Uint8Array);
+    });
+
+    it("preserves specific TypedArray union overlap", () => {
+      function getValue(): Uint8Array | Float32Array | string {
+        return new Uint8Array([1, 2, 3]);
+      }
+
+      const value = getValue();
+
+      assertTypeTypedArray(value);
+
+      expectTypeOf(value).toEqualTypeOf<Uint8Array | Float32Array>();
+      expectTypeOf(value).toExtend<TypedArray>();
+      expectTypeOf(value).not.toEqualTypeOf<TypedArray>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeInstanceOf(Uint8Array);
+    });
   });
 
   describe("typeTypedArray", () => {

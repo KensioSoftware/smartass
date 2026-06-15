@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertIdentical } from "./identical.assert.js";
 
 describe("identical", () => {
@@ -64,5 +64,16 @@ describe("identical", () => {
     expect(() => {
       assertIdentical(true, false);
     }).toThrow();
+  });
+
+  it("narrows to identical type", () => {
+    const actual: unknown = "foo";
+    const expected = "foo";
+
+    assertIdentical(actual, expected);
+
+    expectTypeOf(actual).toEqualTypeOf<"foo">();
+    expectTypeOf(actual).not.toEqualTypeOf<string>();
+    expect(actual).toBeTypeOf("string");
   });
 });

@@ -1,28 +1,59 @@
 import { arrayIncludingAll } from "./array-includes-all.match.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
-import type { ArrayIncludingAll } from "./array-includes-all.type.js";
+import type {
+  ArrayElement,
+  ArrayIncludingAll,
+  ArrayIncludingAllElement,
+} from "./array-includes-all.type.js";
+
+export function assertArrayIncludesAll<
+  TArray extends unknown[],
+  const E extends readonly ArrayElement<TArray>[],
+>(
+  value: TArray,
+  elements: E,
+  message?: string,
+): asserts value is TArray &
+  ArrayIncludingAll<ArrayElement<TArray>, E["length"]>;
+
+export function assertArrayIncludesAll<const E extends readonly unknown[]>(
+  value: unknown,
+  elements: E,
+  message?: string,
+): asserts value is ArrayIncludingAll<ArrayIncludingAllElement<E>, E["length"]>;
 
 /**
  * Assert that an array includes all specified elements, with type narrowing.
  * Elements can appear in any order and do not need to be contiguous.
  * Repeated required elements must appear at least that many times.
  */
-export function assertArrayIncludesAll<T, const E extends readonly T[]>(
-  value: readonly T[],
-  elements: E,
+export function assertArrayIncludesAll(
+  value: unknown,
+  elements: readonly unknown[],
   message?: string,
-): asserts value is ArrayIncludingAll<T, E["length"]> {
+): void {
   const matcher = arrayIncludingAll(elements);
   if (!matcher.matches(value)) {
-    const missing = findMissingElements(value, elements);
     throw new AssertionError(
-      message ??
-        `Expected ${desc(value)} to include all of ${repr(elements)}, but missing ${repr(missing)}.`,
+      message ?? buildArrayIncludesAllMessage(value, elements),
       value,
       matcher.represent(),
     );
   }
+}
+
+function buildArrayIncludesAllMessage(
+  value: unknown,
+  elements: readonly unknown[],
+): string {
+  if (!Array.isArray(value)) {
+    return `Expected ${desc(value)} to be array including all of ${desc(elements)}.`;
+  }
+
+  const missing = findMissingElements(value, elements);
+
+  return `Expected ${desc(value)} to include all of ${repr(elements)}, but missing ${repr(missing)}.`;
 }
 
 function findMissingElements(

@@ -82,6 +82,48 @@ describe("string-length", () => {
       );
     });
 
+    it("throws when value is not a string", () => {
+      expect(() => {
+        assertStringLength(123, 3);
+      }).toThrow("Expected number 123 to be a string of length 3.");
+    });
+
+    it("narrows unknown values to strings of the expected length", () => {
+      const value: unknown = "hello";
+
+      assertStringLength(value, 5);
+
+      expectTypeOf(value).toEqualTypeOf<StringOfLength<5>>();
+      expectTypeOf(value).toExtend<string>();
+      expectTypeOf(value[4]).toEqualTypeOf<string>();
+      expectTypeOf(value[5]).toEqualTypeOf<string | undefined>();
+      expect(value).toBeTypeOf("string");
+      expect(value).toHaveLength(5);
+    });
+
+    it("preserves known string type information", () => {
+      const value = "hello";
+
+      assertStringLength(value, 5);
+
+      expectTypeOf(value).toEqualTypeOf<"hello" & StringOfLength<5>>();
+      expectTypeOf(value).toExtend<string>();
+      expectTypeOf(value).toExtend<"hello">();
+      expectTypeOf(value[4]).toEqualTypeOf<string>();
+      expectTypeOf(value[5]).toEqualTypeOf<string | undefined>();
+      expect(value).toBeTypeOf("string");
+      expect(value).toHaveLength(5);
+    });
+
+    it("narrows unknown values to an empty string for length zero", () => {
+      const value: unknown = "";
+
+      assertStringLength(value, 0);
+
+      expectTypeOf(value).toEqualTypeOf<"">();
+      expect(value).toBe("");
+    });
+
     it("narrows type for safe indexing", () => {
       const foo = "a".repeat(10);
       assertStringLength(foo, 10);

@@ -44,6 +44,62 @@ describe("type-symbol", () => {
         assertTypeSymbol([]);
       }).toThrow("Expected array [] (len 0) to be of type symbol.");
     });
+
+    it("narrows unknown values to symbol", () => {
+      const value: unknown = Symbol("foo");
+
+      assertTypeSymbol(value);
+
+      expectTypeOf(value).toEqualTypeOf<symbol>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expect(value).toBeTypeOf("symbol");
+    });
+
+    it("narrows primitive unions to symbol", () => {
+      function getValue():
+        | string
+        | number
+        | boolean
+        | symbol
+        | null
+        | undefined {
+        return Symbol("foo");
+      }
+
+      const value = getValue();
+
+      assertTypeSymbol(value);
+
+      expectTypeOf(value).toEqualTypeOf<symbol>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("symbol");
+    });
+
+    it("preserves unique symbol union overlap", () => {
+      const first = Symbol("first");
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const second = Symbol("second");
+
+      function getValue(): typeof first | typeof second | "not symbol" {
+        return first;
+      }
+
+      const value = getValue();
+
+      assertTypeSymbol(value);
+
+      expectTypeOf(value).toEqualTypeOf<typeof first | typeof second>();
+      expectTypeOf(value).toExtend<symbol>();
+      expectTypeOf(value).not.toEqualTypeOf<symbol>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("symbol");
+    });
   });
 
   describe("typeSymbol", () => {

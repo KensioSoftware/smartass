@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertTypeBoolean } from "./type-boolean.assert.js";
 import { desc, repr } from "../../describe/describe.js";
 import { typeBoolean } from "./type-boolean.match.js";
@@ -39,6 +39,57 @@ describe("type-boolean", () => {
       expect(() => {
         assertTypeBoolean({});
       }).toThrow("Expected object {} to be of type boolean.");
+    });
+
+    it("narrows unknown values to boolean", () => {
+      const value: unknown = true;
+
+      assertTypeBoolean(value);
+
+      expectTypeOf(value).toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expect(value).toBeTypeOf("boolean");
+    });
+
+    it("narrows primitive unions to boolean", () => {
+      function getValue():
+        | string
+        | number
+        | boolean
+        | bigint
+        | null
+        | undefined {
+        return true;
+      }
+
+      const value = getValue();
+
+      assertTypeBoolean(value);
+
+      expectTypeOf(value).toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("boolean");
+    });
+
+    it("preserves boolean literal union overlap", () => {
+      function getValue(): true | false | "not boolean" {
+        return true;
+      }
+
+      const value = getValue();
+
+      assertTypeBoolean(value);
+
+      expectTypeOf(value).toEqualTypeOf<true | false>();
+      expectTypeOf(value).toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<true>();
+      expectTypeOf(value).not.toEqualTypeOf<false>();
+      expect(value).toBeTypeOf("boolean");
     });
   });
 
