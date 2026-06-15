@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, expectTypeOf, it } from "vitest";
 import { assertObjectEquals } from "./object-equals.assert.js";
 
 describe("object-equals", () => {
@@ -103,6 +103,40 @@ describe("object-equals", () => {
       },
     };
 
+    const expected: {
+      status: string;
+      nested: {
+        count: number;
+      };
+    } = {
+      status: "active",
+      nested: {
+        count: 1,
+      },
+    };
+
+    assertObjectEquals(value, expected);
+
+    expectTypeOf(value).toEqualTypeOf<{
+      status: string;
+      nested: {
+        count: number;
+      };
+    }>();
+    expectTypeOf(value.status).toEqualTypeOf<string>();
+    expectTypeOf(value.nested.count).toEqualTypeOf<number>();
+    expect(value.status).toBe("active");
+    expect(value.nested.count).toBe(1);
+  });
+
+  it("narrows the actual value to the literal expected object type", () => {
+    const value: unknown = {
+      status: "active",
+      nested: {
+        count: 1,
+      },
+    };
+
     assertObjectEquals(value, {
       status: "active",
       nested: {
@@ -110,6 +144,14 @@ describe("object-equals", () => {
       },
     } as const);
 
+    expectTypeOf(value).toEqualTypeOf<{
+      readonly status: "active";
+      readonly nested: {
+        readonly count: 1;
+      };
+    }>();
+    expectTypeOf(value.status).toEqualTypeOf<"active">();
+    expectTypeOf(value.nested.count).toEqualTypeOf<1>();
     expect(value.status).toBe("active");
     expect(value.nested.count).toBe(1);
   });
