@@ -70,6 +70,50 @@ describe("object-has-property", () => {
 
       expect(value.name).toBe("Ada");
     });
+
+    it("narrows unknown values to objects with the specified property", () => {
+      const value: unknown = { name: "Ada" };
+
+      assertObjectHasProperty(value, "name");
+
+      expectTypeOf(value).toEqualTypeOf<object & Record<"name", unknown>>();
+      expectTypeOf(value.name).toEqualTypeOf<unknown>();
+      expect(value.name).toBe("Ada");
+    });
+
+    it("preserves known object types when asserting an existing optional property", () => {
+      const value: { name?: string; age: number } = {
+        name: "Ada",
+        age: 36,
+      };
+
+      assertObjectHasProperty(value, "name");
+
+      expectTypeOf(value).toEqualTypeOf<
+        { name?: string; age: number } & object & Record<"name", unknown>
+      >();
+      expectTypeOf(value.name).toEqualTypeOf<string | undefined>();
+      expectTypeOf(value.age).toEqualTypeOf<number>();
+      expect(value.name).toBe("Ada");
+      expect(value.age).toBe(36);
+    });
+
+    it("preserves known object types when asserting a new property", () => {
+      const value: { age: number } = {
+        age: 36,
+        name: "Ada",
+      } as { age: number };
+
+      assertObjectHasProperty(value, "name");
+
+      expectTypeOf(value).toEqualTypeOf<
+        { age: number } & object & Record<"name", unknown>
+      >();
+      expectTypeOf(value.name).toEqualTypeOf<unknown>();
+      expectTypeOf(value.age).toEqualTypeOf<number>();
+      expect(value.name).toBeTypeOf("string");
+      expect(value.age).toBeTypeOf("number");
+    });
   });
 
   describe("objectWithProperty", () => {
