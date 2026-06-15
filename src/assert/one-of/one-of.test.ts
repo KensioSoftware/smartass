@@ -32,6 +32,40 @@ describe("one-of", () => {
         assertOneOf(4, [1, 2, 3]);
       }).toThrow("Expected number 4 to be one of [1,2,3].");
     });
+
+    it("narrows unknown values to the allowed literal union", () => {
+      const value: unknown = "draft";
+
+      assertOneOf(value, ["draft", "published"]);
+
+      expectTypeOf(value).toEqualTypeOf<"draft" | "published">();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+    });
+
+    it("narrows existing unions to their overlap with the allowed values", () => {
+      const value: "draft" | "archived" = "draft";
+
+      assertOneOf(value, ["draft", "published"]);
+
+      expectTypeOf(value).toEqualTypeOf<"draft">();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<"draft" | "archived">();
+      expectTypeOf(value).not.toEqualTypeOf<"draft" | "published">();
+      expect(value).toBeTypeOf("string");
+    });
+
+    it("narrows mixed literal values", () => {
+      const value: unknown = 1;
+
+      assertOneOf(value, ["enabled", 1, true, null]);
+
+      expectTypeOf(value).toEqualTypeOf<"enabled" | 1 | true | null>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<boolean>();
+      expect(value).toBeTypeOf("number");
+    });
   });
 
   describe("oneOf", () => {

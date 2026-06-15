@@ -73,7 +73,7 @@ describe("identical", () => {
     assertIdentical(actual, expected);
 
     expectTypeOf(actual).toEqualTypeOf<"foo">();
-    expectTypeOf(actual).not.toEqualTypeOf<"string">();
+    expectTypeOf(actual).not.toEqualTypeOf<string>();
     expect(actual).toBeTypeOf("string");
   });
 });
