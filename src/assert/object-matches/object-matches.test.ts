@@ -131,7 +131,7 @@ describe("object-matches", () => {
         tags: arrayIncluding("foobar"),
       });
 
-      expectTypeOf(actual.tags).toEqualTypeOf<[unknown, ...unknown[]]>();
+      expectTypeOf(actual.tags).toEqualTypeOf<["foobar", ...unknown[]]>();
 
       const id: 1 = actual.id;
       const tags = actual.tags;

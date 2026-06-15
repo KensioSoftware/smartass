@@ -114,6 +114,23 @@ describe("array-includes", () => {
       expect(foo.bar.foobar.includes("b")).toBe(true);
     });
 
+    it("uses the matcher element type when the actual property is unknown", () => {
+      interface Foo {
+        bar?: unknown;
+      }
+
+      function getFoo(): Foo {
+        return { bar: ["a", "b", "c"] };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, { bar: arrayIncluding("b") });
+
+      expectTypeOf(foo.bar).toEqualTypeOf<["b", ...unknown[]]>();
+      expect(foo.bar.includes("b")).toBe(true);
+    });
+
     it("describes the arrayIncluding matcher", () => {
       const matcher = arrayIncluding("foobar");
 
