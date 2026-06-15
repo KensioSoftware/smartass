@@ -1,6 +1,7 @@
 import { createMatcher } from "../../match/match.js";
 import {
   instanceOfMatcher,
+  type ClassConstructor,
   type InstanceOfMatcher,
 } from "./instance-of.type.js";
 
@@ -8,7 +9,7 @@ import {
  * Matcher for a value being an instance of a given class.
  */
 export function instanceOf<T>(
-  classConstructor: abstract new (...args: never[]) => T,
+  classConstructor: ClassConstructor<T>,
 ): InstanceOfMatcher<T> {
   return {
     ...createMatcher(
