@@ -57,6 +57,58 @@ describe("type-string", () => {
       expect(foo.bar.foobar).toBeTypeOf("string");
       expect(foo.bar.foobar).toBe("hello");
     });
+
+    it("narrows unknown values to string", () => {
+      const value: unknown = "hello";
+
+      assertTypeString(value);
+
+      expectTypeOf(value).toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expect(value).toBeTypeOf("string");
+    });
+
+    it("narrows primitive unions to string", () => {
+      function getValue():
+        | string
+        | number
+        | boolean
+        | bigint
+        | null
+        | undefined {
+        return "hello";
+      }
+
+      const value = getValue();
+
+      assertTypeString(value);
+
+      expectTypeOf(value).toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("string");
+    });
+
+    it("preserves string literal union overlap", () => {
+      function getValue(): "hello" | "world" | 123 | null {
+        return "hello";
+      }
+
+      const value = getValue();
+
+      assertTypeString(value);
+
+      expectTypeOf(value).toEqualTypeOf<"hello" | "world">();
+      expectTypeOf(value).toExtend<string>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expect(value).toBeTypeOf("string");
+    });
   });
 
   describe("typeString", () => {
