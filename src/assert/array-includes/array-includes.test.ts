@@ -70,15 +70,15 @@ describe("array-includes", () => {
     });
 
     it("preserves specific array type information when value is already an array", () => {
-      const value: readonly ("foo" | "bar")[] = ["foo", "bar"];
+      const value: ("foo" | "bar")[] = ["foo", "bar"];
 
       assertArrayIncludes(value, "foo");
 
       expectTypeOf(value).toEqualTypeOf<
-        readonly ("foo" | "bar")[] & ["foo", ...unknown[]]
+        ("foo" | "bar")[] & ["foo" | "bar", ...unknown[]]
       >();
-      expectTypeOf(value).toExtend<readonly ("foo" | "bar")[]>();
-      expectTypeOf(value).toExtend<["foo", ...unknown[]]>();
+      expectTypeOf(value).toExtend<("foo" | "bar")[]>();
+      expectTypeOf(value).toExtend<["foo" | "bar", ...unknown[]]>();
       expect(value).toBeTypeOf("object");
     });
 

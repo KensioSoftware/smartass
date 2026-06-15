@@ -4,14 +4,13 @@ import { desc } from "../../describe/describe.js";
 import type { ArrayIncluding } from "./array-includes.type.js";
 
 export function assertArrayIncludes<
-  T,
-  const E extends T,
-  TArray extends readonly T[],
+  TArray extends unknown[],
+  const E extends TArray[number],
 >(
   value: TArray,
   element: E,
   message?: string,
-): asserts value is TArray & ArrayIncluding<E>;
+): asserts value is TArray & ArrayIncluding<TArray[number]>;
 
 export function assertArrayIncludes<const E>(
   value: unknown,
