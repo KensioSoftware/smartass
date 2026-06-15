@@ -106,6 +106,27 @@ describe("string-ends-with", () => {
       expect(foo.bar.filename.endsWith(".json")).toBe(true);
     });
 
+    it("preserves string literal union overlap in composable matcher", () => {
+      interface Foo {
+        bar?: { filename?: "package.json" | "package.txt" | null };
+      }
+
+      function getFoo(): Foo {
+        return { bar: { filename: "package.json" } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { filename: stringEndingWith(".json") },
+      });
+
+      expectTypeOf(foo.bar.filename).toEqualTypeOf<"package.json">();
+      expectTypeOf(foo.bar.filename).not.toEqualTypeOf<`${string}.json`>();
+      expectTypeOf(foo.bar.filename).not.toEqualTypeOf<string>();
+      expect(foo.bar.filename.endsWith(".json")).toBe(true);
+    });
+
     it("matches strings that end with suffix", () => {
       const matcher = stringEndingWith("world");
       expect(matcher.matches("hello world")).toBe(true);
