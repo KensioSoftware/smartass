@@ -73,6 +73,58 @@ describe("type-numeric", () => {
         assertTypeNumeric("foo", "Custom error message");
       }).toThrow("Custom error message");
     });
+
+    it("narrows unknown values to number or bigint", () => {
+      const value: unknown = 42;
+
+      assertTypeNumeric(value);
+
+      expectTypeOf(value).toEqualTypeOf<number | bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("number");
+    });
+
+    it("narrows primitive unions to number or bigint", () => {
+      function getValue():
+        | string
+        | number
+        | boolean
+        | bigint
+        | null
+        | undefined {
+        return 42n;
+      }
+
+      const value = getValue();
+
+      assertTypeNumeric(value);
+
+      expectTypeOf(value).toEqualTypeOf<number | bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("bigint");
+    });
+
+    it("preserves numeric literal union overlap", () => {
+      function getValue(): 1 | 2n | "not numeric" | false {
+        return 1;
+      }
+
+      const value = getValue();
+
+      assertTypeNumeric(value);
+
+      expectTypeOf(value).toEqualTypeOf<1 | 2n>();
+      expectTypeOf(value).toExtend<number | bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<number | bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<bigint>();
+      expect(value).toBeTypeOf("number");
+    });
   });
 
   describe("typeNumeric", () => {
