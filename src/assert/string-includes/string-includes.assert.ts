@@ -2,14 +2,34 @@ import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { stringIncluding } from "./string-includes.match.js";
 
+type StringIncluding<
+  TActual extends string,
+  TSubstring extends string,
+> = TActual extends `${string}${TSubstring}${string}` ? TActual : never;
+
+export function assertStringIncludes<
+  TActual extends string,
+  const TSubstring extends string,
+>(
+  value: TActual,
+  substring: TSubstring,
+  message?: string,
+): asserts value is StringIncluding<TActual, TSubstring>;
+
+export function assertStringIncludes<const TSubstring extends string>(
+  value: unknown,
+  substring: TSubstring,
+  message?: string,
+): asserts value is `${string}${TSubstring}${string}`;
+
 /**
  * Assert that a string includes a given substring, with type narrowing.
  */
-export function assertStringIncludes<const T extends string>(
-  value: string,
-  substring: T,
+export function assertStringIncludes(
+  value: unknown,
+  substring: string,
   message?: string,
-): asserts value is `${string}${T}${string}` {
+): void {
   const matcher = stringIncluding(substring);
 
   if (!matcher.matches(value)) {
