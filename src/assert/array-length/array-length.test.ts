@@ -40,13 +40,19 @@ describe("array-length", () => {
     it("throws on null", () => {
       expect(() => {
         assertArrayLength(null, 0);
-      }).toThrow("Expected null not to be null.");
+      }).toThrow("Expected null to be an array of length 0.");
     });
 
     it("throws on undefined", () => {
       expect(() => {
         assertArrayLength(undefined, 0);
-      }).toThrow("Expected undefined not to be undefined.");
+      }).toThrow("Expected undefined to be an array of length 0.");
+    });
+
+    it("throws on non-arrays", () => {
+      expect(() => {
+        assertArrayLength("abc", 3);
+      }).toThrow('Expected string "abc" to be an array of length 3.');
     });
 
     it("works with different lengths", () => {
@@ -62,6 +68,29 @@ describe("array-length", () => {
       expect(() => {
         assertArrayLength([1, 2, 3, 4, 5, 6], 6);
       }).not.toThrow();
+    });
+
+    it("preserves specific array type information when value is already an array", () => {
+      const value: ("foo" | "bar")[] = ["foo", "bar"];
+
+      assertArrayLength(value, 2);
+
+      expectTypeOf(value).toEqualTypeOf<
+        ("foo" | "bar")[] & ["foo" | "bar", "foo" | "bar"]
+      >();
+      expectTypeOf(value).toExtend<("foo" | "bar")[]>();
+      expectTypeOf(value).toExtend<["foo" | "bar", "foo" | "bar"]>();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("narrows unknown values to an array of the expected length", () => {
+      const value: unknown = ["foo", "bar"];
+
+      assertArrayLength(value, 2);
+
+      expectTypeOf(value).toEqualTypeOf<[unknown, unknown]>();
+      expectTypeOf(value).toExtend<unknown[]>();
+      expect(value).toBeTypeOf("object");
     });
   });
 
