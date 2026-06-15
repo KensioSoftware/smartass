@@ -73,6 +73,28 @@ describe("number-to-nearest", () => {
         assertNumberToNearest("47", 50, 10);
       }).toThrow('Expected string "47" to be of type number.');
     });
+
+    it("narrows unknown values to number", () => {
+      const value: unknown = 47;
+
+      assertNumberToNearest(value, 50, 10);
+
+      expectTypeOf(value).toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<bigint>();
+      expect(value).toBeTypeOf("number");
+    });
+
+    it("removes null and undefined from nullable number values", () => {
+      const value: number | null | undefined = 47;
+
+      assertNumberToNearest(value, 50, 10);
+
+      expectTypeOf(value).toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("number");
+    });
   });
 
   describe("numberToNearest", () => {
