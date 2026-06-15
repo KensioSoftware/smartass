@@ -108,8 +108,8 @@ describe("array-includes", () => {
       assertObjectMatches(foo, { bar: { foobar: arrayIncluding("b") } });
 
       // Null-chain operator ? is not required after type narrowing.
-      // TypeScript knows foo.bar.foobar is an array of strings with at least one element.
-      expectTypeOf(foo.bar.foobar).toEqualTypeOf<[string, ...string[]]>();
+      // TypeScript knows foo.bar.foobar is an array of strings including "b".
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<["b", ...string[]]>();
       expectTypeOf(foo.bar.foobar.includes("b")).toEqualTypeOf<boolean>();
       expect(foo.bar.foobar.includes("b")).toBe(true);
     });
