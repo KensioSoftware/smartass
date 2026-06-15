@@ -61,6 +61,48 @@ describe("string-not-includes", () => {
         'Expected string "hello world" not to include "o w", but it did.',
       );
     });
+
+    it("throws when value is not a string", () => {
+      expect(() => {
+        assertStringNotIncludes(123, "foo");
+      }).toThrow('Expected number 123 to be a string not including "foo".');
+    });
+
+    it("narrows unknown values to strings for non-empty substrings", () => {
+      const value: unknown = "hello world";
+
+      assertStringNotIncludes(value, "foo");
+
+      expectTypeOf(value).toEqualTypeOf<
+        Exclude<string, `${string}foo${string}`>
+      >();
+      expectTypeOf(value).toExtend<string>();
+      expect(value).toBeTypeOf("string");
+      expect(value.includes("foo")).toBe(false);
+    });
+
+    it("preserves overlap detail for existing string unions", () => {
+      function getValue(): "hello world" | "goodbye world" | "safe text" {
+        return "safe text";
+      }
+
+      const value = getValue();
+
+      assertStringNotIncludes(value, "hello");
+
+      expectTypeOf(value).toEqualTypeOf<"goodbye world" | "safe text">();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("string");
+      expect(value.includes("hello")).toBe(false);
+    });
+
+    it("narrows impossible empty-substring assertions to never", () => {
+      const value: unknown = "hello";
+
+      expect(() => {
+        assertStringNotIncludes(value, "");
+      }).toThrow('Expected string "hello" not to include "", but it did.');
+    });
   });
 
   describe("stringNotIncluding", () => {
