@@ -1,12 +1,9 @@
 import { AssertionError } from "../../assertion-error.js";
 import { instanceOf } from "./instance-of.match.js";
-import type { ClassConstructor } from "./instance-of.type.js";
-
-type InstanceOfAssertion<TActual, TInstance> = [
-  Extract<NonNullable<TActual>, TInstance>,
-] extends [never]
-  ? TActual & TInstance
-  : Extract<NonNullable<TActual>, TInstance>;
+import type {
+  ClassConstructor,
+  InstanceOfAssertion,
+} from "./instance-of.type.js";
 
 export function assertInstanceOf<TActual, TInstance>(
   value: TActual,

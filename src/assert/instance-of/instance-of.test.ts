@@ -132,6 +132,33 @@ describe("instance-of", () => {
       expect(foo.bar.foobar.value).toBeTypeOf("number");
     });
 
+    it("preserves specific structural intersection in composable matcher", () => {
+      type NamedTestClass = TestClass & { name: string };
+
+      interface Foo {
+        bar?: { foobar?: NamedTestClass | OtherClass };
+      }
+
+      function getFoo(): Foo {
+        const value = new TestClass() as NamedTestClass;
+        value.name = "test";
+        return { bar: { foobar: value } };
+      }
+
+      const foo = getFoo();
+
+      assertObjectMatches(foo, {
+        bar: { foobar: instanceOf(TestClass) },
+      });
+
+      expectTypeOf(foo.bar.foobar).toExtend<TestClass>();
+      expectTypeOf(foo.bar.foobar).toEqualTypeOf<NamedTestClass>();
+      expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<TestClass>();
+      expectTypeOf(foo.bar.foobar.value).toEqualTypeOf<number>();
+      expectTypeOf(foo.bar.foobar.name).toEqualTypeOf<string>();
+      expect(foo.bar.foobar).toBeInstanceOf(TestClass);
+    });
+
     it("explains failed composition", () => {
       expect(() => {
         assertObjectMatches(

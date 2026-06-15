@@ -17,6 +17,8 @@ export function instanceOf<T>(
       () => `instance of ${classConstructor.name}`,
       () => `${classConstructor.name}()`,
     ),
+    // Runtime marker used only to make the matcher type nominal for type-level
+    // refinement dispatch. It is not part of the user-facing matcher behaviour.
     [instanceOfMatcher]: undefined as T,
   };
 }

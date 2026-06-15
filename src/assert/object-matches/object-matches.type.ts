@@ -19,7 +19,10 @@ import type {
   ArrayIncludingAllMatch,
   ArrayIncludingAllMatcher,
 } from "../array-includes-all/array-includes-all.type.js";
-import type { InstanceOfMatcher } from "../instance-of/instance-of.type.js";
+import type {
+  InstanceOfMatch,
+  InstanceOfMatcher,
+} from "../instance-of/instance-of.type.js";
 import type {
   ArrayIncludingMatch,
   ArrayIncludingMatcher,
@@ -28,10 +31,6 @@ import type {
   NonEmptyArrayMatch,
   NonEmptyArrayMatcher,
 } from "../array-not-empty/array-not-empty.type.js";
-import type {
-  BufferEqualToMatch,
-  BufferEqualToMatcher,
-} from "../buffer-equal/buffer-equal.type.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -60,12 +59,6 @@ type ActualArrayElement<TActual> =
   NonNullable<TActual> extends readonly unknown[]
     ? ArrayElement<NonNullable<TActual>>
     : unknown;
-
-type InstanceOfRefine<TActual, TInstance> = [
-  Extract<NonNullable<TActual>, TInstance>,
-] extends [never]
-  ? TInstance
-  : Extract<NonNullable<TActual>, TInstance>;
 
 type ObjectWithPropertyRefine<TActual, K extends PropertyKey> =
   NonNullable<TActual> extends object
@@ -100,8 +93,8 @@ type RefineMatcherResult<TActual, TExpected extends AssertionMatcher<unknown>> =
           ? ArrayOfMinLengthMatch<TActual, N>
           : TExpected extends NonEmptyArrayMatcher
             ? NonEmptyArrayMatch<TActual>
-            : TExpected extends BufferEqualToMatcher<infer TBuffer>
-              ? BufferEqualToMatch<TActual, TBuffer>
+            : TExpected extends InstanceOfMatcher<infer TInstance>
+              ? InstanceOfMatch<TActual, TInstance>
               : TExpected extends {
                     readonly [refinement]?: unknown;
                   }
@@ -117,9 +110,7 @@ type RefineMatcherResult<TActual, TExpected extends AssertionMatcher<unknown>> =
                       ]
                     : TExpected extends AssertionMatcher<readonly unknown[]>
                       ? ActualArrayElement<TActual>[]
-                      : TExpected extends InstanceOfMatcher<infer TInstance>
-                        ? InstanceOfRefine<TActual, TInstance>
-                        : RefinedMatch<TExpected, TActual>;
+                      : RefinedMatch<TExpected, TActual>;
 
 type MatcherRefine<TActual, TExpected> =
   TExpected extends AssertionMatcher<unknown>
