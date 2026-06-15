@@ -57,6 +57,56 @@ describe("type-bigint", () => {
         assertTypeBigInt(42, "Custom error");
       }).toThrow("Custom error");
     });
+
+    it("narrows unknown values to bigint", () => {
+      const value: unknown = 42n;
+
+      assertTypeBigInt(value);
+
+      expectTypeOf(value).toEqualTypeOf<bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expect(value).toBeTypeOf("bigint");
+    });
+
+    it("narrows primitive unions to bigint", () => {
+      function getValue():
+        | string
+        | number
+        | bigint
+        | boolean
+        | null
+        | undefined {
+        return 42n;
+      }
+
+      const value = getValue();
+
+      assertTypeBigInt(value);
+
+      expectTypeOf(value).toEqualTypeOf<bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<number>();
+      expectTypeOf(value).not.toEqualTypeOf<string>();
+      expectTypeOf(value).not.toEqualTypeOf<boolean>();
+      expectTypeOf(value).not.toEqualTypeOf<null>();
+      expectTypeOf(value).not.toEqualTypeOf<undefined>();
+      expect(value).toBeTypeOf("bigint");
+    });
+
+    it("preserves bigint literal union overlap", () => {
+      function getValue(): 1n | 2n | "not bigint" {
+        return 1n;
+      }
+
+      const value = getValue();
+
+      assertTypeBigInt(value);
+
+      expectTypeOf(value).toEqualTypeOf<1n | 2n>();
+      expectTypeOf(value).toExtend<bigint>();
+      expectTypeOf(value).not.toEqualTypeOf<bigint>();
+      expect(value).toBeTypeOf("bigint");
+    });
   });
 
   describe("typeBigInt", () => {
