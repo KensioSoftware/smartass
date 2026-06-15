@@ -102,6 +102,59 @@ describe("array-includes-all", () => {
         assertArrayIncludesAll([1, 2, 2, 3], [2, 2, 3]);
       }).not.toThrow();
     });
+
+    it("preserves specific array type information when value is already an array", () => {
+      const value: ("foo" | "bar" | "baz")[] = ["foo", "bar", "baz"];
+
+      assertArrayIncludesAll(value, ["foo", "bar"]);
+
+      expectTypeOf(value).toEqualTypeOf<
+        ("foo" | "bar" | "baz")[] &
+          [
+            "foo" | "bar" | "baz",
+            "foo" | "bar" | "baz",
+            ...("foo" | "bar" | "baz")[],
+          ]
+      >();
+      expectTypeOf(value).toExtend<("foo" | "bar" | "baz")[]>();
+      expectTypeOf(value).toExtend<
+        [
+          "foo" | "bar" | "baz",
+          "foo" | "bar" | "baz",
+          ...("foo" | "bar" | "baz")[],
+        ]
+      >();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("narrows unknown values to an array including all specified element types", () => {
+      const value: unknown = ["foo", "bar", "baz"];
+
+      assertArrayIncludesAll(value, ["foo", "bar"]);
+
+      expectTypeOf(value).toEqualTypeOf<
+        ["foo" | "bar", "foo" | "bar", ...("foo" | "bar")[]]
+      >();
+      expectTypeOf(value).toExtend<unknown[]>();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("narrows unknown values to an array when no elements are required", () => {
+      const value: unknown = ["foo", "bar"];
+
+      assertArrayIncludesAll(value, []);
+
+      expectTypeOf(value).toEqualTypeOf<unknown[]>();
+      expect(value).toBeTypeOf("object");
+    });
+
+    it("throws when value is not an array", () => {
+      expect(() => {
+        assertArrayIncludesAll("not an array", ["foo"]);
+      }).toThrow(
+        'Expected string "not an array" to be array including all of array ["foo"] (len 1).',
+      );
+    });
   });
 
   describe("arrayIncludingAll", () => {

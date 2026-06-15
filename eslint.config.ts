@@ -166,6 +166,14 @@ export default defineConfig(
     },
   },
 
+  // ── Type files ──────────────────────────────────────────
+  {
+    files: ["**/*.type.ts"],
+    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
+
   // ── Config files (allow default exports) ────────────────
   {
     files: ["*.config.ts", "*.config.js"],
