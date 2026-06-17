@@ -5,6 +5,7 @@ set -Eeuo pipefail
 pnpm install
 pnpm build:index
 pnpm build:readme
+pnpm build
 pnpm check
 pnpm pack --dry-run
 pnpm version minor
