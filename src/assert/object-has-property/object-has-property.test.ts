@@ -90,7 +90,12 @@ describe("object-has-property", () => {
       assertObjectHasProperty(value, "name");
 
       expectTypeOf(value).toEqualTypeOf<
-        { name?: string; age: number } & object & Record<"name", unknown>
+        {
+          name?: string;
+          age: number;
+        } & object & {
+            name: string | undefined;
+          }
       >();
       expectTypeOf(value.name).toEqualTypeOf<string | undefined>();
       expectTypeOf(value.age).toEqualTypeOf<number>();
@@ -113,6 +118,17 @@ describe("object-has-property", () => {
       expectTypeOf(value.age).toEqualTypeOf<number>();
       expect(value.name).toBeTypeOf("string");
       expect(value.age).toBeTypeOf("number");
+    });
+
+    it("incorporates known type of property if present", () => {
+      const foo: Record<string, number> = { foobar: 123 };
+
+      expectTypeOf(foo["foobar"]).toEqualTypeOf<number | undefined>();
+
+      assertObjectHasProperty(foo, "foobar");
+
+      expectTypeOf(foo.foobar).toEqualTypeOf<number>();
+      expect(foo.foobar).toBeTypeOf("number");
     });
   });
 
