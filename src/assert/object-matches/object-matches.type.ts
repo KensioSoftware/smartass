@@ -89,6 +89,10 @@ import type {
   TypeTypedArrayMatcher,
 } from "../type-typed-array/type-typed-array.type.js";
 import type { UuidV4Match, UuidV4Matcher } from "../uuid/uuid-v4.type.js";
+import type {
+  MapOfSizeMatch,
+  MapOfSizeMatcher,
+} from "../map-size/map-size.type.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -237,11 +241,13 @@ type TypeMatcherRefine<
 type MiscMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
   TExpected extends InstanceOfMatcher<infer TInstance>
     ? InstanceOfMatch<TActual, TInstance>
-    : TExpected extends OneOfMatcher<infer TAllowed>
-      ? OneOfMatch<TActual, TAllowed>
-      : TExpected extends UuidV4Matcher
-        ? UuidV4Match<TActual>
-        : never;
+    : TExpected extends MapOfSizeMatcher<infer N>
+      ? MapOfSizeMatch<TActual, N>
+      : TExpected extends OneOfMatcher<infer TAllowed>
+        ? OneOfMatch<TActual, TAllowed>
+        : TExpected extends UuidV4Matcher
+          ? UuidV4Match<TActual>
+          : never;
 
 /**
  * Run all explicit matcher refinements before trying generic fallbacks.
