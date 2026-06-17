@@ -29,6 +29,8 @@ export * from "./assert/object-has-property/object-has-property.match.js";
 export * from "./assert/object-matches/object-matches.assert.js";
 export * from "./assert/one-of/one-of.assert.js";
 export * from "./assert/one-of/one-of.match.js";
+export * from "./assert/set-size/set-size.assert.js";
+export * from "./assert/set-size/set-size.match.js";
 export * from "./assert/string-ends-with/string-ends-with.assert.js";
 export * from "./assert/string-ends-with/string-ends-with.match.js";
 export * from "./assert/string-includes/string-includes.assert.js";
