@@ -1,7 +1,17 @@
 import { arrayOfLength } from "./array-length.match.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
-import type { ArrayOfLength } from "./array-length.type.js";
+import type { ArrayOfLength, ArrayOfLengthMatch } from "./array-length.type.js";
+
+export function assertArrayLength<
+  TArray extends unknown[] | null | undefined,
+  const N extends number,
+>(
+  value: TArray,
+  expectedLength: N,
+  message?: string,
+): asserts value is Extract<NonNullable<TArray>, unknown[]> &
+  ArrayOfLengthMatch<TArray, N>;
 
 export function assertArrayLength<
   TArray extends unknown[],

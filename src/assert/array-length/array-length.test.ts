@@ -92,6 +92,27 @@ describe("array-length", () => {
       expectTypeOf(value).toExtend<unknown[]>();
       expect(value).toBeTypeOf("object");
     });
+
+    it("narrows to exclude optional undefined", () => {
+      interface Foo {
+        foobar?: string[] | undefined;
+      }
+
+      function getFoo(): Foo {
+        return { foobar: ["foo"] };
+      }
+
+      const foo = getFoo();
+
+      assertArrayLength(foo.foobar, 1);
+
+      expectTypeOf(foo.foobar).toExtend<string[]>();
+      expectTypeOf(foo.foobar).toEqualTypeOf<string[] & [string]>();
+      expect(foo.foobar).toBeTypeOf("object");
+
+      expectTypeOf(foo.foobar[0]).toEqualTypeOf<string>();
+      expectTypeOf(foo.foobar[0]).not.toEqualTypeOf<undefined>();
+    });
   });
 
   describe("arrayOfLength", () => {
