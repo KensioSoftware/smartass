@@ -10,7 +10,7 @@ export function assertObjectHasProperty<
   value: T,
   key: K,
   message?: string,
-): asserts value is T & ObjectWithProperty<K>;
+): asserts value is T & ObjectWithProperty<K, T>;
 
 export function assertObjectHasProperty<K extends PropertyKey>(
   value: unknown,
