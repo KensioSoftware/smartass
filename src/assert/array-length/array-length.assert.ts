@@ -13,15 +13,6 @@ export function assertArrayLength<
 ): asserts value is Extract<NonNullable<TArray>, unknown[]> &
   ArrayOfLengthMatch<TArray, N>;
 
-export function assertArrayLength<
-  TArray extends unknown[],
-  const N extends number,
->(
-  value: TArray,
-  expectedLength: N,
-  message?: string,
-): asserts value is TArray & ArrayOfLength<TArray[number], N>;
-
 export function assertArrayLength<const N extends number>(
   value: unknown,
   expectedLength: N,

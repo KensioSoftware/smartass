@@ -93,6 +93,10 @@ import type {
   MapOfSizeMatch,
   MapOfSizeMatcher,
 } from "../map-size/map-size.type.js";
+import type {
+  SetOfSizeMatch,
+  SetOfSizeMatcher,
+} from "../set-size/set-size.type.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -243,11 +247,13 @@ type MiscMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
     ? InstanceOfMatch<TActual, TInstance>
     : TExpected extends MapOfSizeMatcher<infer N>
       ? MapOfSizeMatch<TActual, N>
-      : TExpected extends OneOfMatcher<infer TAllowed>
-        ? OneOfMatch<TActual, TAllowed>
-        : TExpected extends UuidV4Matcher
-          ? UuidV4Match<TActual>
-          : never;
+      : TExpected extends SetOfSizeMatcher<infer N>
+        ? SetOfSizeMatch<TActual, N>
+        : TExpected extends OneOfMatcher<infer TAllowed>
+          ? OneOfMatch<TActual, TAllowed>
+          : TExpected extends UuidV4Matcher
+            ? UuidV4Match<TActual>
+            : never;
 
 /**
  * Run all explicit matcher refinements before trying generic fallbacks.
