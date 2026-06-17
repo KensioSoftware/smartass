@@ -2,4 +2,5 @@
 
 pnpm run build:index
 pnpm run build:readme
+pnpm run build
 pnpm run check
