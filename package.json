@@ -3,7 +3,7 @@
   "description": "TypeScript-first test assertion functions with precise type narrowing",
   "author": "Kensio Software",
   "repository": "https://github.com/KensioSoftware/smartass",
-  "license": "AGPL-3.0",
+  "license": "Apache-2.0",
   "version": "1.21.0",
   "type": "module",
   "main": "./dist/index.js",

@@ -1,5 +1,12 @@
 # @kensio/smartass
 
+[![npm version](https://img.shields.io/npm/v/%40kensio%2Fsmartass)](https://www.npmjs.com/package/@kensio/smartass)
+![CI](https://img.shields.io/github/actions/workflow/status/KensioSoftware/smartass/pr.yml?label=CI)
+![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/hughgrigg/57bc32d63dcc345dea15d1f1c38b51bb/raw/coverage.json)
+![Node](https://img.shields.io/node/v/%40kensio%2Fsmartass)
+![TypeScript](https://img.shields.io/badge/TS-TypeScript-3178C6)
+![License](https://img.shields.io/npm/l/%40kensio%2Fsmartass)
+
 TypeScript-first test assertion functions with precise type narrowing via
 assertion signatures.
 
