@@ -6,14 +6,15 @@ updates:
     directories:
       - "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:00"
+      interval: "daily"
+      time: "08:00"
       timezone: "Europe/London"
     cooldown:
       semver-major-days: 30
       semver-minor-days: 7
-      semver-patch-days: 3
+      semver-patch-days: 5
+      exclude:
+        - "@kensio/*"
     open-pull-requests-limit: 5
     groups:
       npm-patch-and-minor:
@@ -33,9 +34,8 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
-      interval: "weekly"
-      day: "monday"
-      time: "09:15"
+      interval: "daily"
+      time: "08:00"
       timezone: "Europe/London"
     cooldown:
       default-days: 7
