@@ -44,6 +44,23 @@ export type ArrayOfLength<T, N extends number> = N extends 0
                           length: N;
                         };
 
+export type ReadonlyArrayOfLength<T, N extends number> = Readonly<
+  ArrayOfLength<T, N>
+>;
+
+type IsKnownReadonlyArray<TActual> =
+  Extract<NonNullable<TActual>, readonly unknown[]> extends Extract<
+    NonNullable<TActual>,
+    unknown[]
+  >
+    ? false
+    : true;
+
+type ArrayOfLengthMatchForMutability<TActual, TElement, N extends number> =
+  IsKnownReadonlyArray<TActual> extends true
+    ? ReadonlyArrayOfLength<TElement, N>
+    : ArrayOfLength<TElement, N>;
+
 /**
  * Type produced when an actual value is matched by arrayOfLength().
  *
@@ -52,10 +69,10 @@ export type ArrayOfLength<T, N extends number> = N extends 0
  * actual value is an array, we preserve its element type. Otherwise, we fall
  * back to unknown elements.
  */
-export type ArrayOfLengthMatch<TActual, N extends number> = ArrayOfLength<
-  ArrayMatchElement<TActual>,
-  N
->;
+export type ArrayOfLengthMatch<
+  TActual,
+  N extends number,
+> = ArrayOfLengthMatchForMutability<TActual, ArrayMatchElement<TActual>, N>;
 
 export type ArrayOfLengthMatcher<N extends number> = AssertionMatcher<
   ArrayOfLength<unknown, N>

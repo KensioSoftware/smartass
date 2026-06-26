@@ -1,16 +1,20 @@
 import { arrayOfMinLength } from "./array-min-length.match.js";
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
-import type { ArrayOfMinLength } from "./array-min-length.type.js";
+import type {
+  ArrayOfMinLength,
+  ArrayOfMinLengthMatch,
+} from "./array-min-length.type.js";
 
 export function assertArrayMinLength<
-  TArray extends unknown[],
+  TArray extends readonly unknown[] | null | undefined,
   const N extends number,
 >(
   value: TArray,
   minLength: N,
   message?: string,
-): asserts value is TArray & ArrayOfMinLength<TArray[number], N>;
+): asserts value is Extract<NonNullable<TArray>, readonly unknown[]> &
+  ArrayOfMinLengthMatch<TArray, N>;
 
 export function assertArrayMinLength<const N extends number>(
   value: unknown,

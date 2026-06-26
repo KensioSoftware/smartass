@@ -83,6 +83,19 @@ describe("array-length", () => {
       expect(value).toBeTypeOf("object");
     });
 
+    it("preserves readonly array type information when value is already readonly", () => {
+      const value: readonly ("foo" | "bar")[] = ["foo", "bar"];
+
+      assertArrayLength(value, 2);
+
+      expectTypeOf(value).toEqualTypeOf<
+        readonly ("foo" | "bar")[] & readonly ["foo" | "bar", "foo" | "bar"]
+      >();
+      expectTypeOf(value).toExtend<readonly ("foo" | "bar")[]>();
+      expectTypeOf(value).toExtend<readonly ["foo" | "bar", "foo" | "bar"]>();
+      expect(value).toBeTypeOf("object");
+    });
+
     it("narrows unknown values to an array of the expected length", () => {
       const value: unknown = ["foo", "bar"];
 
@@ -112,6 +125,38 @@ describe("array-length", () => {
 
       expectTypeOf(foo.foobar[0]).toEqualTypeOf<string>();
       expectTypeOf(foo.foobar[0]).not.toEqualTypeOf<undefined>();
+    });
+
+    it("narrows readonly optional arrays while preserving element type", () => {
+      interface HostedZone {
+        readonly Id?: string | undefined;
+        readonly Name?: string | undefined;
+      }
+
+      interface ListHostedZonesOutput {
+        readonly HostedZones?: readonly HostedZone[] | undefined;
+      }
+
+      function getOutput(): ListHostedZonesOutput {
+        return {
+          HostedZones: [
+            { Name: "a.example.com." },
+            { Name: "b.example.com." },
+            { Name: "c.example.com." },
+          ],
+        };
+      }
+
+      const output = getOutput();
+
+      assertArrayLength(output.HostedZones, 3);
+
+      expectTypeOf(output.HostedZones).toExtend<readonly HostedZone[]>();
+      expectTypeOf(output.HostedZones[0]).toEqualTypeOf<HostedZone>();
+      expectTypeOf(output.HostedZones[0].Name).toEqualTypeOf<
+        string | undefined
+      >();
+      expect(output.HostedZones[0].Name).toBe("a.example.com.");
     });
   });
 
