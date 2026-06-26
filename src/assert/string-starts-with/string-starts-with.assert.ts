@@ -1,11 +1,7 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { stringStartingWith } from "./string-starts-with.match.js";
-
-type StringStartingWith<
-  TActual extends string,
-  TPrefix extends string,
-> = TActual extends `${TPrefix}${string}` ? TActual : never;
+import type { StringStartingWithAssertion } from "./string-starts-with.type.js";
 
 export function assertStringStartsWith<
   TActual extends string,
@@ -14,7 +10,7 @@ export function assertStringStartsWith<
   value: TActual,
   prefix: TPrefix,
   message?: string,
-): asserts value is StringStartingWith<TActual, TPrefix>;
+): asserts value is StringStartingWithAssertion<TActual, TPrefix>;
 
 export function assertStringStartsWith<const TPrefix extends string>(
   value: unknown,

@@ -3,6 +3,7 @@ import { assertStringStartsWith } from "./string-starts-with.assert.js";
 import { stringStartingWith } from "./string-starts-with.match.js";
 import { desc, repr } from "../../describe/describe.js";
 import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
+import { assertNonNullable } from "../non-nullable/non-nullable.assert.js";
 
 describe("string-starts-with", () => {
   describe("assertStringStartsWith", () => {
@@ -83,6 +84,27 @@ describe("string-starts-with", () => {
       expectTypeOf(value).not.toEqualTypeOf<string>();
       expect(value).toBeTypeOf("string");
       expect(value.startsWith("package")).toBe(true);
+    });
+
+    it("narrows non-nullable broad strings to strings starting with prefix", () => {
+      interface CreateHostedZoneOutput {
+        readonly HostedZone?: {
+          readonly Id?: string | undefined;
+        };
+      }
+
+      const createHostedZoneOutput: CreateHostedZoneOutput = {
+        HostedZone: { Id: "Z123456789" },
+      };
+
+      const hostedZoneId = createHostedZoneOutput.HostedZone?.Id;
+
+      assertNonNullable(hostedZoneId);
+      assertStringStartsWith(hostedZoneId, "Z");
+
+      expectTypeOf(hostedZoneId).toEqualTypeOf<`Z${string}`>();
+      expectTypeOf(hostedZoneId).not.toEqualTypeOf<never>();
+      expect(hostedZoneId.startsWith("Z")).toBe(true);
     });
   });
 
