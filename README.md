@@ -179,10 +179,10 @@ You can use this in your ESLint config like this:
 import { defineConfig } from "eslint/config";
 import tseslint from "typescript-eslint";
 
-import { smartassAssertions } from "@kensio/smartass/eslint";
+import { smartassPreferSpecificAssertions } from "@kensio/smartass/eslint";
 
 export default defineConfig(
   ...tseslint.configs.recommended,
-  ...smartassAssertions,
+  ...smartassPreferSpecificAssertions,
 );
 ```
