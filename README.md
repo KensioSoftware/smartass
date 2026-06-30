@@ -161,3 +161,28 @@ structure.
 - [typeTypedArray](src/assert/type-typed-array/type-typed-array.match.ts)
 - [uuidV4](src/assert/uuid/uuid-v4.match.ts)
 <!-- matcher-functions:end -->
+
+## Optional ESLint config
+
+The `@kensio/smartass` package also exports an optional ESLint flat config that discourages less
+specific assertion usage. For example:
+
+```typescript
+assertIdentical(foo.length, 2);
+// suggested improvement:
+assertArrayLength(foo, 2);
+```
+
+You can use this in your ESLint config like this:
+
+```typescript
+import { defineConfig } from "eslint/config";
+import tseslint from "typescript-eslint";
+
+import { smartassAssertions } from "@kensio/smartass/eslint";
+
+export default defineConfig(
+  ...tseslint.configs.recommended,
+  ...smartassAssertions,
+);
+```
