@@ -12,6 +12,10 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./eslint": {
+      "types": "./dist/eslint/smartass-eslint.config.d.ts",
+      "import": "./dist/eslint/smartass-eslint.config.js"
     }
   },
   "files": [
