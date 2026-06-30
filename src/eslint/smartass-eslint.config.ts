@@ -169,6 +169,30 @@ export const smartassPreferSpecificAssertions = defineConfig({
       },
       {
         selector:
+          "CallExpression[callee.name='assertTrue'] > CallExpression[callee.property.name='isDirectory']",
+        message:
+          "Use assertDirectoryExists(path) instead of assertTrue(pathStats.isDirectory()).",
+      },
+      {
+        selector:
+          "CallExpression[callee.name='assertTrue'] > CallExpression[callee.property.name='isFile']",
+        message:
+          "Use assertFileExists(path) instead of assertTrue(pathStats.isFile()).",
+      },
+      {
+        selector:
+          "CallExpression[callee.name='assertTrue'] > CallExpression[callee.name='existsSync']",
+        message:
+          "Use assertPathExists(path) instead of assertTrue(existsSync(path)).",
+      },
+      {
+        selector:
+          "CallExpression[callee.name='assertTrue'] > UnaryExpression[operator='!'] > CallExpression[callee.name='existsSync']",
+        message:
+          "Use assertPathNotExists(path) instead of assertTrue(!existsSync(path)).",
+      },
+      {
+        selector:
           "CallExpression[callee.name='assertTrue'] > CallExpression[callee.property.name='startsWith']",
         message:
           "Use assertStringStartsWith(value, expectedPrefix) instead of assertTrue(value.startsWith(expectedPrefix)).",
@@ -202,6 +226,30 @@ export const smartassPreferSpecificAssertions = defineConfig({
           "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='==='] > MemberExpression[property.name='length']",
         message:
           "Use assertArrayNotEmpty(value) instead of assertFalse(value.length === 0) where the value is an array.",
+      },
+      {
+        selector:
+          "CallExpression[callee.name='assertFalse'] > UnaryExpression[operator='!'] > CallExpression[callee.property.name='isDirectory']",
+        message:
+          "Use assertDirectoryExists(path) instead of assertFalse(!pathStats.isDirectory()).",
+      },
+      {
+        selector:
+          "CallExpression[callee.name='assertFalse'] > UnaryExpression[operator='!'] > CallExpression[callee.property.name='isFile']",
+        message:
+          "Use assertFileExists(path) instead of assertFalse(!pathStats.isFile()).",
+      },
+      {
+        selector:
+          "CallExpression[callee.name='assertFalse'] > CallExpression[callee.name='existsSync']",
+        message:
+          "Use assertPathNotExists(path) instead of assertFalse(existsSync(path)).",
+      },
+      {
+        selector:
+          "CallExpression[callee.name='assertFalse'] > UnaryExpression[operator='!'] > CallExpression[callee.name='existsSync']",
+        message:
+          "Use assertPathExists(path) instead of assertFalse(!existsSync(path)).",
       },
       {
         selector:
