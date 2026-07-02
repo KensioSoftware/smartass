@@ -7,6 +7,26 @@ import {
 
 /**
  * Matcher for a TypedArray value.
+ * Matchers are applied through assertObjectMatches, where they narrow the
+ * corresponding property type.
+ * Type information that already exists in the calling scope is incorporated.
+ * @example
+ * ```ts
+ * import { assertObjectMatches, typeTypedArray } from "@kensio/smartass";
+ *
+ * const value: unknown = {
+ *   pixels: new Uint8Array([255, 128, 0]),
+ * };
+ *
+ * assertObjectMatches(value, {
+ *   pixels: typeTypedArray(),
+ * });
+ *
+ * // value is now narrowed to an object with a TypedArray pixels property
+ * // {
+ * //   pixels: TypedArray;
+ * // }
+ * ```
  */
 export function typeTypedArray(): TypeTypedArrayMatcher {
   return {

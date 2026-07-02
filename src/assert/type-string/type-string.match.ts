@@ -6,6 +6,26 @@ import {
 
 /**
  * Matcher for a string value.
+ * Matchers are applied through assertObjectMatches, where they narrow the
+ * corresponding property type.
+ * Type information that already exists in the calling scope is incorporated.
+ * @example
+ * ```ts
+ * import { assertObjectMatches, typeString } from "@kensio/smartass";
+ *
+ * const value: unknown = {
+ *   name: "Alice",
+ * };
+ *
+ * assertObjectMatches(value, {
+ *   name: typeString(),
+ * });
+ *
+ * // value is now narrowed to an object with a string name
+ * // {
+ * //   name: string;
+ * // }
+ * ```
  */
 export function typeString(): TypeStringMatcher {
   return {
