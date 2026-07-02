@@ -1,4 +1,4 @@
-# @kensio/smartass
+# <img src="https://smartassertions.dev/favicon.png" alt="Yulin logo" width="28" height="28">&nbsp;Smartass(ertions)
 
 [![npm version](https://img.shields.io/npm/v/%40kensio%2Fsmartass)](https://www.npmjs.com/package/@kensio/smartass)
 ![CI](https://img.shields.io/github/actions/workflow/status/KensioSoftware/smartass/pr.yml?label=CI)
@@ -9,6 +9,8 @@
 
 TypeScript-first test assertion functions with precise type narrowing via
 assertion signatures.
+
+[https://smartassertions.dev/](https://smartassertions.dev/ "Smartass assertion functions docs website")
 
 ## Installation
 
