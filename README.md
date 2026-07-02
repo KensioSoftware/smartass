@@ -13,7 +13,7 @@ assertion signatures.
 ## Installation
 
 ```bash
-npm install @kensio/smartass
+npm install -D @kensio/smartass
 ```
 
 ## Type narrowing with assertion signatures

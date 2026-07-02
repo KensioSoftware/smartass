@@ -8,6 +8,16 @@ import type { TypedArray } from "./type-typed-array.type.js";
  * Supports all TypedArray types: Uint8Array, Int8Array, Uint16Array,
  * Int16Array, Uint32Array, Int32Array, Float32Array, Float64Array,
  * BigInt64Array, BigUint64Array.
+ * @example
+ * ```ts
+ * import { assertTypeTypedArray } from "@kensio/smartass";
+ *
+ * const value: unknown = new Uint8Array([1, 2, 3]);
+ *
+ * assertTypeTypedArray(value);
+ *
+ * // value is now narrowed to a TypedArray
+ * ```
  */
 export function assertTypeTypedArray(
   value: unknown,

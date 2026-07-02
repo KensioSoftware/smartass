@@ -4,6 +4,16 @@ import { typeBoolean } from "./type-boolean.match.js";
 
 /**
  * Assert that a value is of type boolean, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertTypeBoolean } from "@kensio/smartass";
+ *
+ * const value: unknown = true;
+ *
+ * assertTypeBoolean(value);
+ *
+ * // value is now narrowed to boolean
+ * ```
  */
 export function assertTypeBoolean(
   value: unknown,

@@ -4,6 +4,16 @@ import { typeNumber } from "./type-number.match.js";
 
 /**
  * Assert that a value is of type number, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertTypeNumber } from "@kensio/smartass";
+ *
+ * const value: unknown = 42;
+ *
+ * assertTypeNumber(value);
+ *
+ * // value is now narrowed to number
+ * ```
  */
 export function assertTypeNumber(
   value: unknown,

@@ -9,6 +9,16 @@ import { findObjectComparisonMismatch } from "../../compare/object-comparison.js
  * Plain objects are compared recursively by value. Arrays are compared by length
  * and by recursively comparing each element in order. Primitive values and
  * non-plain objects are compared using Object.is.
+ * @example
+ * ```ts
+ * import { assertObjectEquals } from "@kensio/smartass";
+ *
+ * const user: unknown = { id: 1, name: "Ada" };
+ *
+ * assertObjectEquals(user, { id: 1, name: "Ada" } as const);
+ *
+ * // user is now narrowed to { readonly id: 1; readonly name: "Ada" }
+ * ```
  */
 export function assertObjectEquals<
   const TExpected extends Record<PropertyKey, unknown>,

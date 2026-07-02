@@ -20,6 +20,16 @@ export function assertStringStartsWith<const TPrefix extends string>(
 
 /**
  * Assert that a string starts with a given prefix, with type narrowing.
+ * @example
+ * ```ts
+ * import { assertStringStartsWith } from "@kensio/smartass";
+ *
+ * const url: string = "https://example.com";
+ *
+ * assertStringStartsWith(url, "https://");
+ *
+ * // url is now narrowed to a string starting with "https://"
+ * ```
  */
 export function assertStringStartsWith(
   value: unknown,

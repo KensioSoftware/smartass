@@ -13,6 +13,16 @@ import type { ErrorLike } from "./throws-error-like.type.js";
  * Error may fail.
  * Use assertThrowsError when you expect a real Error instance from the current
  * JavaScript realm.
+ * @example
+ * ```ts
+ * import { assertThrowsErrorLike } from "@kensio/smartass";
+ *
+ * const error = assertThrowsErrorLike(() => parseJson("bad"), {
+ *   name: "SyntaxError",
+ * });
+ *
+ * // error is returned as ErrorLike; this assertion does not narrow another value.
+ * ```
  */
 export function assertThrowsErrorLike(
   fn: () => unknown,

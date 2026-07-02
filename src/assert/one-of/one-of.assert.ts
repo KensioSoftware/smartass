@@ -22,6 +22,16 @@ export function assertOneOf<const TAllowed extends readonly unknown[]>(
 
 /**
  * Assert that a value is one of a set of expected values, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertOneOf } from "@kensio/smartass";
+ *
+ * const status: unknown = "active";
+ *
+ * assertOneOf(status, ["pending", "active"] as const);
+ *
+ * // status is now narrowed to "pending" | "active"
+ * ```
  */
 export function assertOneOf<const TAllowed extends readonly unknown[]>(
   value: unknown,

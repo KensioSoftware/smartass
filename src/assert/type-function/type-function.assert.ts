@@ -4,6 +4,16 @@ import { typeFunction } from "./type-function.match.js";
 
 /**
  * Assert that a value is of type function, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertTypeFunction } from "@kensio/smartass";
+ *
+ * const callback: unknown = () => "ok";
+ *
+ * assertTypeFunction(callback);
+ *
+ * // callback is now narrowed to Function
+ * ```
  */
 export function assertTypeFunction(
   value: unknown,

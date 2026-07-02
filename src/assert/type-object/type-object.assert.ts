@@ -4,6 +4,16 @@ import { typeObject } from "./type-object.match.js";
 
 /**
  * Assert that a value is of type object, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertTypeObject } from "@kensio/smartass";
+ *
+ * const value: unknown = { name: "Ada" };
+ *
+ * assertTypeObject(value);
+ *
+ * // value is now narrowed to object
+ * ```
  */
 export function assertTypeObject(
   value: unknown,

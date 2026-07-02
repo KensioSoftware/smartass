@@ -2,11 +2,17 @@ import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
 
 /**
- * Assert that two arrays have the same length and the same elements in the same
- * positions, with type narrowing.
+ * Assert that an array exactly equals the expected array, with type narrowing.
+ * @example
+ * ```ts
+ * import { assertArrayEquals } from "@kensio/smartass";
  *
- * Elements are compared using Object.is; nested arrays and objects must be the
- * same references.
+ * const value: unknown = ["admin", "editor"];
+ *
+ * assertArrayEquals(value, ["admin", "editor"]);
+ *
+ * // value is now narrowed to ["admin", "editor"]
+ * ```
  */
 export function assertArrayEquals<const TExpected extends readonly unknown[]>(
   actual: unknown,
