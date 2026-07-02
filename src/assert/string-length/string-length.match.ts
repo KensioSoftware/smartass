@@ -8,6 +8,26 @@ import {
 
 /**
  * Matcher for a string with exactly the expected length.
+ * Matchers are applied through assertObjectMatches, where they narrow the
+ * corresponding property type.
+ * Type information that already exists in the calling scope is incorporated.
+ * @example
+ * ```ts
+ * import { assertObjectMatches, stringOfLength } from "@kensio/smartass";
+ *
+ * const value: unknown = {
+ *   id: "user_123",
+ * };
+ *
+ * assertObjectMatches(value, {
+ *   id: stringOfLength(8),
+ * });
+ *
+ * // value is now narrowed to an object with an 8-character id
+ * // {
+ * //   id: string & { length: 8; 0: string; ...; 7: string };
+ * // }
+ * ```
  */
 export function stringOfLength<const N extends number>(
   expectedLength: N,

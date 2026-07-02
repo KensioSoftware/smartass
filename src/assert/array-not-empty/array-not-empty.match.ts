@@ -7,6 +7,26 @@ import {
 
 /**
  * Matcher for a non-empty array.
+ * Matchers are applied through assertObjectMatches, where they narrow the
+ * corresponding property type.
+ * Type information that already exists in the calling scope is incorporated.
+ * @example
+ * ```ts
+ * import { assertObjectMatches, nonEmptyArray } from "@kensio/smartass";
+ *
+ * const value: unknown = {
+ *   tags: ["typescript", "testing"],
+ * };
+ *
+ * assertObjectMatches(value, {
+ *   tags: nonEmptyArray(),
+ * });
+ *
+ * // value is now narrowed to an object with a non-empty tags array
+ * // {
+ * //   tags: [unknown, ...unknown[]];
+ * // }
+ * ```
  */
 export function nonEmptyArray(): NonEmptyArrayMatcher {
   return {

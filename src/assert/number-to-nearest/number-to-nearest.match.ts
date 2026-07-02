@@ -4,6 +4,26 @@ import { type AssertionMatcher, createMatcher } from "../../match/match.js";
 /**
  * Matcher for a number that, when rounded to the nearest given increment,
  * equals the expected value.
+ * Matchers are applied through assertObjectMatches, where they narrow the
+ * corresponding property type.
+ * Type information that already exists in the calling scope is incorporated.
+ * @example
+ * ```ts
+ * import { assertObjectMatches, numberToNearest } from "@kensio/smartass";
+ *
+ * const value: unknown = {
+ *   temperature: 98.7,
+ * };
+ *
+ * assertObjectMatches(value, {
+ *   temperature: numberToNearest(99, 1),
+ * });
+ *
+ * // value is now narrowed to an object with a numeric temperature
+ * // {
+ * //   temperature: number;
+ * // }
+ * ```
  */
 export function numberToNearest(
   expected: number,

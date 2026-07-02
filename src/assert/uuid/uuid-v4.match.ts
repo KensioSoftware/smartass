@@ -10,6 +10,26 @@ const uuidV4Regex =
 
 /**
  * Matcher for a UUID v4 string value.
+ * Matchers are applied through assertObjectMatches, where they narrow the
+ * corresponding property type.
+ * Type information that already exists in the calling scope is incorporated.
+ * @example
+ * ```ts
+ * import { assertObjectMatches, uuidV4 } from "@kensio/smartass";
+ *
+ * const value: unknown = {
+ *   id: "123e4567-e89b-42d3-a456-426614174000",
+ * };
+ *
+ * assertObjectMatches(value, {
+ *   id: uuidV4(),
+ * });
+ *
+ * // value is now narrowed to an object with a UUID v4 id
+ * // {
+ * //   id: UuidV4;
+ * // }
+ * ```
  */
 export function uuidV4(): UuidV4Matcher {
   return {
