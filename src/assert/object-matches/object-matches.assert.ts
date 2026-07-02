@@ -15,6 +15,23 @@ import type {
  * order.
  * Matcher values are evaluated with their matcher predicate.
  * Primitive values and non-plain objects are compared using Object.is.
+ * @example
+ * ```ts
+ * import { assertObjectMatches, oneOf, typeString } from "@kensio/smartass"
+ *
+ * const user: unknown = {
+ *   name: "Ada",
+ *   role: "admin",
+ * };
+ *
+ * assertObjectMatches(user, {
+ *   name: typeString(),
+ *   role: oneOf(["admin", "editor"] as const),
+ * });
+ *
+ * // user is now narrowed to an object with a string name
+ * // and a role of "admin" | "editor"
+ * ```
  */
 export function assertObjectMatches<
   TActual,

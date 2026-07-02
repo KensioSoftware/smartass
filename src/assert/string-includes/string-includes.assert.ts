@@ -20,6 +20,16 @@ export function assertStringIncludes<const TSubstring extends string>(
 
 /**
  * Assert that a string includes a given substring, with type narrowing.
+ * @example
+ * ```ts
+ * import { assertStringIncludes } from "@kensio/smartass";
+ *
+ * const message: string = "Upload success";
+ *
+ * assertStringIncludes(message, "success");
+ *
+ * // message is now narrowed to a string including "success"
+ * ```
  */
 export function assertStringIncludes(
   value: unknown,

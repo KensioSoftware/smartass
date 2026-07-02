@@ -6,6 +6,16 @@ import { repr } from "../../describe/describe.js";
 
 /**
  * Assert that a filesystem path does not exist.
+ * @example
+ * ```ts
+ * import { assertPathNotExists } from "@kensio/smartass";
+ *
+ * const filePath = "missing.txt";
+ *
+ * assertPathNotExists(filePath);
+ *
+ * // This validates the missing path at runtime without changing the path type.
+ * ```
  */
 export function assertPathNotExists(
   filePath: string | string[],

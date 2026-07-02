@@ -15,6 +15,16 @@ export function assertArrayNotEmpty(
 
 /**
  * Assert that an array has at least one element, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertArrayNotEmpty } from "@kensio/smartass";
+ *
+ * const value: unknown = ["admin"];
+ *
+ * assertArrayNotEmpty(value);
+ *
+ * // value is now narrowed to a non-empty array
+ * ```
  */
 export function assertArrayNotEmpty(value: unknown, message?: string): void {
   if (!nonEmptyArray().matches(value)) {

@@ -4,6 +4,16 @@ import { typeNumeric } from "./type-numeric.match.js";
 
 /**
  * Assert that a value is numeric (number or bigint), with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertTypeNumeric } from "@kensio/smartass";
+ *
+ * const value: unknown = 42;
+ *
+ * assertTypeNumeric(value);
+ *
+ * // value is now narrowed to number | bigint
+ * ```
  */
 export function assertTypeNumeric(
   value: unknown,

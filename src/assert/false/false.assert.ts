@@ -4,6 +4,16 @@ import { desc } from "../../describe/describe.js";
 /**
  * Assert that a value is strictly false (not just falsy), with type-narrowing
  * to the literal type `false`.
+ * @example
+ * ```ts
+ * import { assertFalse } from "@kensio/smartass";
+ *
+ * const isEnabled: unknown = false;
+ *
+ * assertFalse(isEnabled);
+ *
+ * // isEnabled is now narrowed to literal false
+ * ```
  */
 export function assertFalse(
   value: unknown,

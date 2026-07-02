@@ -21,6 +21,16 @@ export function assertObjectHasProperty<K extends PropertyKey>(
 /**
  * Assert that an object has a certain named property.
  * The property only has to exist on the object, but could be undefined.
+ * @example
+ * ```ts
+ * import { assertObjectHasProperty } from "@kensio/smartass";
+ *
+ * const user: object = { name: "Ada" };
+ *
+ * assertObjectHasProperty(user, "name");
+ *
+ * // user is now narrowed to an object with a "name" property
+ * ```
  */
 export function assertObjectHasProperty(
   value: unknown,

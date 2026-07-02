@@ -6,6 +6,16 @@ import { fileIncludesSubstring } from "../../compare/file-includes.js";
 
 /**
  * Assert that a file does not include a given substring.
+ * @example
+ * ```ts
+ * import { assertFileNotIncludes } from "@kensio/smartass";
+ *
+ * const filePath = "foobar.txt";
+ *
+ * await assertFileNotIncludes(filePath, "find me");
+ *
+ * // This validates file contents at runtime without changing the path type.
+ * ```
  */
 export async function assertFileNotIncludes(
   filePath: string | string[],

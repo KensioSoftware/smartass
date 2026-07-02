@@ -24,6 +24,16 @@ export function assertStringNotIncludes<const TSubstring extends string>(
 
 /**
  * Assert that a string does not include a given substring, with type narrowing.
+ * @example
+ * ```ts
+ * import { assertStringNotIncludes } from "@kensio/smartass";
+ *
+ * const message: string = "Upload success";
+ *
+ * assertStringNotIncludes(message, "error");
+ *
+ * // message is now narrowed to a string not including "error"
+ * ```
  */
 export function assertStringNotIncludes(
   value: unknown,

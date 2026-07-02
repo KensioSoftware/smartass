@@ -32,6 +32,16 @@ export function assertStringLength<const N extends number>(
  *
  * Note that this models JavaScript string indexing and length (UTF-16 code units),
  * not Unicode grapheme clusters.
+ * @example
+ * ```ts
+ * import { assertStringLength } from "@kensio/smartass";
+ *
+ * const code: string = "ABC123";
+ *
+ * assertStringLength(code, 6);
+ *
+ * // code is now narrowed to a string with exactly 6 code units
+ * ```
  */
 export function assertStringLength(
   value: unknown,

@@ -4,6 +4,14 @@ import { desc } from "../../describe/describe.js";
 /**
  * Assertion function that verifies an async function throws an error.
  * Returns the thrown error for further assertions.
+ * @example
+ * ```ts
+ * import { assertThrowsErrorAsync } from "@kensio/smartass";
+ *
+ * const error = await assertThrowsErrorAsync(async () => loadUser("missing"));
+ *
+ * // error is returned as Error; this assertion does not narrow another value.
+ * ```
  */
 export async function assertThrowsErrorAsync(
   fn: () => Promise<unknown>,

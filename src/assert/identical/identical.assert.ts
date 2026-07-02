@@ -4,6 +4,16 @@ import { desc } from "../../describe/describe.js";
 /**
  * Assert that a value is strictly identical to an expected value using ===,
  * with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertIdentical } from "@kensio/smartass";
+ *
+ * const status: unknown = "active";
+ *
+ * assertIdentical(status, "active");
+ *
+ * // status is now narrowed to "active"
+ * ```
  */
 export function assertIdentical<const TExpected>(
   value: unknown,

@@ -7,6 +7,16 @@ import { assertPathExists } from "../path-exists/path-exists.assert.js";
 
 /**
  * Assert that a filesystem path exists and is a file.
+ * @example
+ * ```ts
+ * import { assertFileExists } from "@kensio/smartass";
+ *
+ * const filePath = "README.md";
+ *
+ * assertFileExists(filePath);
+ *
+ * // This validates the file at runtime without changing the path type.
+ * ```
  */
 export function assertFileExists(
   filePath: string | string[],

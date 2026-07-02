@@ -4,6 +4,16 @@ import { typeSymbol } from "./type-symbol.match.js";
 
 /**
  * Assert that a value is of type symbol, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertTypeSymbol } from "@kensio/smartass";
+ *
+ * const value: unknown = Symbol("id");
+ *
+ * assertTypeSymbol(value);
+ *
+ * // value is now narrowed to symbol
+ * ```
  */
 export function assertTypeSymbol(
   value: unknown,

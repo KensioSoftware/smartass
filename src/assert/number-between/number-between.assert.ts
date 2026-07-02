@@ -6,6 +6,16 @@ import { numberBetween } from "./number-between.match.js";
 /**
  * Assert that a numeric value is between min and max inclusive, with
  * type-narrowing.
+ * @example
+ * ```ts
+ * import { assertNumberBetween } from "@kensio/smartass";
+ *
+ * const score: unknown = 87;
+ *
+ * assertNumberBetween(score, 0, 100);
+ *
+ * // score is now narrowed to number | bigint
+ * ```
  */
 export function assertNumberBetween(
   value: unknown,

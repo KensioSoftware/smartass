@@ -23,6 +23,21 @@ export function assertArrayIncludes<const E>(
  * Note that this is an identity match, so objects in an array only fulfill the
  * assertion by being a reference to the same object, rather than equivalent in
  * value to another object reference.
+ * Note that this uses the first element of the narrowed array type to indicate
+ * that the element is included, even though the element could be anywhere in
+ * the array.
+ * @example
+ * ```ts
+ * import { assertArrayIncludes } from "@kensio/smartass"
+ *
+ * const value: unknown = ["admin", "editor"];
+ *
+ * assertArrayIncludes(value, "admin");
+ *
+ * // value is now narrowed to an array including "admin"
+ * // ["admin", ...unknown[]]
+ *
+ * ```
  */
 export function assertArrayIncludes(
   value: unknown,
