@@ -28,6 +28,16 @@ export function assertArrayMinLength<const N extends number>(
  *  - A non-empty array for 1
  *  - At least N elements up to 5
  *  - At least 5 elements for >5
+ * @example
+ * ```ts
+ * import { assertArrayMinLength } from "@kensio/smartass";
+ *
+ * const value: unknown = ["admin", "editor"];
+ *
+ * assertArrayMinLength(value, 2);
+ *
+ * // value is now narrowed to an array with at least 2 elements
+ * ```
  */
 export function assertArrayMinLength(
   value: unknown,

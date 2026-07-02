@@ -7,6 +7,16 @@ import { assertPathExists } from "../path-exists/path-exists.assert.js";
 
 /**
  * Assert that a filesystem path exists and is a directory.
+ * @example
+ * ```ts
+ * import { assertDirectoryExists } from "@kensio/smartass";
+ *
+ * const directoryPath = "src";
+ *
+ * assertDirectoryExists(directoryPath);
+ *
+ * // This validates the directory at runtime without changing the path type.
+ * ```
  */
 export function assertDirectoryExists(
   directoryPath: string | string[],

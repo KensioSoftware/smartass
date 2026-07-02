@@ -6,6 +6,16 @@ import { fileIncludesSubstring } from "../../compare/file-includes.js";
 
 /**
  * Assert that a file includes a given substring.
+ * @example
+ * ```ts
+ * import { assertFileIncludes } from "@kensio/smartass";
+ *
+ * const filePath = "README.md";
+ *
+ * await assertFileIncludes(filePath, "Installation");
+ *
+ * // This validates file contents at runtime without changing the path type.
+ * ```
  */
 export async function assertFileIncludes(
   filePath: string | string[],

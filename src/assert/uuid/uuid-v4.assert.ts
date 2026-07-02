@@ -15,6 +15,16 @@ export function assertUuidV4(
 
 /**
  * Assert that a value is a UUID v4 string, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertUuidV4 } from "@kensio/smartass";
+ *
+ * const value: string = "d2f6b6c0-5f50-4f5d-9f08-2f98e93b6d8f";
+ *
+ * assertUuidV4(value);
+ *
+ * // value is now narrowed to a UUID v4 string
+ * ```
  */
 export function assertUuidV4(value: unknown, message?: string): void {
   const matcher = uuidV4();

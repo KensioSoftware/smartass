@@ -20,6 +20,16 @@ export function assertStringEndsWith<const TSuffix extends string>(
 
 /**
  * Assert that a string ends with a given suffix, with type narrowing.
+ * @example
+ * ```ts
+ * import { assertStringEndsWith } from "@kensio/smartass";
+ *
+ * const filename: string = "index.ts";
+ *
+ * assertStringEndsWith(filename, ".ts");
+ *
+ * // filename is now narrowed to a string ending with ".ts"
+ * ```
  */
 export function assertStringEndsWith(
   value: unknown,

@@ -20,6 +20,16 @@ export function assertMapSize<const N extends number>(
 
 /**
  * Assert that a Map has exactly the expected size, with type narrowing.
+ * @example
+ * ```ts
+ * import { assertMapSize } from "@kensio/smartass";
+ *
+ * const value: unknown = new Map([["role", "admin"]]);
+ *
+ * assertMapSize(value, 1);
+ *
+ * // value is now narrowed to a Map with exactly 1 entry
+ * ```
  */
 export function assertMapSize(
   value: unknown,

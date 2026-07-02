@@ -20,6 +20,16 @@ export function assertSetSize<const N extends number>(
 
 /**
  * Assert that a Set has exactly the expected size, with type narrowing.
+ * @example
+ * ```ts
+ * import { assertSetSize } from "@kensio/smartass";
+ *
+ * const value: unknown = new Set(["admin"]);
+ *
+ * assertSetSize(value, 1);
+ *
+ * // value is now narrowed to a Set with exactly 1 element
+ * ```
  */
 export function assertSetSize(
   value: unknown,

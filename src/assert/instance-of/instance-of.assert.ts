@@ -19,6 +19,16 @@ export function assertInstanceOf<TInstance>(
 
 /**
  * Assertion function that checks if a value is an instance of a given class, with type-narrowing.
+ * @example
+ * ```ts
+ * import { assertInstanceOf } from "@kensio/smartass";
+ *
+ * const error: unknown = new Error("Boom");
+ *
+ * assertInstanceOf(error, Error);
+ *
+ * // error is now narrowed to Error
+ * ```
  */
 export function assertInstanceOf<TInstance>(
   value: unknown,

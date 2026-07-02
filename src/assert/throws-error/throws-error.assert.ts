@@ -11,6 +11,14 @@ import { desc } from "../../describe/describe.js";
  * Use assertThrowsErrorLike for cross-realm errors, such as values thrown from
  * Node vm contexts, iframes, workers, or other environments where instanceof
  * Error may fail.
+ * @example
+ * ```ts
+ * import { assertThrowsError } from "@kensio/smartass";
+ *
+ * const error = assertThrowsError(() => parseJson("bad"));
+ *
+ * // error is returned as Error; this assertion does not narrow another value.
+ * ```
  */
 export function assertThrowsError(fn: () => unknown, message?: string): Error {
   try {

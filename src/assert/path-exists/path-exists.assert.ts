@@ -6,6 +6,16 @@ import { repr } from "../../describe/describe.js";
 
 /**
  * Assert that a filesystem path exists.
+ * @example
+ * ```ts
+ * import { assertPathExists } from "@kensio/smartass";
+ *
+ * const filePath = "README.md";
+ *
+ * assertPathExists(filePath);
+ *
+ * // This validates the path at runtime without changing the path type.
+ * ```
  */
 export function assertPathExists(
   filePath: string | string[],

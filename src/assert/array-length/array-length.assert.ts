@@ -25,6 +25,16 @@ export function assertArrayLength<const N extends number>(
  *  - An empty array for 0
  *  - An exact number of elements up to 10
  *  - At least 10 elements for >10
+ * @example
+ * ```ts
+ * import { assertArrayLength } from "@kensio/smartass";
+ *
+ * const value: unknown = ["admin", "editor"];
+ *
+ * assertArrayLength(value, 2);
+ *
+ * // value is now narrowed to an array with exactly 2 elements
+ * ```
  */
 export function assertArrayLength(
   value: unknown,

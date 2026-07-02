@@ -17,6 +17,16 @@ const defaultOptions = {
 
 /**
  * Assert that a file's content exactly equals the expected content.
+ * @example
+ * ```ts
+ * import { assertFileEquals } from "@kensio/smartass";
+ *
+ * const filePath = "actual.txt";
+ *
+ * assertFileEquals(filePath, "foo content");
+ *
+ * // This validates file contents at runtime without changing the path type.
+ * ```
  */
 export function assertFileEquals(
   filePath: string | string[],

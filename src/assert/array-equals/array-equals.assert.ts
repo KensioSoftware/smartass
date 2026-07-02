@@ -2,19 +2,16 @@ import { AssertionError } from "../../assertion-error.js";
 import { desc } from "../../describe/describe.js";
 
 /**
- * Assert that an array includes all specified elements, with type narrowing.
- * Elements can appear in any order and do not need to be contiguous.
- * Repeated required elements must appear at least that many times.
+ * Assert that an array exactly equals the expected array, with type narrowing.
  * @example
  * ```ts
- * import { assertArrayIncludesAll } from "@kensio/smartass"
+ * import { assertArrayEquals } from "@kensio/smartass";
  *
- * const value: unknown = ["admin", "editor", "admin"];
+ * const value: unknown = ["admin", "editor"];
  *
- * assertArrayIncludesAll(value, ["admin", "editor"] as const);
+ * assertArrayEquals(value, ["admin", "editor"]);
  *
- * // value is now narrowed to an array including both required elements
- * // ["admin" | "editor", "admin" | "editor", ...unknown[]]
+ * // value is now narrowed to ["admin", "editor"]
  * ```
  */
 export function assertArrayEquals<const TExpected extends readonly unknown[]>(
