@@ -59,6 +59,69 @@ export async function describeResponse(
   }
 }
 
+/**
+ * Build a readable multiline description from the synchronously available
+ * metadata of a Response.
+ */
+export function describeResponseMetadata(response: Response): string {
+  return describeResponseDescription(buildBaseResponseDescription(response));
+}
+
+/**
+ * Format a captured response description as a readable multiline diagnostic.
+ */
+export function describeResponseDescription(
+  description: ResponseDescription,
+): string {
+  return [
+    "Response:",
+    ...formatResponseDescriptionLines(description).map((line) => `  ${line}`),
+  ].join("\n");
+}
+
+/**
+ * Represent a Response as a concise single-line diagnostic string.
+ */
+export function reprResponse(response: Response): string {
+  return reprResponseDescription(buildBaseResponseDescription(response));
+}
+
+/**
+ * Represent a captured response description as a concise single-line diagnostic
+ * string.
+ */
+export function reprResponseDescription(
+  description: ResponseDescription,
+): string {
+  const values = [`status=${String(description.status)}`];
+
+  if (description.statusText !== "") {
+    values.push(`statusText=${JSON.stringify(description.statusText)}`);
+  }
+
+  const contentType = getHeaderValue(description.headers, "content-type");
+  if (contentType !== undefined) {
+    values.push(`contentType=${JSON.stringify(contentType)}`);
+  }
+
+  if (description.bodyText !== undefined) {
+    values.push(`body=${JSON.stringify(description.bodyText)}`);
+  }
+
+  return `Response(${values.join(",")})`;
+}
+
+function getHeaderValue(
+  headers: readonly [string, string][],
+  name: string,
+): string | undefined {
+  const normalizedName = name.toLowerCase();
+
+  return headers.find(
+    ([headerName]) => headerName.toLowerCase() === normalizedName,
+  )?.[1];
+}
+
 function buildBaseResponseDescription(response: Response): ResponseDescription {
   return {
     response,
@@ -71,4 +134,57 @@ function buildBaseResponseDescription(response: Response): ResponseDescription {
     headers: [...response.headers.entries()],
     bodyUsed: response.bodyUsed,
   };
+}
+
+function formatResponseDescriptionLines(
+  description: ResponseDescription,
+): string[] {
+  const lines = [
+    `status: ${String(description.status)}`,
+    `ok: ${String(description.ok)}`,
+  ];
+
+  if (description.statusText !== "") {
+    lines.push(`statusText: ${description.statusText}`);
+  }
+
+  if (description.url !== "") {
+    lines.push(`url: ${description.url}`);
+  }
+
+  if (description.redirected) {
+    lines.push(`redirected: ${String(description.redirected)}`);
+  }
+
+  if (description.type !== "default") {
+    lines.push(`type: ${description.type}`);
+  }
+
+  if (description.headers.length > 0) {
+    lines.push(
+      "headers:",
+      ...description.headers.map(([name, value]) => `  ${name}: ${value}`),
+    );
+  }
+
+  if (description.bodyUsed) {
+    lines.push("bodyUsed: true");
+  }
+
+  if (description.bodyText !== undefined && description.bodyText !== "") {
+    lines.push("body:", ...indentMultiline(description.bodyText));
+  }
+
+  if (description.bodyReadError !== undefined) {
+    lines.push(
+      "body read error:",
+      ...indentMultiline(description.bodyReadError),
+    );
+  }
+
+  return lines;
+}
+
+function indentMultiline(value: string): string[] {
+  return value.split("\n").map((line) => `  ${line}`);
 }

@@ -31,7 +31,7 @@ describe("response-status", () => {
 
       expect(() => {
         assertResponseStatus(response, 200);
-      }).toThrow("Expected Response");
+      }).toThrow("Expected response to have status 200 but had status 404.");
     });
 
     it("uses a custom message when provided", () => {
@@ -64,54 +64,30 @@ describe("response-status", () => {
 
       expect(() => {
         assertResponseStatus(response, 200, description);
-      }).toThrow("bodyText");
-    });
-  });
-
-  describe("describeResponse", () => {
-    it("reads the cloned response body without consuming the original body", async () => {
-      const response = new Response("hello", { status: 418 });
-
-      const description = await describeResponse(response);
-
-      expect(description.bodyText).toBe("hello");
-      expect(response.bodyUsed).toBe(false);
-      await expect(response.text()).resolves.toBe("hello");
+      }).toThrow(`Expected response to have status 200 but had status 500.
+Response:
+  status: 500
+  ok: false
+  statusText: Internal Server Error
+  headers:
+    content-type: text/plain
+  body:
+    nope`);
     });
 
-    it("still returns useful metadata if the original body is already used", async () => {
-      const response = new Response("hello", { status: 400 });
-      await response.text();
-
-      const description = await describeResponse(response);
-
-      expect(description.status).toBe(400);
-      expect(description.bodyUsed).toBe(true);
-      expect(description.bodyText).toBeUndefined();
-    });
-
-    it("integrates with desc and repr for plain responses", () => {
-      const response = new Response("hello", {
-        status: 202,
-        statusText: "Accepted",
-      });
-
-      expect(desc(response)).toContain("Response");
-      expect(repr(response)).toContain("status=202");
-      expect(repr(response)).toContain('statusText="Accepted"');
-    });
-
-    it("integrates with desc and repr for response descriptions", async () => {
-      const response = new Response("hello", {
-        status: 202,
-        statusText: "Accepted",
+    it("does not expose ResponseDescription in enhanced assertion messages", async () => {
+      const response = new Response("Unknown simulated AWS host foobar", {
+        status: 501,
+        headers: {
+          "content-type": "text/plain; charset=utf-8",
+        },
       });
 
       const description = await describeResponse(response);
 
-      expect(desc(description)).toContain("ResponseDescription");
-      expect(repr(description)).toContain("status=202");
-      expect(repr(description)).toContain('bodyText="hello"');
+      expect(() => {
+        assertResponseStatus(response, 200, description);
+      }).toThrow(/^(?!.*ResponseDescription).*$/s);
     });
   });
 

@@ -1,5 +1,11 @@
 import { isMatcher } from "../match/match.js";
-import type { ResponseDescription } from "./response/describe-response.js";
+import {
+  describeResponseDescription,
+  describeResponseMetadata,
+  reprResponse,
+  reprResponseDescription,
+  type ResponseDescription,
+} from "./response/describe-response.js";
 
 /**
  * Try to make a useful description of a value that is helpful for debugging.
@@ -10,11 +16,11 @@ export function desc(value: unknown): string {
   }
 
   if (isResponseDescription(value)) {
-    return `ResponseDescription ${repr(value)}`;
+    return describeResponseDescription(value);
   }
 
   if (isResponse(value)) {
-    return `Response ${repr(value)}`;
+    return describeResponseMetadata(value);
   }
 
   if (value === null) return "null";
@@ -247,57 +253,6 @@ function isResponseDescription(value: unknown): value is ResponseDescription {
     Array.isArray(candidate.headers) &&
     typeof candidate.bodyUsed === "boolean"
   );
-}
-
-function reprResponse(response: Response): string {
-  return reprResponseParts({
-    status: response.status,
-    statusText: response.statusText,
-    ok: response.ok,
-    url: response.url,
-    redirected: response.redirected,
-    type: response.type,
-    headers: [...response.headers.entries()],
-    bodyUsed: response.bodyUsed,
-  });
-}
-
-function reprResponseDescription(description: ResponseDescription): string {
-  return reprResponseParts(description);
-}
-
-function reprResponseParts(parts: {
-  readonly status: number;
-  readonly statusText: string;
-  readonly ok: boolean;
-  readonly url: string;
-  readonly redirected: boolean;
-  readonly type: string;
-  readonly headers: readonly [string, string][];
-  readonly bodyUsed: boolean;
-  readonly bodyText?: string;
-  readonly bodyReadError?: string;
-}): string {
-  const values: string[] = [
-    `status=${repr(parts.status)}`,
-    `statusText=${repr(parts.statusText)}`,
-    `ok=${repr(parts.ok)}`,
-    `url=${repr(parts.url)}`,
-    `redirected=${repr(parts.redirected)}`,
-    `type=${repr(parts.type)}`,
-    `headers=${repr(parts.headers)}`,
-    `bodyUsed=${repr(parts.bodyUsed)}`,
-  ];
-
-  if (parts.bodyText !== undefined) {
-    values.push(`bodyText=${repr(parts.bodyText)}`);
-  }
-
-  if (parts.bodyReadError !== undefined) {
-    values.push(`bodyReadError=${repr(parts.bodyReadError)}`);
-  }
-
-  return `{${values.join(",")}}`;
 }
 
 function safeJson(value: unknown): string {
