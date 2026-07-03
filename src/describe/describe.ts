@@ -1,4 +1,5 @@
 import { isMatcher } from "../match/match.js";
+import type { ResponseDescription } from "./response/describe-response.js";
 
 /**
  * Try to make a useful description of a value that is helpful for debugging.
@@ -6,6 +7,14 @@ import { isMatcher } from "../match/match.js";
 export function desc(value: unknown): string {
   if (isMatcher(value)) {
     return value.describe();
+  }
+
+  if (isResponseDescription(value)) {
+    return `ResponseDescription ${repr(value)}`;
+  }
+
+  if (isResponse(value)) {
+    return `Response ${repr(value)}`;
   }
 
   if (value === null) return "null";
@@ -128,6 +137,14 @@ export function repr(value: unknown, seen = new WeakSet<object>()): string {
 
   if (value instanceof URL) return `URL("${value.href}")`;
 
+  if (isResponseDescription(value)) {
+    return reprResponseDescription(value);
+  }
+
+  if (isResponse(value)) {
+    return reprResponse(value);
+  }
+
   if (value instanceof Error) {
     const parts = [`${value.name}(${safeJson(value.message)})`];
 
@@ -208,6 +225,79 @@ function reprObject(value: object, seen: WeakSet<object>): string {
     .map(([key, val]) => `${safeJson(key)}:${repr(val, seen)}`);
 
   return `{${[...first, "...", ...last].join(",")}}`;
+}
+
+function isResponse(value: unknown): value is Response {
+  return typeof Response !== "undefined" && value instanceof Response;
+}
+
+function isResponseDescription(value: unknown): value is ResponseDescription {
+  if (value === null || typeof value !== "object") return false;
+
+  const candidate = value as Partial<ResponseDescription>;
+
+  return (
+    isResponse(candidate.response) &&
+    typeof candidate.status === "number" &&
+    typeof candidate.statusText === "string" &&
+    typeof candidate.ok === "boolean" &&
+    typeof candidate.url === "string" &&
+    typeof candidate.redirected === "boolean" &&
+    typeof candidate.type === "string" &&
+    Array.isArray(candidate.headers) &&
+    typeof candidate.bodyUsed === "boolean"
+  );
+}
+
+function reprResponse(response: Response): string {
+  return reprResponseParts({
+    status: response.status,
+    statusText: response.statusText,
+    ok: response.ok,
+    url: response.url,
+    redirected: response.redirected,
+    type: response.type,
+    headers: [...response.headers.entries()],
+    bodyUsed: response.bodyUsed,
+  });
+}
+
+function reprResponseDescription(description: ResponseDescription): string {
+  return reprResponseParts(description);
+}
+
+function reprResponseParts(parts: {
+  readonly status: number;
+  readonly statusText: string;
+  readonly ok: boolean;
+  readonly url: string;
+  readonly redirected: boolean;
+  readonly type: string;
+  readonly headers: readonly [string, string][];
+  readonly bodyUsed: boolean;
+  readonly bodyText?: string;
+  readonly bodyReadError?: string;
+}): string {
+  const values: string[] = [
+    `status=${repr(parts.status)}`,
+    `statusText=${repr(parts.statusText)}`,
+    `ok=${repr(parts.ok)}`,
+    `url=${repr(parts.url)}`,
+    `redirected=${repr(parts.redirected)}`,
+    `type=${repr(parts.type)}`,
+    `headers=${repr(parts.headers)}`,
+    `bodyUsed=${repr(parts.bodyUsed)}`,
+  ];
+
+  if (parts.bodyText !== undefined) {
+    values.push(`bodyText=${repr(parts.bodyText)}`);
+  }
+
+  if (parts.bodyReadError !== undefined) {
+    values.push(`bodyReadError=${repr(parts.bodyReadError)}`);
+  }
+
+  return `{${values.join(",")}}`;
 }
 
 function safeJson(value: unknown): string {

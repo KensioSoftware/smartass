@@ -9,7 +9,11 @@ INDEX_FILE="${SRC_DIR}/index.ts"
 {
   find "${SRC_DIR}" \
     -type f \
-    \( -name "*.assert.ts" -o -name "*.match.ts" \) \
+    \( \
+      -name "*.assert.ts" \
+      -o -name "*.match.ts" \
+      -o -name "describe-response.ts" \
+    \) \
     | sed "s#^${SRC_DIR}/##" \
     | sort \
     | sed 's#\.ts$#.js#' \

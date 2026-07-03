@@ -97,6 +97,10 @@ import type {
   SetOfSizeMatch,
   SetOfSizeMatcher,
 } from "../set-size/set-size.type.js";
+import type {
+  ResponseOfStatusMatch,
+  ResponseOfStatusMatcher,
+} from "../response-status/response-status.type.js";
 
 type FunctionLike = (...arguments_: never[]) => unknown;
 
@@ -253,7 +257,9 @@ type MiscMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
           ? OneOfMatch<TActual, TAllowed>
           : TExpected extends UuidV4Matcher
             ? UuidV4Match<TActual>
-            : never;
+            : TExpected extends ResponseOfStatusMatcher<infer TStatus>
+              ? ResponseOfStatusMatch<TActual, TStatus>
+              : never;
 
 /**
  * Run all explicit matcher refinements before trying generic fallbacks.
