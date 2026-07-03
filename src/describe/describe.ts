@@ -285,7 +285,7 @@ function reprResponseParts(parts: {
     `url=${repr(parts.url)}`,
     `redirected=${repr(parts.redirected)}`,
     `type=${repr(parts.type)}`,
-    `headers=${repr(Object.fromEntries(parts.headers))}`,
+    `headers=${repr(parts.headers)}`,
     `bodyUsed=${repr(parts.bodyUsed)}`,
   ];
 
