@@ -4,12 +4,6 @@ import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
 import { assertInstanceOf } from "../instance-of/instance-of.assert.js";
 
-export function assertResponseStatus<const TStatus extends number>(
-  response: Response,
-  expectedStatus: TStatus,
-  messageOrDescription?: string | ResponseDescription,
-): asserts response is ResponseWithStatus<TStatus>;
-
 /**
  * Assert that a Response has a specific HTTP status code, with type narrowing.
  * Optionally use describeResponse() for the third argument to get more detailed
