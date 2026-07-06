@@ -62,12 +62,7 @@ describe("type-object", () => {
 
     it("narrows primitive and object unions to object", () => {
       function getValue():
-        | { foo: string }
-        | string
-        | number
-        | boolean
-        | null
-        | undefined {
+        { foo: string } | string | number | boolean | null | undefined {
         return { foo: "bar" };
       }
 
@@ -149,10 +144,7 @@ describe("type-object", () => {
       interface Foo {
         bar?: {
           foobar?:
-            | { kind: "plain"; value: string }
-            | string[]
-            | "not object"
-            | null;
+            { kind: "plain"; value: string } | string[] | "not object" | null;
         };
       }
 

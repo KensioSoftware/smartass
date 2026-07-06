@@ -71,12 +71,7 @@ describe("type-string", () => {
 
     it("narrows primitive unions to string", () => {
       function getValue():
-        | string
-        | number
-        | boolean
-        | bigint
-        | null
-        | undefined {
+        string | number | boolean | bigint | null | undefined {
         return "hello";
       }
 

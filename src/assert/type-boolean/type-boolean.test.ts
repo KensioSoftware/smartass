@@ -55,12 +55,7 @@ describe("type-boolean", () => {
 
     it("narrows primitive unions to boolean", () => {
       function getValue():
-        | string
-        | number
-        | boolean
-        | bigint
-        | null
-        | undefined {
+        string | number | boolean | bigint | null | undefined {
         return true;
       }
 

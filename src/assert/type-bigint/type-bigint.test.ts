@@ -71,12 +71,7 @@ describe("type-bigint", () => {
 
     it("narrows primitive unions to bigint", () => {
       function getValue():
-        | string
-        | number
-        | bigint
-        | boolean
-        | null
-        | undefined {
+        string | number | bigint | boolean | null | undefined {
         return 42n;
       }
 

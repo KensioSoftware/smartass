@@ -159,8 +159,7 @@ function isPlainObject(value: unknown): value is Record<PropertyKey, unknown> {
   }
 
   const prototype: object | null = Object.getPrototypeOf(value) as
-    | object
-    | null;
+    object | null;
 
   return prototype === Object.prototype || prototype === null;
 }

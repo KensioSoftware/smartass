@@ -128,11 +128,7 @@ describe("type-typed-array", () => {
 
     it("narrows object unions to TypedArray", () => {
       function getValue():
-        | Uint8Array
-        | Int16Array
-        | string[]
-        | DataView
-        | null {
+        Uint8Array | Int16Array | string[] | DataView | null {
         return new Uint8Array([1, 2, 3]);
       }
 

@@ -88,12 +88,7 @@ describe("type-numeric", () => {
 
     it("narrows primitive unions to number or bigint", () => {
       function getValue():
-        | string
-        | number
-        | boolean
-        | bigint
-        | null
-        | undefined {
+        string | number | boolean | bigint | null | undefined {
         return 42n;
       }
 
