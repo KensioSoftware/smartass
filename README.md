@@ -128,6 +128,7 @@ structure.
 - [assertTypeTypedArray](src/assert/type-typed-array/type-typed-array.assert.ts)
 - [assertUndefined](src/assert/undefined/undefined.assert.ts)
 - [assertUuidV4](src/assert/uuid/uuid-v4.assert.ts)
+
 <!-- assertion-functions:end -->
 
 ## Matcher functions
@@ -164,6 +165,7 @@ structure.
 - [typeSymbol](src/assert/type-symbol/type-symbol.match.ts)
 - [typeTypedArray](src/assert/type-typed-array/type-typed-array.match.ts)
 - [uuidV4](src/assert/uuid/uuid-v4.match.ts)
+
 <!-- matcher-functions:end -->
 
 ## Optional ESLint config

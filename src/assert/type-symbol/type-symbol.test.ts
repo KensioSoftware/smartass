@@ -59,12 +59,7 @@ describe("type-symbol", () => {
 
     it("narrows primitive unions to symbol", () => {
       function getValue():
-        | string
-        | number
-        | boolean
-        | symbol
-        | null
-        | undefined {
+        string | number | boolean | symbol | null | undefined {
         return Symbol("foo");
       }
 

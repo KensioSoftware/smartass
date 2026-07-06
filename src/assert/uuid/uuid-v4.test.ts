@@ -84,8 +84,7 @@ describe("uuid-v4", () => {
 
     it("preserves known string information when possible", () => {
       function getValue():
-        | "123e4567-e89b-42d3-a456-426614174000"
-        | "not-a-uuid" {
+        "123e4567-e89b-42d3-a456-426614174000" | "not-a-uuid" {
         return "123e4567-e89b-42d3-a456-426614174000";
       }
 

@@ -70,12 +70,7 @@ describe("type-number", () => {
 
     it("narrows primitive unions to number", () => {
       function getValue():
-        | string
-        | number
-        | boolean
-        | bigint
-        | null
-        | undefined {
+        string | number | boolean | bigint | null | undefined {
         return 42;
       }
 

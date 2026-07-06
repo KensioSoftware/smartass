@@ -67,12 +67,7 @@ describe("type-function", () => {
 
     it("narrows primitive and function unions to Function", () => {
       function getValue():
-        | string
-        | number
-        | boolean
-        | null
-        | undefined
-        | Function {
+        string | number | boolean | null | undefined | Function {
         return () => 42;
       }
 
