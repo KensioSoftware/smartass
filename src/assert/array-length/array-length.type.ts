@@ -44,17 +44,20 @@ export type ArrayOfLength<T, N extends number> = N extends 0
                           length: N;
                         };
 
+export type ReadableArrayOfLength<T, N extends number> = Readonly<
+  ArrayOfLength<T, N>
+>;
+
 export type ReadonlyArrayOfLength<T, N extends number> = Readonly<
   ArrayOfLength<T, N>
 >;
 
 type IsKnownReadonlyArray<TActual> =
-  Extract<NonNullable<TActual>, readonly unknown[]> extends Extract<
-    NonNullable<TActual>,
-    unknown[]
-  >
-    ? false
-    : true;
+  NonNullable<TActual> extends readonly unknown[]
+    ? NonNullable<TActual> extends unknown[]
+      ? false
+      : true
+    : false;
 
 type ArrayOfLengthMatchForMutability<TActual, TElement, N extends number> =
   IsKnownReadonlyArray<TActual> extends true

@@ -96,6 +96,38 @@ describe("array-length", () => {
       expect(value).toBeTypeOf("object");
     });
 
+    it("preserves indexed element properties for nested readonly arrays", () => {
+      interface ReadonlyItem {
+        readonly id: string;
+        readonly enabled: boolean;
+      }
+
+      interface ReadonlyContainer {
+        readonly items: readonly ReadonlyItem[];
+      }
+
+      const container: ReadonlyContainer = {
+        items: [
+          { id: "first", enabled: true },
+          { id: "second", enabled: false },
+        ],
+      };
+
+      assertArrayLength(container.items, 2);
+
+      expectTypeOf(container.items).toEqualTypeOf<
+        readonly ReadonlyItem[] & readonly [ReadonlyItem, ReadonlyItem]
+      >();
+      expectTypeOf(container.items[1]).toEqualTypeOf<ReadonlyItem>();
+      expectTypeOf(container.items[1].id).toEqualTypeOf<string>();
+      expectTypeOf(container.items[0].enabled).toEqualTypeOf<boolean>();
+      expectTypeOf(container.items[1].enabled).toEqualTypeOf<boolean>();
+
+      expect(container.items[1].id).toBe("second");
+      expect(container.items[0].enabled).toBe(true);
+      expect(container.items[1].enabled).toBe(false);
+    });
+
     it("narrows unknown values to an array of the expected length", () => {
       const value: unknown = ["foo", "bar"];
 
@@ -208,6 +240,40 @@ describe("array-length", () => {
 
       expectTypeOf(foo.bar).toEqualTypeOf<[unknown, unknown]>();
       expect(foo.bar).toHaveLength(2);
+    });
+
+    it("preserves indexed element properties for nested readonly arrays", () => {
+      interface ReadonlyItem {
+        readonly id: string;
+        readonly enabled: boolean;
+      }
+
+      interface ReadonlyContainer {
+        readonly items: readonly ReadonlyItem[];
+      }
+
+      const container: ReadonlyContainer = {
+        items: [
+          { id: "first", enabled: true },
+          { id: "second", enabled: false },
+        ],
+      };
+
+      assertObjectMatches(container, {
+        items: arrayOfLength(2),
+      });
+
+      expectTypeOf(container.items).toEqualTypeOf<
+        readonly [ReadonlyItem, ReadonlyItem]
+      >();
+      expectTypeOf(container.items[1]).toEqualTypeOf<ReadonlyItem>();
+      expectTypeOf(container.items[1].id).toEqualTypeOf<string>();
+      expectTypeOf(container.items[0].enabled).toEqualTypeOf<boolean>();
+      expectTypeOf(container.items[1].enabled).toEqualTypeOf<boolean>();
+
+      expect(container.items[1].id).toBe("second");
+      expect(container.items[0].enabled).toBe(true);
+      expect(container.items[1].enabled).toBe(false);
     });
 
     it("matches arrays with the expected length", () => {
