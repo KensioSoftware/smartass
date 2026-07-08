@@ -4,14 +4,14 @@ import { desc, repr } from "../../describe/describe.js";
 import type { ArrayOfLength, ArrayOfLengthMatch } from "./array-length.type.js";
 
 export function assertArrayLength<
-  TArray extends readonly unknown[] | null | undefined,
+  TActual extends object | null | undefined,
   const N extends number,
 >(
-  value: TArray,
+  value: TActual,
   expectedLength: N,
   message?: string,
-): asserts value is Extract<NonNullable<TArray>, readonly unknown[]> &
-  ArrayOfLengthMatch<TArray, N>;
+): asserts value is Extract<NonNullable<TActual>, readonly unknown[]> &
+  ArrayOfLengthMatch<Extract<NonNullable<TActual>, readonly unknown[]>, N>;
 
 export function assertArrayLength<const N extends number>(
   value: unknown,
