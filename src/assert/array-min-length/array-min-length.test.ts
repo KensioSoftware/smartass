@@ -173,6 +173,40 @@ describe("array-min-length", () => {
       expect(output.HostedZones[0].Name).toBe("a.example.com.");
     });
 
+    it("does not narrow readonly array elements to never", () => {
+      interface ReadonlyItem {
+        readonly id: string;
+        readonly enabled: boolean;
+      }
+
+      interface ReadonlyContainer {
+        readonly items: readonly ReadonlyItem[];
+      }
+
+      const container: ReadonlyContainer = {
+        items: [
+          { id: "first", enabled: true },
+          { id: "second", enabled: false },
+        ],
+      };
+
+      assertArrayMinLength(container.items, 2);
+
+      expectTypeOf(container.items).toEqualTypeOf<
+        readonly ReadonlyItem[] &
+          readonly [ReadonlyItem, ReadonlyItem, ...ReadonlyItem[]]
+      >();
+      expectTypeOf(container.items[0]).toEqualTypeOf<ReadonlyItem>();
+      expectTypeOf(container.items[1]).toEqualTypeOf<ReadonlyItem>();
+      expectTypeOf(container.items[1].id).toEqualTypeOf<string>();
+      expectTypeOf(container.items[0].enabled).toEqualTypeOf<boolean>();
+      expectTypeOf(container.items[1].enabled).toEqualTypeOf<boolean>();
+
+      expect(container.items[1].id).toBe("second");
+      expect(container.items[0].enabled).toBe(true);
+      expect(container.items[1].enabled).toBe(false);
+    });
+
     it("narrows unknown values to an array with at least the expected length", () => {
       const value: unknown = ["foo", "bar"];
 
@@ -211,6 +245,41 @@ describe("array-min-length", () => {
       expect(foo.bar.foobar[0]).toBeTypeOf("string");
       expect(foo.bar.foobar[1]).toBeTypeOf("string");
       expect(["string", "undefined"]).toContain(typeof foo.bar.foobar[2]);
+    });
+
+    it("does not narrow readonly array elements to never when used as a matcher", () => {
+      interface ReadonlyItem {
+        readonly id: string;
+        readonly enabled: boolean;
+      }
+
+      interface ReadonlyContainer {
+        readonly items: readonly ReadonlyItem[];
+      }
+
+      const container: ReadonlyContainer = {
+        items: [
+          { id: "first", enabled: true },
+          { id: "second", enabled: false },
+        ],
+      };
+
+      assertObjectMatches(container, {
+        items: arrayOfMinLength(2),
+      });
+
+      expectTypeOf(container.items).toEqualTypeOf<
+        readonly [ReadonlyItem, ReadonlyItem, ...ReadonlyItem[]]
+      >();
+      expectTypeOf(container.items[0]).toEqualTypeOf<ReadonlyItem>();
+      expectTypeOf(container.items[1]).toEqualTypeOf<ReadonlyItem>();
+      expectTypeOf(container.items[1].id).toEqualTypeOf<string>();
+      expectTypeOf(container.items[0].enabled).toEqualTypeOf<boolean>();
+      expectTypeOf(container.items[1].enabled).toEqualTypeOf<boolean>();
+
+      expect(container.items[1].id).toBe("second");
+      expect(container.items[0].enabled).toBe(true);
+      expect(container.items[1].enabled).toBe(false);
     });
 
     it("matches arrays with exactly the minimum length", () => {

@@ -44,10 +44,6 @@ export type ArrayOfLength<T, N extends number> = N extends 0
                           length: N;
                         };
 
-export type ReadableArrayOfLength<T, N extends number> = Readonly<
-  ArrayOfLength<T, N>
->;
-
 export type ReadonlyArrayOfLength<T, N extends number> = Readonly<
   ArrayOfLength<T, N>
 >;
