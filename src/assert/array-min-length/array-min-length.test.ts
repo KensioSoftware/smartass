@@ -207,6 +207,42 @@ describe("array-min-length", () => {
       expect(container.items[1].enabled).toBe(false);
     });
 
+    it("narrows union of non-array and readonly array to the readonly array branch", () => {
+      interface PolicyStatement {
+        readonly Effect: "Allow" | "Deny";
+        readonly Action: string;
+        readonly Resource: string;
+      }
+
+      interface PolicyDocument {
+        readonly Version?: string | undefined;
+        readonly Statement: PolicyStatement | readonly PolicyStatement[];
+      }
+
+      const document: PolicyDocument = {
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Action: "s3:GetObject",
+            Resource: "arn:aws:s3:::example-bucket/*",
+          },
+        ],
+      };
+
+      assertArrayMinLength(document.Statement, 1);
+
+      expectTypeOf(document.Statement).toEqualTypeOf<
+        readonly PolicyStatement[] &
+          readonly [PolicyStatement, ...PolicyStatement[]]
+      >();
+      expectTypeOf(document.Statement[0]).toEqualTypeOf<PolicyStatement>();
+      expectTypeOf(document.Statement[0].Effect).toEqualTypeOf<
+        "Allow" | "Deny"
+      >();
+      expect(document.Statement[0].Effect).toBe("Allow");
+    });
+
     it("narrows unknown values to an array with at least the expected length", () => {
       const value: unknown = ["foo", "bar"];
 
@@ -280,6 +316,43 @@ describe("array-min-length", () => {
       expect(container.items[1].id).toBe("second");
       expect(container.items[0].enabled).toBe(true);
       expect(container.items[1].enabled).toBe(false);
+    });
+
+    it("narrows union of non-array and readonly array when used as a matcher", () => {
+      interface PolicyStatement {
+        readonly Effect: "Allow" | "Deny";
+        readonly Action: string;
+        readonly Resource: string;
+      }
+
+      interface PolicyDocument {
+        readonly Version?: string | undefined;
+        readonly Statement: PolicyStatement | readonly PolicyStatement[];
+      }
+
+      const document: PolicyDocument = {
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Action: "s3:GetObject",
+            Resource: "arn:aws:s3:::example-bucket/*",
+          },
+        ],
+      };
+
+      assertObjectMatches(document, {
+        Statement: arrayOfMinLength(1),
+      });
+
+      expectTypeOf(document.Statement).toEqualTypeOf<
+        readonly [PolicyStatement, ...PolicyStatement[]]
+      >();
+      expectTypeOf(document.Statement[0]).toEqualTypeOf<PolicyStatement>();
+      expectTypeOf(document.Statement[0].Effect).toEqualTypeOf<
+        "Allow" | "Deny"
+      >();
+      expect(document.Statement[0].Effect).toBe("Allow");
     });
 
     it("matches arrays with exactly the minimum length", () => {

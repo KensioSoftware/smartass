@@ -7,14 +7,14 @@ import type {
 } from "./array-min-length.type.js";
 
 export function assertArrayMinLength<
-  TArray extends readonly unknown[] | null | undefined,
+  TActual extends object | null | undefined,
   const N extends number,
 >(
-  value: TArray,
+  value: TActual,
   minLength: N,
   message?: string,
-): asserts value is Extract<NonNullable<TArray>, readonly unknown[]> &
-  ArrayOfMinLengthMatch<TArray, N>;
+): asserts value is Extract<NonNullable<TActual>, readonly unknown[]> &
+  ArrayOfMinLengthMatch<Extract<NonNullable<TActual>, readonly unknown[]>, N>;
 
 export function assertArrayMinLength<const N extends number>(
   value: unknown,

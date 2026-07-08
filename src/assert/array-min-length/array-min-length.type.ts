@@ -14,11 +14,15 @@ type ArrayElementOf<T> = T extends readonly (infer TElement)[]
   ? TElement
   : unknown;
 
-type ArrayMatchElement<TActual> = [
-  Extract<NonNullable<TActual>, readonly unknown[]>,
-] extends [never]
+type ArrayBranchOf<TActual> = Extract<NonNullable<TActual>, readonly unknown[]>;
+
+type ArrayMatchElement<TActual> = [ArrayBranchOf<TActual>] extends [never]
   ? unknown
-  : ArrayElementOf<Extract<NonNullable<TActual>, readonly unknown[]>>;
+  : ArrayElementOf<ArrayBranchOf<TActual>>;
+
+type ArrayMatchBranch<TActual> = [ArrayBranchOf<TActual>] extends [never]
+  ? TActual
+  : ArrayBranchOf<TActual>;
 
 export type ArrayOfMinLength<T, N extends number> = N extends 0
   ? T[]
@@ -46,7 +50,7 @@ type IsKnownReadonlyArray<TActual> =
     : false;
 
 type ArrayOfMinLengthMatchForMutability<TActual, TElement, N extends number> =
-  IsKnownReadonlyArray<TActual> extends true
+  IsKnownReadonlyArray<ArrayMatchBranch<TActual>> extends true
     ? ReadonlyArrayOfMinLength<TElement, N>
     : ArrayOfMinLength<TElement, N>;
 
