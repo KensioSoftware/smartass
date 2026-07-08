@@ -39,12 +39,11 @@ export type ReadonlyArrayOfMinLength<T, N extends number> = Readonly<
 >;
 
 type IsKnownReadonlyArray<TActual> =
-  Extract<NonNullable<TActual>, readonly unknown[]> extends Extract<
-    NonNullable<TActual>,
-    unknown[]
-  >
-    ? false
-    : true;
+  NonNullable<TActual> extends readonly unknown[]
+    ? NonNullable<TActual> extends unknown[]
+      ? false
+      : true
+    : false;
 
 type ArrayOfMinLengthMatchForMutability<TActual, TElement, N extends number> =
   IsKnownReadonlyArray<TActual> extends true
