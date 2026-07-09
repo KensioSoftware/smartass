@@ -133,7 +133,7 @@ describe("repr", () => {
     expect(repr(42)).toBe("42");
     expect(repr(0)).toBe("0");
     expect(repr(-0)).toBe("-0");
-    expect(repr(3.141_59)).toBe("3.14159");
+    expect(repr(3.14159)).toBe("3.14159");
     expect(repr(Number.NaN)).toBe("NaN");
     expect(repr(Infinity)).toBe("Infinity");
     expect(repr(-Infinity)).toBe("-Infinity");

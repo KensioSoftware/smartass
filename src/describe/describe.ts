@@ -158,7 +158,7 @@ export function repr(value: unknown, seen = new WeakSet<object>()): string {
       parts.push(`cause=${desc(value.cause)}`);
     }
 
-    const stack = value.stack?.split("\n")[1]?.trim();
+    const stack = value.stack?.split("\n", 2)[1]?.trim();
     if (stack !== undefined) parts.push(`stack=${stack.replace(/^at\s+/, "")}`);
 
     return parts.join(" ");
