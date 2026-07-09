@@ -83,8 +83,8 @@ describe("assertBufferEqual", () => {
     });
 
     it("works with Float64Array", () => {
-      const a = new Float64Array([1.123_456_789, 2.987_654_321]);
-      const b = new Float64Array([1.123_456_789, 2.987_654_321]);
+      const a = new Float64Array([1.123456789, 2.987654321]);
+      const b = new Float64Array([1.123456789, 2.987654321]);
       expect(() => {
         assertBufferEqual(a, b);
       }).not.toThrow();

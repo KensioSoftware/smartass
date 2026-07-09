@@ -51,7 +51,7 @@ describe("type-typed-array", () => {
 
     it("does not throw for Float64Array", () => {
       expect(() => {
-        assertTypeTypedArray(new Float64Array([1.123_456_789]));
+        assertTypeTypedArray(new Float64Array([1.123456789]));
       }).not.toThrow();
     });
 
@@ -252,7 +252,7 @@ describe("type-typed-array", () => {
 
     it("matches Float64Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Float64Array([1.123_456_789]))).toBe(true);
+      expect(matcher.matches(new Float64Array([1.123456789]))).toBe(true);
     });
 
     it("matches BigInt64Array values", () => {

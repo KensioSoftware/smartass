@@ -52,7 +52,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/eslint-plugin-security": "^3.0.1",
-    "@types/node": "^25.9.4",
+    "@types/node": "^25.9.5",
     "@vitest/coverage-v8": "^4.1.10",
     "@vitest/eslint-plugin": "^1.6.21",
     "eslint": "^10.6.0",
@@ -60,7 +60,7 @@
     "eslint-plugin-jsdoc": "^63.0.12",
     "eslint-plugin-no-secrets": "^2.3.3",
     "eslint-plugin-security": "^4.0.1",
-    "eslint-plugin-unicorn": "^64.0.0",
+    "eslint-plugin-unicorn": "^65.0.1",
     "globals": "^17.7.0",
     "jiti": "^2.7.0",
     "prettier": "^3.9.4",
