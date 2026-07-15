@@ -34,7 +34,7 @@ importers:
         version: 10.1.8(eslint@10.6.0(jiti@2.7.0))
       eslint-plugin-jsdoc:
         specifier: ^63.0.12
-        version: 63.0.12(eslint@10.6.0(jiti@2.7.0))
+        version: 63.0.13(eslint@10.6.0(jiti@2.7.0))
       eslint-plugin-no-secrets:
         specifier: ^2.3.3
         version: 2.3.3(eslint@10.6.0(jiti@2.7.0))
@@ -52,7 +52,7 @@ importers:
         version: 2.7.0
       prettier:
         specifier: ^3.9.4
-        version: 3.9.4
+        version: 3.9.5
       typescript:
         specifier: npm:@typescript/typescript6@^6.0.2
         version: '@typescript/typescript6@6.0.2'
@@ -353,6 +353,10 @@ packages:
 
   '@typescript-eslint/types@8.63.0':
     resolution: {integrity: sha512-xyLtl9DUBBFrcJS4x2pIqGLH68/tC2uOa4Z7pUteW09D3bXnnXUom4dyPikzWgB7llmIc1zoeI3aoUdC4rPK/Q==}
+    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@typescript-eslint/types@8.64.0':
+    resolution: {integrity: sha512-qjhfuTfLXjA4IOzXvz0rTjT01BqEiIgPoUeMwiEjnaHKJMTNo8rH5pYW1a2L/0Dnux2fPC85AeyJoWaGa8WxTA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@typescript-eslint/typescript-estree@8.63.0':
@@ -664,8 +668,8 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
-  eslint-plugin-jsdoc@63.0.12:
-    resolution: {integrity: sha512-99VfBHyoLlF9n5w9wh+jLWDBzCgYd3tfw3M/aynAd+H2ylGHWLbde/GPTuo/5az3jMAN0fH7QzCYvEOY6u+Ypg==}
+  eslint-plugin-jsdoc@63.0.13:
+    resolution: {integrity: sha512-ahG1kWA8jYNwaQJtzJlnF+v4Gb9w5r+WL98gp+L8qjLN9ErpL5sevGuemN+fCYsU3Np27F36KmDc8UPi1ml/dg==}
     engines: {node: ^22.13.0 || >=24}
     peerDependencies:
       eslint: ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -1032,8 +1036,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.9.4:
-    resolution: {integrity: sha512-yWG/o/4oJfo036EKAfK6ACAoDOfHeRHx4tuxkfBZiauURiaSmYwlpOr5LQqKtIkRD2z1PLteme2WoxEnj4tHTg==}
+  prettier@3.9.5:
+    resolution: {integrity: sha512-/FVl766LpUfB5vXgCYOYa0MeV/441Ia99AeICQIQFTY/Nw0roZwULcXpku5i1/m5kt/baz+s4Zogspd839HSMg==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -1303,7 +1307,7 @@ snapshots:
   '@es-joy/jsdoccomment@0.88.0':
     dependencies:
       '@types/estree': 1.0.9
-      '@typescript-eslint/types': 8.63.0
+      '@typescript-eslint/types': 8.64.0
       comment-parser: 1.4.7
       esquery: 1.7.0
       jsdoc-type-pratt-parser: 7.2.0
@@ -1523,6 +1527,8 @@ snapshots:
       - supports-color
 
   '@typescript-eslint/types@8.63.0': {}
+
+  '@typescript-eslint/types@8.64.0': {}
 
   '@typescript-eslint/typescript-estree@8.63.0(@typescript/typescript6@6.0.2)':
     dependencies:
@@ -1771,7 +1777,7 @@ snapshots:
     dependencies:
       eslint: 10.6.0(jiti@2.7.0)
 
-  eslint-plugin-jsdoc@63.0.12(eslint@10.6.0(jiti@2.7.0)):
+  eslint-plugin-jsdoc@63.0.13(eslint@10.6.0(jiti@2.7.0)):
     dependencies:
       '@es-joy/jsdoccomment': 0.88.0
       '@es-joy/resolve.exports': 1.2.0
@@ -2115,7 +2121,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.9.4: {}
+  prettier@3.9.5: {}
 
   punycode@2.3.1: {}
 
