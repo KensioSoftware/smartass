@@ -62,7 +62,7 @@ describe("type-object", () => {
 
     it("narrows primitive and object unions to object", () => {
       function getValue():
-        { foo: string } | string | number | boolean | null | undefined {
+        string | number | boolean | null | undefined | { foo: string } {
         return { foo: "bar" };
       }
 
@@ -82,10 +82,10 @@ describe("type-object", () => {
 
     it("preserves object union overlap", () => {
       function getValue():
-        | { kind: "object"; value: string }
-        | { kind: "array"; value: string[] }
         | "not object"
-        | null {
+        | null
+        | { kind: "object"; value: string }
+        | { kind: "array"; value: string[] } {
         return { kind: "object", value: "bar" };
       }
 
@@ -118,7 +118,7 @@ describe("type-object", () => {
   describe("typeObject", () => {
     it("works as composable matcher", () => {
       interface Foo {
-        bar?: { foobar?: { something: "hello" } | null };
+        bar?: { foobar?: null | { something: "hello" } };
       }
 
       function getFoo(): Foo {
@@ -144,7 +144,7 @@ describe("type-object", () => {
       interface Foo {
         bar?: {
           foobar?:
-            { kind: "plain"; value: string } | string[] | "not object" | null;
+            string[] | "not object" | null | { kind: "plain"; value: string };
         };
       }
 
@@ -168,7 +168,7 @@ describe("type-object", () => {
       // Then the property should keep the known object overlap, including
       // arrays, instead of widening to the less precise object type.
       expectTypeOf(foo.bar.foobar).toEqualTypeOf<
-        { kind: "plain"; value: string } | string[]
+        string[] | { kind: "plain"; value: string }
       >();
       expectTypeOf(foo.bar.foobar).toExtend<object>();
       expectTypeOf(foo.bar.foobar).not.toEqualTypeOf<object>();

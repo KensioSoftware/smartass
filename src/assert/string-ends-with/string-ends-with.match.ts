@@ -24,7 +24,7 @@ import {
  *
  * // value is now narrowed to an object with a filename ending in ".pdf"
  * // {
- * //   filename: `${string}.pdf`;
+ * //   filename: `${string}.PDF`;
  * // }
  * ```
  */

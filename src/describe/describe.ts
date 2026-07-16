@@ -112,12 +112,12 @@ export function repr(value: unknown, seen = new WeakSet<object>()): string {
   }
 
   if (value instanceof Map) {
-    const entries = reprList([...value.entries()], seen);
+    const entries = reprList([...value], seen);
     return `Map([${entries}])`;
   }
 
   if (value instanceof Set) {
-    const entries = reprList([...value.values()], seen);
+    const entries = reprList([...value], seen);
     return `Set([${entries}])`;
   }
 
@@ -165,9 +165,9 @@ export function repr(value: unknown, seen = new WeakSet<object>()): string {
   }
 
   if (typeof value === "object") {
-    const proto = Object.getPrototypeOf(value) as {
+    const proto = Object.getPrototypeOf(value) as null | {
       constructor?: { name?: unknown };
-    } | null;
+    };
     const ctorName =
       typeof proto?.constructor?.name === "string"
         ? proto.constructor.name

@@ -50,7 +50,7 @@ describe("type-number", () => {
         assertTypeNumber(3.14);
       }).not.toThrow();
       expect(() => {
-        assertTypeNumber(Number.NaN);
+        assertTypeNumber(NaN);
       }).not.toThrow();
       expect(() => {
         assertTypeNumber(Infinity);
@@ -163,7 +163,7 @@ describe("type-number", () => {
       expect(matcher.matches(0)).toBe(true);
       expect(matcher.matches(-1)).toBe(true);
       expect(matcher.matches(3.14)).toBe(true);
-      expect(matcher.matches(Number.NaN)).toBe(true);
+      expect(matcher.matches(NaN)).toBe(true);
       expect(matcher.matches(Infinity)).toBe(true);
     });
 

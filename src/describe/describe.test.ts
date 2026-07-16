@@ -23,7 +23,7 @@ describe("desc", () => {
     expect(desc(0)).toBe("number 0");
     expect(desc(-0)).toBe("number -0");
     expect(desc(3.14)).toBe("number 3.14");
-    expect(desc(Number.NaN)).toBe("number NaN");
+    expect(desc(NaN)).toBe("number NaN");
     expect(desc(Infinity)).toBe("number Infinity");
     expect(desc(-Infinity)).toBe("number -Infinity");
   });
@@ -134,7 +134,7 @@ describe("repr", () => {
     expect(repr(0)).toBe("0");
     expect(repr(-0)).toBe("-0");
     expect(repr(3.14159)).toBe("3.14159");
-    expect(repr(Number.NaN)).toBe("NaN");
+    expect(repr(NaN)).toBe("NaN");
     expect(repr(Infinity)).toBe("Infinity");
     expect(repr(-Infinity)).toBe("-Infinity");
   });
