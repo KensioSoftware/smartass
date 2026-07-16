@@ -131,6 +131,7 @@ function buildBaseResponseDescription(response: Response): ResponseDescription {
     url: response.url,
     redirected: response.redirected,
     type: response.type,
+    // eslint-disable-next-line unicorn/prefer-iterator-to-array
     headers: [...response.headers.entries()],
     bodyUsed: response.bodyUsed,
   };

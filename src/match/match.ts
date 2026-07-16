@@ -87,5 +87,7 @@ export function createMatcher<T>(
  * Check whether a value is a matcher.
  */
 export function isMatcher(value: unknown): value is AssertionMatcher<unknown> {
-  return typeof value === "object" && value !== null && matcher in value;
+  return (
+    typeof value === "object" && value !== null && Object.hasOwn(value, matcher)
+  );
 }

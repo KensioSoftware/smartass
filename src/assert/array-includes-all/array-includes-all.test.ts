@@ -286,6 +286,7 @@ describe("array-includes-all", () => {
 
     it("repr handles mixed types correctly for truncated arrays", () => {
       expect(
+        // eslint-disable-next-line unicorn/max-nested-calls
         repr(arrayIncludingAll([1, "a", null, true, 2n, Symbol("x")])),
       ).toBe('[…,1,"a",null,…,Symbol(x),…]');
     });

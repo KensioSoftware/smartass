@@ -135,6 +135,8 @@ export default defineConfig(
     rules: {
       "unicorn/better-regex": "warn",
       "unicorn/prevent-abbreviations": "off",
+      "unicorn/prefer-at": "off",
+      "unicorn/no-unsafe-property-key": "off",
     },
   },
 

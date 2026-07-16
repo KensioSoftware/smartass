@@ -36,6 +36,7 @@ export function objectWithProperty<K extends PropertyKey>(
 ): ObjectWithPropertyMatcher<K> {
   return createMatcher(
     (value): value is ObjectWithProperty<K> =>
+      // eslint-disable-next-line unicorn/no-computed-property-existence-check
       typeof value === "object" && value !== null && key in value,
     () => `object with property ${desc(key)}`,
     () => `{${repr(key)}}`,
