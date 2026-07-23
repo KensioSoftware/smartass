@@ -24,7 +24,7 @@ export function assertNumberBetween(
   message = `Expected ${desc(value)} to be between ${desc(min)} and ${desc(max)} inclusive.`,
 ): asserts value is number | bigint {
   assertTypeNumeric(value, message);
-  if (!numberBetween(min, max).matches(value)) {
+  if (!numberBetween(min, max).isMatch(value)) {
     throw new AssertionError(
       message,
       value,

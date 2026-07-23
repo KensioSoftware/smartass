@@ -122,49 +122,49 @@ describe("number-to-nearest", () => {
     it("matches when value rounds to expected", () => {
       const matcher = numberToNearest(12, 1);
 
-      expect(matcher.matches(12.3)).toBe(true);
+      expect(matcher.isMatch(12.3)).toBe(true);
     });
 
     it("matches to nearest 10", () => {
       const matcher = numberToNearest(50, 10);
 
-      expect(matcher.matches(47)).toBe(true);
-      expect(matcher.matches(43)).toBe(false);
+      expect(matcher.isMatch(47)).toBe(true);
+      expect(matcher.isMatch(43)).toBe(false);
     });
 
     it("matches to nearest 0.1", () => {
       const matcher = numberToNearest(1.2, 0.1);
 
-      expect(matcher.matches(1.234)).toBe(true);
-      expect(matcher.matches(1.267)).toBe(false);
+      expect(matcher.isMatch(1.234)).toBe(true);
+      expect(matcher.isMatch(1.267)).toBe(false);
     });
 
     it("matches to nearest 5", () => {
       const matcher = numberToNearest(10, 5);
 
-      expect(matcher.matches(8)).toBe(true);
-      expect(matcher.matches(7)).toBe(false);
+      expect(matcher.isMatch(8)).toBe(true);
+      expect(matcher.isMatch(7)).toBe(false);
     });
 
     it("matches exact values", () => {
       const matcher = numberToNearest(50, 10);
 
-      expect(matcher.matches(50)).toBe(true);
+      expect(matcher.isMatch(50)).toBe(true);
     });
 
     it("matches negative numbers", () => {
       const matcher = numberToNearest(-50, 10);
 
-      expect(matcher.matches(-47)).toBe(true);
-      expect(matcher.matches(-43)).toBe(false);
+      expect(matcher.isMatch(-47)).toBe(true);
+      expect(matcher.isMatch(-43)).toBe(false);
     });
 
     it("does not match non-number values", () => {
       const matcher = numberToNearest(50, 10);
 
-      expect(matcher.matches("47")).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
+      expect(matcher.isMatch("47")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
     });
 
     it("describes the matcher", () => {

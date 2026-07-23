@@ -175,17 +175,17 @@ describe("type-function", () => {
     it("matches function values", () => {
       const matcher = typeFunction();
       expect(
-        matcher.matches(() => {
+        matcher.isMatch(() => {
           //
         }),
       ).toBe(true);
       expect(
-        matcher.matches(function () {
+        matcher.isMatch(function () {
           //
         }),
       ).toBe(true);
       expect(
-        matcher.matches(async () => {
+        matcher.isMatch(async () => {
           //
         }),
       ).toBe(true);
@@ -193,12 +193,12 @@ describe("type-function", () => {
 
     it("does not match non-function values", () => {
       const matcher = typeFunction();
-      expect(matcher.matches("foobar")).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
-      expect(matcher.matches(123)).toBe(false);
-      expect(matcher.matches({})).toBe(false);
+      expect(matcher.isMatch("foobar")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
+      expect(matcher.isMatch({})).toBe(false);
     });
 
     it("describes the matcher", () => {

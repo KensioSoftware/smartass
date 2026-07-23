@@ -32,7 +32,7 @@ export function oneOf<const TAllowed extends readonly unknown[]>(
     ...createMatcher(
       (value): value is TAllowed[number] => allowed.includes(value as never),
       () => `one of ${repr(allowed)}`,
-      () => allowed.map((i) => repr(i)).join("|"),
+      () => allowed.map((index) => repr(index)).join("|"),
     ),
     // Runtime marker used only to make the matcher type nominal for type-level
     // refinement dispatch. It is not part of the user-facing matcher behaviour.

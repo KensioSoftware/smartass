@@ -47,7 +47,7 @@ export function assertArrayIncludesAll(
   message?: string,
 ): void {
   const matcher = arrayIncludingAll(elements);
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? buildArrayIncludesAllMessage(value, elements),
       value,

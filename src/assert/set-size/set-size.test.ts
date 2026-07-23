@@ -141,30 +141,30 @@ describe("set-size", () => {
     it("matches Sets with the expected size", () => {
       const matcher = setOfSize(3);
 
-      expect(matcher.matches(new Set(["a", "b", "c"]))).toBe(true);
+      expect(matcher.isMatch(new Set(["a", "b", "c"]))).toBe(true);
     });
 
     it("does not match Sets with a different size", () => {
       const matcher = setOfSize(3);
 
-      expect(matcher.matches(new Set(["a"]))).toBe(false);
-      expect(matcher.matches(new Set(["a", "b", "c", "d"]))).toBe(false);
+      expect(matcher.isMatch(new Set(["a"]))).toBe(false);
+      expect(matcher.isMatch(new Set(["a", "b", "c", "d"]))).toBe(false);
     });
 
     it("matches empty Sets when expected size is zero", () => {
       const matcher = setOfSize(0);
 
-      expect(matcher.matches(new Set())).toBe(true);
-      expect(matcher.matches(new Set(["a"]))).toBe(false);
+      expect(matcher.isMatch(new Set())).toBe(true);
+      expect(matcher.isMatch(new Set(["a"]))).toBe(false);
     });
 
     it("does not match non-Sets", () => {
       const matcher = setOfSize(1);
 
-      expect(matcher.matches(1)).toBe(false);
-      expect(matcher.matches("a")).toBe(false);
-      expect(matcher.matches({ size: 1 })).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(1)).toBe(false);
+      expect(matcher.isMatch("a")).toBe(false);
+      expect(matcher.isMatch({ size: 1 })).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("describes the setOfSize matcher", () => {

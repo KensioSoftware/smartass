@@ -14,25 +14,25 @@ import { desc } from "../../describe/describe.js";
  * ```
  */
 export async function assertThrowsErrorAsync(
-  fn: () => Promise<unknown>,
+  callable: () => Promise<unknown>,
   message?: string,
 ): Promise<Error> {
   try {
-    await fn();
+    await callable();
   } catch (error) {
     if (error instanceof Error) {
       return error;
     }
     throw new AssertionError(
       message ??
-        `Expected ${desc(fn)} to throw Error, but it threw ${desc(error)}.`,
+        `Expected ${desc(callable)} to throw Error, but it threw ${desc(error)}.`,
       error,
       Error,
     );
   }
 
   throw new AssertionError(
-    message ?? `Expected ${desc(fn)} to throw, but it did not.`,
+    message ?? `Expected ${desc(callable)} to throw, but it did not.`,
     undefined,
     Error,
   );

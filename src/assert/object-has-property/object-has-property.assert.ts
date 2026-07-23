@@ -39,7 +39,7 @@ export function assertObjectHasProperty(
 ): void {
   const matcher = objectWithProperty(key);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? `Expected ${desc(value)} to be ${matcher.describe()}.`,
       value,

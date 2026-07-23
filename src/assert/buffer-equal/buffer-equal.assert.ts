@@ -24,7 +24,7 @@ export function assertBufferEqual<T extends TypedArray>(
   expected: T,
   message?: string,
 ): asserts actual is T {
-  if (!bufferEqualTo(expected).matches(actual)) {
+  if (!bufferEqualTo(expected).isMatch(actual)) {
     throw new AssertionError(
       message ?? `Expected ${desc(actual)} to equal ${desc(expected)}.`,
       actual,

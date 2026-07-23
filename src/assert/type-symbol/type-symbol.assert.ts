@@ -20,7 +20,7 @@ export function assertTypeSymbol(
   message = `Expected ${desc(value)} to be of type symbol.`,
 ): asserts value is symbol {
   const matcher = typeSymbol();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

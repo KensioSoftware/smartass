@@ -20,7 +20,7 @@ export function assertTypeBoolean(
   message = `Expected ${desc(value)} to be of type boolean.`,
 ): asserts value is boolean {
   const matcher = typeBoolean();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

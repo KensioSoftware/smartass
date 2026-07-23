@@ -179,18 +179,18 @@ describe("type-object", () => {
 
     it("matches object values", () => {
       const matcher = typeObject();
-      expect(matcher.matches({})).toBe(true);
-      expect(matcher.matches({ key: "value" })).toBe(true);
-      expect(matcher.matches([])).toBe(true);
+      expect(matcher.isMatch({})).toBe(true);
+      expect(matcher.isMatch({ key: "value" })).toBe(true);
+      expect(matcher.isMatch([])).toBe(true);
     });
 
     it("does not match non-object values", () => {
       const matcher = typeObject();
-      expect(matcher.matches("not an object")).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
-      expect(matcher.matches(123)).toBe(false);
+      expect(matcher.isMatch("not an object")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
     });
 
     it("describes the matcher", () => {

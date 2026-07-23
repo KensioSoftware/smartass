@@ -217,47 +217,47 @@ describe("type-typed-array", () => {
 
     it("matches Uint8Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Uint8Array([1, 2, 3]))).toBe(true);
+      expect(matcher.isMatch(new Uint8Array([1, 2, 3]))).toBe(true);
     });
 
     it("matches Int8Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Int8Array([-1, 2, -3]))).toBe(true);
+      expect(matcher.isMatch(new Int8Array([-1, 2, -3]))).toBe(true);
     });
 
     it("matches Uint16Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Uint16Array([256, 512]))).toBe(true);
+      expect(matcher.isMatch(new Uint16Array([256, 512]))).toBe(true);
     });
 
     it("matches Int16Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Int16Array([-256, 512]))).toBe(true);
+      expect(matcher.isMatch(new Int16Array([-256, 512]))).toBe(true);
     });
 
     it("matches Uint32Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Uint32Array([1_000_000]))).toBe(true);
+      expect(matcher.isMatch(new Uint32Array([1_000_000]))).toBe(true);
     });
 
     it("matches Int32Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Int32Array([-1_000_000]))).toBe(true);
+      expect(matcher.isMatch(new Int32Array([-1_000_000]))).toBe(true);
     });
 
     it("matches Float32Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Float32Array([1.5, 2.5]))).toBe(true);
+      expect(matcher.isMatch(new Float32Array([1.5, 2.5]))).toBe(true);
     });
 
     it("matches Float64Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new Float64Array([1.123456789]))).toBe(true);
+      expect(matcher.isMatch(new Float64Array([1.123456789]))).toBe(true);
     });
 
     it("matches BigInt64Array values", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(new BigInt64Array([9_007_199_254_740_991n]))).toBe(
+      expect(matcher.isMatch(new BigInt64Array([9_007_199_254_740_991n]))).toBe(
         true,
       );
     });
@@ -265,38 +265,38 @@ describe("type-typed-array", () => {
     it("matches BigUint64Array values", () => {
       const matcher = typeTypedArray();
       expect(
-        matcher.matches(new BigUint64Array([9_007_199_254_740_991n])),
+        matcher.isMatch(new BigUint64Array([9_007_199_254_740_991n])),
       ).toBe(true);
     });
 
     it("does not match regular arrays", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches([1, 2, 3])).toBe(false);
+      expect(matcher.isMatch([1, 2, 3])).toBe(false);
     });
 
     it("does not match null", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("does not match undefined", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(undefined)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
     });
 
     it("does not match numbers", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches(123)).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
     });
 
     it("does not match strings", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches("hello")).toBe(false);
+      expect(matcher.isMatch("hello")).toBe(false);
     });
 
     it("does not match objects", () => {
       const matcher = typeTypedArray();
-      expect(matcher.matches({})).toBe(false);
+      expect(matcher.isMatch({})).toBe(false);
     });
 
     it("describes the matcher", () => {

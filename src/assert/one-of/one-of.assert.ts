@@ -39,7 +39,7 @@ export function assertOneOf<const TAllowed extends readonly unknown[]>(
   message?: string,
 ): void {
   const matcher = oneOf(allowed);
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? `Expected ${desc(value)} to be ${matcher.describe()}.`,
       value,

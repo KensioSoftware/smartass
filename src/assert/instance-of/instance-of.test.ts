@@ -28,9 +28,9 @@ describe("instance-of", () => {
     });
 
     it("throws when value is a plain object", () => {
-      const obj = { value: 42 };
+      const object = { value: 42 };
       expect(() => {
-        assertInstanceOf(obj, TestClass);
+        assertInstanceOf(object, TestClass);
       }).toThrow("Expected value to be instance of TestClass, but it was not.");
     });
 
@@ -173,23 +173,23 @@ describe("instance-of", () => {
     });
 
     it("matches correct instances", () => {
-      expect(instanceOf(TestClass).matches(new TestClass())).toBe(true);
+      expect(instanceOf(TestClass).isMatch(new TestClass())).toBe(true);
     });
 
     it("does not match incorrect instances", () => {
-      expect(instanceOf(TestClass).matches(new OtherClass())).toBe(false);
+      expect(instanceOf(TestClass).isMatch(new OtherClass())).toBe(false);
     });
 
     it("does not match plain objects", () => {
-      expect(instanceOf(TestClass).matches({ value: 42 })).toBe(false);
+      expect(instanceOf(TestClass).isMatch({ value: 42 })).toBe(false);
     });
 
     it("does not match null", () => {
-      expect(instanceOf(TestClass).matches(null)).toBe(false);
+      expect(instanceOf(TestClass).isMatch(null)).toBe(false);
     });
 
     it("does not match undefined", () => {
-      expect(instanceOf(TestClass).matches(undefined)).toBe(false);
+      expect(instanceOf(TestClass).isMatch(undefined)).toBe(false);
     });
 
     it("describes the matcher", () => {
@@ -203,7 +203,7 @@ describe("instance-of", () => {
     it("describes when constructor has no name", () => {
       const noNameCtor = function (): void {
         //
-      } as unknown as abstract new (...args: never[]) => unknown;
+      } as unknown as abstract new (...arguments_: never[]) => unknown;
       const matcher = instanceOf(noNameCtor);
 
       expect(matcher.describe()).toBe("instance of noNameCtor");

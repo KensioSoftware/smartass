@@ -138,75 +138,75 @@ describe("number-between", () => {
     describe("with numbers", () => {
       it("matches values within range", () => {
         const matcher = numberBetween(1, 10);
-        expect(matcher.matches(5)).toBe(true);
+        expect(matcher.isMatch(5)).toBe(true);
       });
 
       it("matches values equal to min", () => {
         const matcher = numberBetween(1, 10);
-        expect(matcher.matches(1)).toBe(true);
+        expect(matcher.isMatch(1)).toBe(true);
       });
 
       it("matches values equal to max", () => {
         const matcher = numberBetween(1, 10);
-        expect(matcher.matches(10)).toBe(true);
+        expect(matcher.isMatch(10)).toBe(true);
       });
 
       it("does not match values below min", () => {
         const matcher = numberBetween(1, 10);
-        expect(matcher.matches(0)).toBe(false);
+        expect(matcher.isMatch(0)).toBe(false);
       });
 
       it("does not match values above max", () => {
         const matcher = numberBetween(1, 10);
-        expect(matcher.matches(11)).toBe(false);
+        expect(matcher.isMatch(11)).toBe(false);
       });
 
       it("works with negative numbers", () => {
         const matcher = numberBetween(-10, 0);
-        expect(matcher.matches(-5)).toBe(true);
-        expect(matcher.matches(-15)).toBe(false);
+        expect(matcher.isMatch(-5)).toBe(true);
+        expect(matcher.isMatch(-15)).toBe(false);
       });
 
       it("works with decimals", () => {
         const matcher = numberBetween(1, 2);
-        expect(matcher.matches(1.5)).toBe(true);
-        expect(matcher.matches(2.1)).toBe(false);
+        expect(matcher.isMatch(1.5)).toBe(true);
+        expect(matcher.isMatch(2.1)).toBe(false);
       });
     });
 
     describe("with bigint", () => {
       it("matches values within range", () => {
         const matcher = numberBetween(1n, 10n);
-        expect(matcher.matches(5n)).toBe(true);
+        expect(matcher.isMatch(5n)).toBe(true);
       });
 
       it("matches values equal to min", () => {
         const matcher = numberBetween(1n, 10n);
-        expect(matcher.matches(1n)).toBe(true);
+        expect(matcher.isMatch(1n)).toBe(true);
       });
 
       it("matches values equal to max", () => {
         const matcher = numberBetween(1n, 10n);
-        expect(matcher.matches(10n)).toBe(true);
+        expect(matcher.isMatch(10n)).toBe(true);
       });
 
       it("does not match values below min", () => {
         const matcher = numberBetween(1n, 10n);
-        expect(matcher.matches(0n)).toBe(false);
+        expect(matcher.isMatch(0n)).toBe(false);
       });
 
       it("does not match values above max", () => {
         const matcher = numberBetween(1n, 10n);
-        expect(matcher.matches(11n)).toBe(false);
+        expect(matcher.isMatch(11n)).toBe(false);
       });
     });
 
     describe("type checking", () => {
       it("does not match non-numeric values", () => {
         const matcher = numberBetween(1, 10);
-        expect(matcher.matches("5")).toBe(false);
-        expect(matcher.matches(null)).toBe(false);
-        expect(matcher.matches(undefined)).toBe(false);
+        expect(matcher.isMatch("5")).toBe(false);
+        expect(matcher.isMatch(null)).toBe(false);
+        expect(matcher.isMatch(undefined)).toBe(false);
       });
     });
 

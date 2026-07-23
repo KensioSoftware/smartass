@@ -31,10 +31,10 @@ describe("array-equals", () => {
   });
 
   it("works with objects using reference equality", () => {
-    const obj = { id: 1 };
+    const object = { id: 1 };
 
     expect(() => {
-      assertArrayEquals([obj], [obj]);
+      assertArrayEquals([object], [object]);
     }).not.toThrow();
 
     expect(() => {

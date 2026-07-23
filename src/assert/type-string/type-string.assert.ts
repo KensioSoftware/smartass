@@ -20,7 +20,7 @@ export function assertTypeString(
   message = `Expected ${desc(value)} to be of type string.`,
 ): asserts value is string {
   const matcher = typeString();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

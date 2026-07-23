@@ -38,7 +38,7 @@ export function assertSetSize(
 ): void {
   const matcher = setOfSize(expectedSize);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? buildSetSizeMessage(value, expectedSize),
       value,

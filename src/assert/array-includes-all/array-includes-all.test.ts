@@ -67,21 +67,24 @@ describe("array-includes-all", () => {
     it("requires duplicate elements in matcher input to appear repeatedly", () => {
       const matcher = arrayIncludingAll([2, 2, 3]);
 
-      expect(matcher.matches([1, 2, 3])).toBe(false);
-      expect(matcher.matches([1, 2, 2, 3])).toBe(true);
+      expect(matcher.isMatch([1, 2, 3])).toBe(false);
+      expect(matcher.isMatch([1, 2, 2, 3])).toBe(true);
     });
 
     it("does not match arrays missing required elements", () => {
       const matcher = arrayIncludingAll([2, 4]);
 
-      expect(matcher.matches([1, 2, 3])).toBe(false);
+      expect(matcher.isMatch([1, 2, 3])).toBe(false);
     });
 
     it("works with objects using reference equality", () => {
-      const obj1 = { id: 1 };
-      const obj2 = { id: 2 };
+      const object1 = { id: 1 };
+      const object2 = { id: 2 };
       expect(() => {
-        assertArrayIncludesAll([obj1, obj2, { id: 3 }], [obj1, obj2]);
+        assertArrayIncludesAll(
+          [object1, object2, { id: 3 }],
+          [object1, object2],
+        );
       }).not.toThrow();
 
       expect(() => {
@@ -189,50 +192,50 @@ describe("array-includes-all", () => {
     it("matches arrays including all required elements", () => {
       const matcher = arrayIncludingAll([2, 4]);
 
-      expect(matcher.matches([1, 2, 3, 4])).toBe(true);
+      expect(matcher.isMatch([1, 2, 3, 4])).toBe(true);
     });
 
     it("matches arrays including all required elements in any order", () => {
       const matcher = arrayIncludingAll([4, 2, 1]);
 
-      expect(matcher.matches([1, 2, 3, 4])).toBe(true);
+      expect(matcher.isMatch([1, 2, 3, 4])).toBe(true);
     });
 
     it("matches arrays including duplicate required elements when the element exists", () => {
       const matcher = arrayIncludingAll([2, 2, 3]);
 
-      expect(matcher.matches([1, 2, 2, 3])).toBe(true);
+      expect(matcher.isMatch([1, 2, 2, 3])).toBe(true);
     });
 
     it("does not match arrays missing required elements", () => {
       const matcher = arrayIncludingAll([2, 4]);
 
-      expect(matcher.matches([1, 2, 3])).toBe(false);
+      expect(matcher.isMatch([1, 2, 3])).toBe(false);
     });
 
     it("does not match non-arrays", () => {
       const matcher = arrayIncludingAll([1]);
 
-      expect(matcher.matches(1)).toBe(false);
-      expect(matcher.matches("1")).toBe(false);
-      expect(matcher.matches({ 0: 1, length: 1 })).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(1)).toBe(false);
+      expect(matcher.isMatch("1")).toBe(false);
+      expect(matcher.isMatch({ 0: 1, length: 1 })).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("matches any array when no elements are required", () => {
       const matcher = arrayIncludingAll([]);
 
-      expect(matcher.matches([])).toBe(true);
-      expect(matcher.matches([1, 2, 3])).toBe(true);
+      expect(matcher.isMatch([])).toBe(true);
+      expect(matcher.isMatch([1, 2, 3])).toBe(true);
     });
 
     it("matches objects using reference equality", () => {
-      const obj1 = { id: 1 };
-      const obj2 = { id: 2 };
-      const matcher = arrayIncludingAll([obj1, obj2]);
+      const object1 = { id: 1 };
+      const object2 = { id: 2 };
+      const matcher = arrayIncludingAll([object1, object2]);
 
-      expect(matcher.matches([obj1, obj2, { id: 3 }])).toBe(true);
-      expect(matcher.matches([{ id: 1 }, obj2])).toBe(false);
+      expect(matcher.isMatch([object1, object2, { id: 3 }])).toBe(true);
+      expect(matcher.isMatch([{ id: 1 }, object2])).toBe(false);
     });
 
     it("describes the arrayIncludingAll matcher", () => {

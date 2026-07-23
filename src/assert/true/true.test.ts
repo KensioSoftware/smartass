@@ -58,30 +58,30 @@ describe("assertTrue", () => {
   });
 
   it("narrows boolean values to true", () => {
-    function getValue(): boolean {
+    function isTrue(): boolean {
       return true;
     }
 
-    const value = getValue();
+    const isValue = isTrue();
 
-    assertTrue(value);
+    assertTrue(isValue);
 
-    expectTypeOf(value).toEqualTypeOf<true>();
-    expectTypeOf(value).not.toEqualTypeOf<boolean>();
-    expect(value).toBeTypeOf("boolean");
+    expectTypeOf(isValue).toEqualTypeOf<true>();
+    expectTypeOf(isValue).not.toEqualTypeOf<boolean>();
+    expect(isValue).toBeTypeOf("boolean");
   });
 
   it("narrows boolean literal unions to true", () => {
-    function getValue(): true | false {
+    function isTrue(): true | false {
       return true;
     }
 
-    const value = getValue();
+    const isValue = isTrue();
 
-    assertTrue(value);
+    assertTrue(isValue);
 
-    expectTypeOf(value).toEqualTypeOf<true>();
-    expectTypeOf(value).not.toEqualTypeOf<boolean>();
-    expect(value).toBeTypeOf("boolean");
+    expectTypeOf(isValue).toEqualTypeOf<true>();
+    expectTypeOf(isValue).not.toEqualTypeOf<boolean>();
+    expect(isValue).toBeTypeOf("boolean");
   });
 });

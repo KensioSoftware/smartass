@@ -38,7 +38,7 @@ export function assertStringIncludes(
 ): void {
   const matcher = stringIncluding(substring);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to include ${repr(substring)}, but it did not.`,

@@ -3,7 +3,7 @@ export declare const refinement: unique symbol;
 
 export interface AssertionMatcher<T> {
   readonly [matcher]: true;
-  matches(value: unknown): value is T;
+  isMatch(value: unknown): value is T;
   describe(): string;
   represent(): string;
 }
@@ -71,13 +71,13 @@ export type InferMatch<T> =
  * Create a matcher from a function that returns whether a value matches.
  */
 export function createMatcher<T>(
-  matches: (value: unknown) => value is T,
+  isMatch: (value: unknown) => value is T,
   describe: () => string,
   represent: () => string,
 ): AssertionMatcher<T> {
   return {
     [matcher]: true,
-    matches,
+    isMatch,
     describe,
     represent,
   };

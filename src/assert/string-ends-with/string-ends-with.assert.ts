@@ -37,7 +37,7 @@ export function assertStringEndsWith(
   message?: string,
 ): void {
   const matcher = stringEndingWith(suffix);
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to end with ${repr(suffix)}, but it did not.`,

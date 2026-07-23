@@ -31,13 +31,13 @@ const defaultOptions = {
 export function assertFileEquals(
   filePath: string | string[],
   expected: string,
-  opts: AssertFileEqualsOptions = {},
+  assertionOptions: AssertFileEqualsOptions = {},
   message?: string,
 ): void {
   const resolvedFilePath = Array.isArray(filePath)
     ? path.join(...filePath)
     : filePath;
-  const options = { ...defaultOptions, ...opts };
+  const options = { ...defaultOptions, ...assertionOptions };
 
   assertFileExists(resolvedFilePath, message);
 

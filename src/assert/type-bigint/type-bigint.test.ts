@@ -153,20 +153,20 @@ describe("type-bigint", () => {
 
     it("matches bigint values", () => {
       const matcher = typeBigInt();
-      expect(matcher.matches(0n)).toBe(true);
-      expect(matcher.matches(42n)).toBe(true);
-      expect(matcher.matches(-42n)).toBe(true);
+      expect(matcher.isMatch(0n)).toBe(true);
+      expect(matcher.isMatch(42n)).toBe(true);
+      expect(matcher.isMatch(-42n)).toBe(true);
     });
 
     it("does not match non-bigint values", () => {
       const matcher = typeBigInt();
-      expect(matcher.matches(42)).toBe(false);
-      expect(matcher.matches("42")).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches({})).toBe(false);
-      expect(matcher.matches([])).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
+      expect(matcher.isMatch(42)).toBe(false);
+      expect(matcher.isMatch("42")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch({})).toBe(false);
+      expect(matcher.isMatch([])).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
     });
 
     it("describes the matcher", () => {

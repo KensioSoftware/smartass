@@ -20,7 +20,7 @@ export function assertTypeNumeric(
   message = `Expected ${desc(value)} to be of type number or bigint.`,
 ): asserts value is number | bigint {
   const matcher = typeNumeric();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

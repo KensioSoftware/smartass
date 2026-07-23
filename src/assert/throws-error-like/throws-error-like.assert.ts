@@ -25,11 +25,11 @@ import type { ErrorLike } from "./throws-error-like.type.js";
  * ```
  */
 export function assertThrowsErrorLike(
-  fn: () => unknown,
+  callable: () => unknown,
   message?: string,
 ): ErrorLike {
   try {
-    fn();
+    callable();
   } catch (error) {
     if (isErrorLike(error)) {
       return error;
@@ -37,14 +37,14 @@ export function assertThrowsErrorLike(
 
     throw new AssertionError(
       message ??
-        `Expected ${desc(fn)} to throw Error-like object, but it threw ${desc(error)}.`,
+        `Expected ${desc(callable)} to throw Error-like object, but it threw ${desc(error)}.`,
       error,
       Error,
     );
   }
 
   throw new AssertionError(
-    message ?? `Expected ${desc(fn)} to throw, but it did not.`,
+    message ?? `Expected ${desc(callable)} to throw, but it did not.`,
     undefined,
     Error,
   );

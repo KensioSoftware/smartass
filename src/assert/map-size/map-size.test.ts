@@ -167,7 +167,7 @@ describe("map-size", () => {
       const matcher = mapOfSize(3);
 
       expect(
-        matcher.matches(
+        matcher.isMatch(
           new Map([
             ["a", 1],
             ["b", 2],
@@ -180,9 +180,9 @@ describe("map-size", () => {
     it("does not match Maps with a different size", () => {
       const matcher = mapOfSize(3);
 
-      expect(matcher.matches(new Map([["a", 1]]))).toBe(false);
+      expect(matcher.isMatch(new Map([["a", 1]]))).toBe(false);
       expect(
-        matcher.matches(
+        matcher.isMatch(
           new Map([
             ["a", 1],
             ["b", 2],
@@ -196,17 +196,17 @@ describe("map-size", () => {
     it("matches empty Maps when expected size is zero", () => {
       const matcher = mapOfSize(0);
 
-      expect(matcher.matches(new Map())).toBe(true);
-      expect(matcher.matches(new Map([["a", 1]]))).toBe(false);
+      expect(matcher.isMatch(new Map())).toBe(true);
+      expect(matcher.isMatch(new Map([["a", 1]]))).toBe(false);
     });
 
     it("does not match non-Maps", () => {
       const matcher = mapOfSize(1);
 
-      expect(matcher.matches(1)).toBe(false);
-      expect(matcher.matches("a")).toBe(false);
-      expect(matcher.matches({ size: 1 })).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(1)).toBe(false);
+      expect(matcher.isMatch("a")).toBe(false);
+      expect(matcher.isMatch({ size: 1 })).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("describes the mapOfSize matcher", () => {

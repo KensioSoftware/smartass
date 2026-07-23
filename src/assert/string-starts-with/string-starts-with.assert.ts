@@ -37,7 +37,7 @@ export function assertStringStartsWith(
   message?: string,
 ): void {
   const matcher = stringStartingWith(prefix);
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? buildStringStartsWithMessage(value, prefix),
       value,

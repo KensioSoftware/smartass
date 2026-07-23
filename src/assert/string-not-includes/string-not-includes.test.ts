@@ -156,54 +156,54 @@ describe("string-not-includes", () => {
 
     it("matches strings that do not include substring", () => {
       const matcher = stringNotIncluding("world");
-      expect(matcher.matches("hello")).toBe(true);
+      expect(matcher.isMatch("hello")).toBe(true);
     });
 
     it("does not match strings that include substring", () => {
       const matcher = stringNotIncluding("world");
-      expect(matcher.matches("hello world")).toBe(false);
+      expect(matcher.isMatch("hello world")).toBe(false);
     });
 
     it("does not match empty string with non-empty substring", () => {
       const matcher = stringNotIncluding("world");
-      expect(matcher.matches("")).toBe(true);
+      expect(matcher.isMatch("")).toBe(true);
     });
 
     it("does not match when string equals substring", () => {
       const matcher = stringNotIncluding("world");
-      expect(matcher.matches("world")).toBe(false);
+      expect(matcher.isMatch("world")).toBe(false);
     });
 
     it("works with empty substring", () => {
       const matcher = stringNotIncluding("");
-      expect(matcher.matches("hello")).toBe(false);
-      expect(matcher.matches("")).toBe(false);
+      expect(matcher.isMatch("hello")).toBe(false);
+      expect(matcher.isMatch("")).toBe(false);
     });
 
     it("is case sensitive", () => {
       const matcher = stringNotIncluding("hello");
-      expect(matcher.matches("Hello World")).toBe(true);
-      expect(matcher.matches("hello world")).toBe(false);
+      expect(matcher.isMatch("Hello World")).toBe(true);
+      expect(matcher.isMatch("hello world")).toBe(false);
     });
 
     it("works with substring at start", () => {
       const matcher = stringNotIncluding("hello");
-      expect(matcher.matches("hello world")).toBe(false);
-      expect(matcher.matches("world hello")).toBe(false);
+      expect(matcher.isMatch("hello world")).toBe(false);
+      expect(matcher.isMatch("world hello")).toBe(false);
     });
 
     it("works with substring at end", () => {
       const matcher = stringNotIncluding("world");
-      expect(matcher.matches("hello world")).toBe(false);
-      expect(matcher.matches("world hello")).toBe(false);
+      expect(matcher.isMatch("hello world")).toBe(false);
+      expect(matcher.isMatch("world hello")).toBe(false);
     });
 
     it("does not match non-string values", () => {
       const matcher = stringNotIncluding("foo");
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(123)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
     });
 
     it("describes the matcher", () => {

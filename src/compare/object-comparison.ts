@@ -22,7 +22,7 @@ export function findObjectComparisonMismatch(
   path = "$",
 ): ObjectComparisonMismatch | undefined {
   if (isMatcher(expected)) {
-    if (!expected.matches(actual)) {
+    if (!expected.isMatch(actual)) {
       return {
         path,
         actual,

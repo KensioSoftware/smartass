@@ -95,13 +95,13 @@ Response:
     it("matches a Response with the expected status", () => {
       const matcher = responseOfStatus(200);
 
-      expect(matcher.matches(new Response("ok", { status: 200 }))).toBe(true);
+      expect(matcher.isMatch(new Response("ok", { status: 200 }))).toBe(true);
     });
 
     it("does not match a Response with a different status", () => {
       const matcher = responseOfStatus(200);
 
-      expect(matcher.matches(new Response("not found", { status: 404 }))).toBe(
+      expect(matcher.isMatch(new Response("not found", { status: 404 }))).toBe(
         false,
       );
     });
@@ -109,10 +109,10 @@ Response:
     it("does not match non-Response values", () => {
       const matcher = responseOfStatus(200);
 
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches({ status: 200 })).toBe(false);
-      expect(matcher.matches("response")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch({ status: 200 })).toBe(false);
+      expect(matcher.isMatch("response")).toBe(false);
     });
 
     it("describes the matcher", () => {

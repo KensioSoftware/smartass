@@ -27,7 +27,7 @@ export function assertNumberToNearest(
 
   const matcher = numberToNearest(expected, toNearest);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? `Expected ${repr(value)} to ${matcher.describe()}.`,
       value,

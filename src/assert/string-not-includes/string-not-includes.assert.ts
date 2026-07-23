@@ -42,7 +42,7 @@ export function assertStringNotIncludes(
 ): void {
   const matcher = stringNotIncluding(substring);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? buildStringNotIncludesMessage(value, substring),
       value,
