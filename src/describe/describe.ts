@@ -165,12 +165,12 @@ export function repr(value: unknown, seen = new WeakSet<object>()): string {
   }
 
   if (typeof value === "object") {
-    const proto = Object.getPrototypeOf(value) as null | {
+    const prototype = Object.getPrototypeOf(value) as null | {
       constructor?: { name?: unknown };
     };
     const ctorName =
-      typeof proto?.constructor?.name === "string"
-        ? proto.constructor.name
+      typeof prototype?.constructor?.name === "string"
+        ? prototype.constructor.name
         : undefined;
 
     const json = reprObject(value, seen);
@@ -218,17 +218,17 @@ function reprObject(value: object, seen: WeakSet<object>): string {
 
   if (entries.length <= 10) {
     const pairs = entries
-      .map(([key, val]) => `${safeJson(key)}:${repr(val, seen)}`)
+      .map(([key, value]) => `${safeJson(key)}:${repr(value, seen)}`)
       .join(",");
     return `{${pairs}}`;
   }
 
   const first = entries
     .slice(0, 3)
-    .map(([key, val]) => `${safeJson(key)}:${repr(val, seen)}`);
+    .map(([key, value]) => `${safeJson(key)}:${repr(value, seen)}`);
   const last = entries
     .slice(-3)
-    .map(([key, val]) => `${safeJson(key)}:${repr(val, seen)}`);
+    .map(([key, value]) => `${safeJson(key)}:${repr(value, seen)}`);
 
   return `{${[...first, "...", ...last].join(",")}}`;
 }

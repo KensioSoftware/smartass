@@ -46,7 +46,7 @@ export function assertArrayMinLength(
 ): void {
   const matcher = arrayOfMinLength(minLength);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? buildArrayMinLengthMessage(value, minLength),
       value,

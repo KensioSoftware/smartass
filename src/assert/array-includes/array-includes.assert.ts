@@ -46,7 +46,7 @@ export function assertArrayIncludes(
 ): void {
   const matcher = arrayIncluding(element);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ??
         `Expected ${desc(value)} to include ${desc(element)}, but it did not.`,

@@ -20,7 +20,7 @@ export function assertTypeFunction(
   message = `Expected ${desc(value)} to be of type function.`,
 ): asserts value is Function {
   const matcher = typeFunction();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

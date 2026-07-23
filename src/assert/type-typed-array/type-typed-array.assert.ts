@@ -24,7 +24,7 @@ export function assertTypeTypedArray(
   message = `Expected ${desc(value)} to be a TypedArray.`,
 ): asserts value is TypedArray {
   const matcher = typeTypedArray();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

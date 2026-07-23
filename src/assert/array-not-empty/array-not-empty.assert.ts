@@ -27,7 +27,7 @@ export function assertArrayNotEmpty(
  * ```
  */
 export function assertArrayNotEmpty(value: unknown, message?: string): void {
-  if (!nonEmptyArray().matches(value)) {
+  if (!nonEmptyArray().isMatch(value)) {
     throw new AssertionError(
       message ?? buildArrayNotEmptyMessage(value),
       value,

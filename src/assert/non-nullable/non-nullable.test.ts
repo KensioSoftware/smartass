@@ -88,23 +88,23 @@ describe("non-nullable", () => {
     it("matches non-null and non-undefined values", () => {
       const matcher = nonNullable();
 
-      expect(matcher.matches("foobar")).toBe(true);
-      expect(matcher.matches(123)).toBe(true);
-      expect(matcher.matches(true)).toBe(true);
-      expect(matcher.matches({})).toBe(true);
-      expect(matcher.matches([])).toBe(true);
+      expect(matcher.isMatch("foobar")).toBe(true);
+      expect(matcher.isMatch(123)).toBe(true);
+      expect(matcher.isMatch(true)).toBe(true);
+      expect(matcher.isMatch({})).toBe(true);
+      expect(matcher.isMatch([])).toBe(true);
     });
 
     it("does not match null", () => {
       const matcher = nonNullable();
 
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("does not match undefined", () => {
       const matcher = nonNullable();
 
-      expect(matcher.matches(undefined)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
     });
 
     it("describes the matcher", () => {

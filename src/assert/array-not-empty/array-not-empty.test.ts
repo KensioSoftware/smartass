@@ -92,28 +92,28 @@ describe("not-empty", () => {
     it("matches non-empty arrays", () => {
       const matcher = nonEmptyArray();
 
-      expect(matcher.matches([1])).toBe(true);
+      expect(matcher.isMatch([1])).toBe(true);
     });
 
     it("matches arrays with multiple elements", () => {
       const matcher = nonEmptyArray();
 
-      expect(matcher.matches([1, 2, 3])).toBe(true);
+      expect(matcher.isMatch([1, 2, 3])).toBe(true);
     });
 
     it("does not match empty arrays", () => {
       const matcher = nonEmptyArray();
 
-      expect(matcher.matches([])).toBe(false);
+      expect(matcher.isMatch([])).toBe(false);
     });
 
     it("does not match non-arrays", () => {
       const matcher = nonEmptyArray();
 
-      expect(matcher.matches(1)).toBe(false);
-      expect(matcher.matches("a")).toBe(false);
-      expect(matcher.matches({ 0: "a", length: 1 })).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(1)).toBe(false);
+      expect(matcher.isMatch("a")).toBe(false);
+      expect(matcher.isMatch({ 0: "a", length: 1 })).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("describes the nonEmptyArray matcher", () => {
@@ -148,6 +148,6 @@ describe("not-empty", () => {
   it("matches non-empty arrays", () => {
     const matcher = nonEmptyArray();
 
-    expect(matcher.matches([1])).toBe(true);
+    expect(matcher.isMatch([1])).toBe(true);
   });
 });

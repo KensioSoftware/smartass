@@ -20,7 +20,7 @@ export function assertTypeObject(
   message = `Expected ${desc(value)} to be of type object.`,
 ): asserts value is object {
   const matcher = typeObject();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

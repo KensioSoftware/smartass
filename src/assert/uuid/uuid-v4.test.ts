@@ -174,43 +174,43 @@ describe("uuid-v4", () => {
 
     it("matches UUID v4 values", () => {
       const matcher = uuidV4();
-      expect(matcher.matches("123e4567-e89b-42d3-a456-426614174000")).toBe(
+      expect(matcher.isMatch("123e4567-e89b-42d3-a456-426614174000")).toBe(
         true,
       );
     });
 
     it("matches uppercase UUID v4 values", () => {
       const matcher = uuidV4();
-      expect(matcher.matches("123E4567-E89B-42D3-A456-426614174000")).toBe(
+      expect(matcher.isMatch("123E4567-E89B-42D3-A456-426614174000")).toBe(
         true,
       );
     });
 
     it("does not match non-UUID strings", () => {
       const matcher = uuidV4();
-      expect(matcher.matches("not-a-uuid")).toBe(false);
+      expect(matcher.isMatch("not-a-uuid")).toBe(false);
     });
 
     it("does not match UUIDs that are not v4", () => {
       const matcher = uuidV4();
-      expect(matcher.matches("123e4567-e89b-12d3-a456-426614174000")).toBe(
+      expect(matcher.isMatch("123e4567-e89b-12d3-a456-426614174000")).toBe(
         false,
       );
     });
 
     it("does not match UUIDs with invalid variant", () => {
       const matcher = uuidV4();
-      expect(matcher.matches("123e4567-e89b-42d3-7456-426614174000")).toBe(
+      expect(matcher.isMatch("123e4567-e89b-42d3-7456-426614174000")).toBe(
         false,
       );
     });
 
     it("does not match non-string values", () => {
       const matcher = uuidV4();
-      expect(matcher.matches(123)).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
     });
 
     it("describes the matcher", () => {

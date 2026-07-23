@@ -54,38 +54,40 @@ describe("type-boolean", () => {
     });
 
     it("narrows primitive unions to boolean", () => {
+      // eslint-disable-next-line unicorn/consistent-boolean-name
       function getValue():
         string | number | boolean | bigint | null | undefined {
         return true;
       }
 
-      const value = getValue();
+      const isValue = getValue();
 
-      assertTypeBoolean(value);
+      assertTypeBoolean(isValue);
 
-      expectTypeOf(value).toEqualTypeOf<boolean>();
-      expectTypeOf(value).not.toEqualTypeOf<string>();
-      expectTypeOf(value).not.toEqualTypeOf<number>();
-      expectTypeOf(value).not.toEqualTypeOf<bigint>();
-      expectTypeOf(value).not.toEqualTypeOf<null>();
-      expectTypeOf(value).not.toEqualTypeOf<undefined>();
-      expect(value).toBeTypeOf("boolean");
+      expectTypeOf(isValue).toEqualTypeOf<boolean>();
+      expectTypeOf(isValue).not.toEqualTypeOf<string>();
+      expectTypeOf(isValue).not.toEqualTypeOf<number>();
+      expectTypeOf(isValue).not.toEqualTypeOf<bigint>();
+      expectTypeOf(isValue).not.toEqualTypeOf<null>();
+      expectTypeOf(isValue).not.toEqualTypeOf<undefined>();
+      expect(isValue).toBeTypeOf("boolean");
     });
 
     it("preserves boolean literal union overlap", () => {
+      // eslint-disable-next-line unicorn/consistent-boolean-name
       function getValue(): true | false | "not boolean" {
         return true;
       }
 
-      const value = getValue();
+      const isValue = getValue();
 
-      assertTypeBoolean(value);
+      assertTypeBoolean(isValue);
 
-      expectTypeOf(value).toEqualTypeOf<true | false>();
-      expectTypeOf(value).toEqualTypeOf<boolean>();
-      expectTypeOf(value).not.toEqualTypeOf<true>();
-      expectTypeOf(value).not.toEqualTypeOf<false>();
-      expect(value).toBeTypeOf("boolean");
+      expectTypeOf(isValue).toEqualTypeOf<true | false>();
+      expectTypeOf(isValue).toEqualTypeOf<boolean>();
+      expectTypeOf(isValue).not.toEqualTypeOf<true>();
+      expectTypeOf(isValue).not.toEqualTypeOf<false>();
+      expect(isValue).toBeTypeOf("boolean");
     });
   });
 
@@ -122,17 +124,17 @@ describe("type-boolean", () => {
 
     it("matches boolean values", () => {
       const matcher = typeBoolean();
-      expect(matcher.matches(true)).toBe(true);
-      expect(matcher.matches(false)).toBe(true);
+      expect(matcher.isMatch(true)).toBe(true);
+      expect(matcher.isMatch(false)).toBe(true);
     });
 
     it("does not match non-boolean values", () => {
       const matcher = typeBoolean();
-      expect(matcher.matches("true")).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(1)).toBe(false);
-      expect(matcher.matches({})).toBe(false);
+      expect(matcher.isMatch("true")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(1)).toBe(false);
+      expect(matcher.isMatch({})).toBe(false);
     });
 
     it("describes the matcher", () => {

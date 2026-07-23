@@ -93,11 +93,11 @@ describe("string-starts-with", () => {
         };
       }
 
-      const createHostedZoneOutput: CreateHostedZoneOutput = {
+      const hostedZoneCreation: CreateHostedZoneOutput = {
         HostedZone: { Id: "Z123456789" },
       };
 
-      const hostedZoneId = createHostedZoneOutput.HostedZone?.Id;
+      const hostedZoneId = hostedZoneCreation.HostedZone?.Id;
 
       assertNonNullable(hostedZoneId);
       assertStringStartsWith(hostedZoneId, "Z");
@@ -160,45 +160,45 @@ describe("string-starts-with", () => {
 
     it("matches strings that start with prefix", () => {
       const matcher = stringStartingWith("hello");
-      expect(matcher.matches("hello world")).toBe(true);
-      expect(matcher.matches("hello")).toBe(true);
+      expect(matcher.isMatch("hello world")).toBe(true);
+      expect(matcher.isMatch("hello")).toBe(true);
     });
 
     it("does not match strings that do not start with prefix", () => {
       const matcher = stringStartingWith("foo");
-      expect(matcher.matches("bar")).toBe(false);
-      expect(matcher.matches("bar-foo")).toBe(false);
-      expect(matcher.matches("foobar")).toBe(true);
+      expect(matcher.isMatch("bar")).toBe(false);
+      expect(matcher.isMatch("bar-foo")).toBe(false);
+      expect(matcher.isMatch("foobar")).toBe(true);
     });
 
     it("works with empty prefix", () => {
       const matcher = stringStartingWith("");
-      expect(matcher.matches("hello")).toBe(true);
-      expect(matcher.matches("")).toBe(true);
+      expect(matcher.isMatch("hello")).toBe(true);
+      expect(matcher.isMatch("")).toBe(true);
     });
 
     it("is case sensitive", () => {
       const matcher = stringStartingWith("hello");
-      expect(matcher.matches("Hello World")).toBe(false);
-      expect(matcher.matches("hello world")).toBe(true);
+      expect(matcher.isMatch("Hello World")).toBe(false);
+      expect(matcher.isMatch("hello world")).toBe(true);
     });
 
     it("works with exact match", () => {
       const matcher = stringStartingWith("hello");
-      expect(matcher.matches("hello")).toBe(true);
+      expect(matcher.isMatch("hello")).toBe(true);
     });
 
     it("works when prefix is longer than string", () => {
       const matcher = stringStartingWith("hello");
-      expect(matcher.matches("hi")).toBe(false);
+      expect(matcher.isMatch("hi")).toBe(false);
     });
 
     it("does not match non-string values", () => {
       const matcher = stringStartingWith("foo");
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(123)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
     });
 
     it("describes the matcher", () => {

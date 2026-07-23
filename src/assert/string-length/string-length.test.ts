@@ -181,53 +181,53 @@ describe("string-length", () => {
 
     it("matches strings with expected length", () => {
       const matcher = stringOfLength(5);
-      expect(matcher.matches("hello")).toBe(true);
+      expect(matcher.isMatch("hello")).toBe(true);
     });
 
     it("does not match strings with different length", () => {
       const matcher = stringOfLength(3);
-      expect(matcher.matches("hello")).toBe(false);
+      expect(matcher.isMatch("hello")).toBe(false);
     });
 
     it("works with empty string", () => {
       const matcher = stringOfLength(0);
-      expect(matcher.matches("")).toBe(true);
+      expect(matcher.isMatch("")).toBe(true);
     });
 
     it("does not match non-empty string when expecting empty", () => {
       const matcher = stringOfLength(0);
-      expect(matcher.matches("a")).toBe(false);
+      expect(matcher.isMatch("a")).toBe(false);
     });
 
     it("works with single character", () => {
       const matcher = stringOfLength(1);
-      expect(matcher.matches("a")).toBe(true);
+      expect(matcher.isMatch("a")).toBe(true);
     });
 
     it("does not match multi-character when expecting single", () => {
       const matcher = stringOfLength(1);
-      expect(matcher.matches("ab")).toBe(false);
+      expect(matcher.isMatch("ab")).toBe(false);
     });
 
     it("works with large lengths", () => {
       const longString = "a".repeat(1000);
       const matcher = stringOfLength(1000);
-      expect(matcher.matches(longString)).toBe(true);
+      expect(matcher.isMatch(longString)).toBe(true);
     });
 
     it("does not match when length differs for large strings", () => {
       const longString = "a".repeat(1000);
       const matcher = stringOfLength(999);
-      expect(matcher.matches(longString)).toBe(false);
+      expect(matcher.isMatch(longString)).toBe(false);
     });
 
     it("does not match non-string values", () => {
       const matcher = stringOfLength(5);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(123)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
-      expect(matcher.matches({ length: 5 })).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
+      expect(matcher.isMatch({ length: 5 })).toBe(false);
     });
 
     it("describes the matcher", () => {
@@ -248,7 +248,7 @@ describe("string-length", () => {
     it("works with unicode characters", () => {
       // JavaScript's .length counts UTF-16 code units
       const matcher = stringOfLength(2);
-      expect(matcher.matches("你好")).toBe(true);
+      expect(matcher.isMatch("你好")).toBe(true);
     });
   });
 });

@@ -47,7 +47,7 @@ describe("type-number", () => {
         assertTypeNumber(-1);
       }).not.toThrow();
       expect(() => {
-        assertTypeNumber(3.14);
+        assertTypeNumber(3.42);
       }).not.toThrow();
       expect(() => {
         assertTypeNumber(NaN);
@@ -159,21 +159,21 @@ describe("type-number", () => {
 
     it("matches number values", () => {
       const matcher = typeNumber();
-      expect(matcher.matches(123)).toBe(true);
-      expect(matcher.matches(0)).toBe(true);
-      expect(matcher.matches(-1)).toBe(true);
-      expect(matcher.matches(3.14)).toBe(true);
-      expect(matcher.matches(NaN)).toBe(true);
-      expect(matcher.matches(Infinity)).toBe(true);
+      expect(matcher.isMatch(123)).toBe(true);
+      expect(matcher.isMatch(0)).toBe(true);
+      expect(matcher.isMatch(-1)).toBe(true);
+      expect(matcher.isMatch(3.42)).toBe(true);
+      expect(matcher.isMatch(NaN)).toBe(true);
+      expect(matcher.isMatch(Infinity)).toBe(true);
     });
 
     it("does not match non-number values", () => {
       const matcher = typeNumber();
-      expect(matcher.matches("123")).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
-      expect(matcher.matches({})).toBe(false);
+      expect(matcher.isMatch("123")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
+      expect(matcher.isMatch({})).toBe(false);
     });
 
     it("describes the matcher", () => {

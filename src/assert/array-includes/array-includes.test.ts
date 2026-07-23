@@ -57,9 +57,9 @@ describe("array-includes", () => {
     });
 
     it("works with objects using reference equality", () => {
-      const obj = { id: 1 };
+      const object = { id: 1 };
       expect(() => {
-        assertArrayIncludes([obj, { id: 2 }], obj);
+        assertArrayIncludes([object, { id: 2 }], object);
       }).not.toThrow();
 
       expect(() => {

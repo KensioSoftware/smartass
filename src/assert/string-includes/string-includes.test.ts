@@ -147,48 +147,48 @@ describe("string-includes", () => {
 
     it("matches strings that include substring", () => {
       const matcher = stringIncluding("world");
-      expect(matcher.matches("hello world")).toBe(true);
-      expect(matcher.matches("world")).toBe(true);
+      expect(matcher.isMatch("hello world")).toBe(true);
+      expect(matcher.isMatch("world")).toBe(true);
     });
 
     it("does not match strings that do not include substring", () => {
       const matcher = stringIncluding("foo");
-      expect(matcher.matches("bar")).toBe(false);
+      expect(matcher.isMatch("bar")).toBe(false);
     });
 
     it("works with empty substring", () => {
       const matcher = stringIncluding("");
-      expect(matcher.matches("hello")).toBe(true);
-      expect(matcher.matches("")).toBe(true);
+      expect(matcher.isMatch("hello")).toBe(true);
+      expect(matcher.isMatch("")).toBe(true);
     });
 
     it("is case sensitive", () => {
       const matcher = stringIncluding("hello");
-      expect(matcher.matches("Hello World")).toBe(false);
-      expect(matcher.matches("hello world")).toBe(true);
+      expect(matcher.isMatch("Hello World")).toBe(false);
+      expect(matcher.isMatch("hello world")).toBe(true);
     });
 
     it("works with substring at start", () => {
       const matcher = stringIncluding("hello");
-      expect(matcher.matches("hello world")).toBe(true);
+      expect(matcher.isMatch("hello world")).toBe(true);
     });
 
     it("works with substring at end", () => {
       const matcher = stringIncluding("world");
-      expect(matcher.matches("hello world")).toBe(true);
+      expect(matcher.isMatch("hello world")).toBe(true);
     });
 
     it("works with substring in middle", () => {
       const matcher = stringIncluding("o w");
-      expect(matcher.matches("hello world")).toBe(true);
+      expect(matcher.isMatch("hello world")).toBe(true);
     });
 
     it("does not match non-string values", () => {
       const matcher = stringIncluding("foo");
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(123)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
     });
 
     it("describes the matcher", () => {

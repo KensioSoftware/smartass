@@ -137,6 +137,8 @@ export default defineConfig(
       "unicorn/prevent-abbreviations": "off",
       "unicorn/prefer-at": "off",
       "unicorn/no-unsafe-property-key": "off",
+      "unicorn/no-non-function-verb-prefix": "warn",
+      "unicorn/consistent-boolean-name": "warn",
     },
   },
 

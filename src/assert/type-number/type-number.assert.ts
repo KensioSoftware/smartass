@@ -20,7 +20,7 @@ export function assertTypeNumber(
   message = `Expected ${desc(value)} to be of type number.`,
 ): asserts value is number {
   const matcher = typeNumber();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

@@ -27,12 +27,12 @@ describe("identical", () => {
   });
 
   it("works with object references", () => {
-    const obj = { foo: "bar" };
+    const object = { foo: "bar" };
     expect(() => {
-      assertIdentical(obj, obj);
+      assertIdentical(object, object);
     }).not.toThrow();
     expect(() => {
-      assertIdentical(obj, { foo: "bar" });
+      assertIdentical(object, { foo: "bar" });
     }).toThrow();
   });
 

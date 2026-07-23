@@ -49,7 +49,7 @@ export function assertStringLength(
   message?: string,
 ): void {
   const matcher = stringOfLength(expectedLength);
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? buildStringLengthMessage(value, expectedLength),
       value,

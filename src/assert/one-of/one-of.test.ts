@@ -115,51 +115,51 @@ describe("one-of", () => {
 
     it("matches when value is in allowed list", () => {
       const matcher = oneOf(["foo", "bar", "baz"]);
-      expect(matcher.matches("foo")).toBe(true);
-      expect(matcher.matches("bar")).toBe(true);
+      expect(matcher.isMatch("foo")).toBe(true);
+      expect(matcher.isMatch("bar")).toBe(true);
     });
 
     it("does not match when value is not in allowed list", () => {
       const matcher = oneOf(["foo", "bar"]);
-      expect(matcher.matches("baz")).toBe(false);
+      expect(matcher.isMatch("baz")).toBe(false);
     });
 
     it("works with numbers", () => {
       const matcher = oneOf([1, 2, 3]);
-      expect(matcher.matches(1)).toBe(true);
-      expect(matcher.matches(4)).toBe(false);
+      expect(matcher.isMatch(1)).toBe(true);
+      expect(matcher.isMatch(4)).toBe(false);
     });
 
     it("works with bigint", () => {
       const matcher = oneOf([1n, 2n, 3n]);
-      expect(matcher.matches(1n)).toBe(true);
-      expect(matcher.matches(4n)).toBe(false);
+      expect(matcher.isMatch(1n)).toBe(true);
+      expect(matcher.isMatch(4n)).toBe(false);
     });
 
     it("works with boolean values", () => {
       const matcher = oneOf([true, false]);
-      expect(matcher.matches(true)).toBe(true);
-      expect(matcher.matches(false)).toBe(true);
+      expect(matcher.isMatch(true)).toBe(true);
+      expect(matcher.isMatch(false)).toBe(true);
     });
 
     it("works with mixed types", () => {
       const matcher = oneOf(["string", 42, true]);
-      expect(matcher.matches("string")).toBe(true);
-      expect(matcher.matches(42)).toBe(true);
-      expect(matcher.matches(true)).toBe(true);
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch("string")).toBe(true);
+      expect(matcher.isMatch(42)).toBe(true);
+      expect(matcher.isMatch(true)).toBe(true);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("works with undefined", () => {
       const matcher = oneOf(["foo", undefined]);
-      expect(matcher.matches(undefined)).toBe(true);
-      expect(matcher.matches("bar")).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(true);
+      expect(matcher.isMatch("bar")).toBe(false);
     });
 
     it("works with null", () => {
       const matcher = oneOf(["foo", null]);
-      expect(matcher.matches(null)).toBe(true);
-      expect(matcher.matches("bar")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(true);
+      expect(matcher.isMatch("bar")).toBe(false);
     });
 
     it("describes the matcher", () => {
@@ -184,21 +184,21 @@ describe("one-of", () => {
 
     it("does not match null values when not in allowed list", () => {
       const matcher = oneOf(["foo", "bar"]);
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("does not match undefined values when not in allowed list", () => {
       const matcher = oneOf(["foo", "bar"]);
-      expect(matcher.matches(undefined)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
     });
 
     it("matches symbol values", () => {
       const sym1 = Symbol("test");
       const sym2 = Symbol("test");
       const matcher = oneOf([sym1, "foo"]);
-      expect(matcher.matches(sym1)).toBe(true);
-      expect(matcher.matches(sym2)).toBe(false);
-      expect(matcher.matches("foo")).toBe(true);
+      expect(matcher.isMatch(sym1)).toBe(true);
+      expect(matcher.isMatch(sym2)).toBe(false);
+      expect(matcher.isMatch("foo")).toBe(true);
     });
   });
 });

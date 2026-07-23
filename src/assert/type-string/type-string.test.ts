@@ -164,18 +164,18 @@ describe("type-string", () => {
 
     it("matches string values", () => {
       const matcher = typeString();
-      expect(matcher.matches("hello")).toBe(true);
-      expect(matcher.matches("")).toBe(true);
-      expect(matcher.matches("123")).toBe(true);
+      expect(matcher.isMatch("hello")).toBe(true);
+      expect(matcher.isMatch("")).toBe(true);
+      expect(matcher.isMatch("123")).toBe(true);
     });
 
     it("does not match non-string values", () => {
       const matcher = typeString();
-      expect(matcher.matches(123)).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
-      expect(matcher.matches({})).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
+      expect(matcher.isMatch({})).toBe(false);
     });
 
     it("describes the matcher", () => {

@@ -43,7 +43,7 @@ export function assertArrayLength(
 ): void {
   const matcher = arrayOfLength(expectedLength);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? buildArrayLengthMessage(value, expectedLength),
       value,

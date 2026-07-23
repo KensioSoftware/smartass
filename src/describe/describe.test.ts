@@ -22,7 +22,7 @@ describe("desc", () => {
     expect(desc(42)).toBe("number 42");
     expect(desc(0)).toBe("number 0");
     expect(desc(-0)).toBe("number -0");
-    expect(desc(3.14)).toBe("number 3.14");
+    expect(desc(3.42)).toBe("number 3.42");
     expect(desc(NaN)).toBe("number NaN");
     expect(desc(Infinity)).toBe("number Infinity");
     expect(desc(-Infinity)).toBe("number -Infinity");
@@ -46,10 +46,10 @@ describe("desc", () => {
   });
 
   it("describes functions", () => {
-    function testFunc(a: number, b: number): number {
+    function testFunction(a: number, b: number): number {
       return a + b;
     }
-    expect(desc(testFunc)).toBe("function testFunc(){} (2 args)");
+    expect(desc(testFunction)).toBe("function testFunction(){} (2 args)");
     expect(
       desc(() => {
         /* empty */
@@ -65,8 +65,8 @@ describe("desc", () => {
   });
 
   it("describes arrays with more than 10 items", () => {
-    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-    expect(desc(arr)).toBe("array [1,2,3,...,11,12,13] (len 13)");
+    const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+    expect(desc(array)).toBe("array [1,2,3,...,11,12,13] (len 13)");
   });
 
   it("describes Maps", () => {
@@ -95,7 +95,7 @@ describe("desc", () => {
   });
 
   it("describes objects with more than 10 properties", () => {
-    const obj = {
+    const object = {
       a: 1,
       b: 2,
       c: 3,
@@ -109,7 +109,7 @@ describe("desc", () => {
       k: 11,
       l: 12,
     };
-    const result = desc(obj);
+    const result = desc(object);
     expect(result).toContain("object");
     expect(result).toContain("...");
   });
@@ -133,7 +133,7 @@ describe("repr", () => {
     expect(repr(42)).toBe("42");
     expect(repr(0)).toBe("0");
     expect(repr(-0)).toBe("-0");
-    expect(repr(3.14159)).toBe("3.14159");
+    expect(repr(3.42123)).toBe("3.42123");
     expect(repr(NaN)).toBe("NaN");
     expect(repr(Infinity)).toBe("Infinity");
     expect(repr(-Infinity)).toBe("-Infinity");
@@ -159,10 +159,10 @@ describe("repr", () => {
   });
 
   it("represents functions", () => {
-    function namedFunc(): void {
+    function namedFunction(): void {
       /* empty */
     }
-    expect(repr(namedFunc)).toBe("function namedFunc(){}");
+    expect(repr(namedFunction)).toBe("function namedFunction(){}");
     expect(
       repr(() => {
         /* empty */
@@ -193,13 +193,13 @@ describe("repr", () => {
   });
 
   it("represents arrays with exactly 10 items", () => {
-    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-    expect(repr(arr)).toBe("[1,2,3,4,5,6,7,8,9,10]");
+    const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    expect(repr(array)).toBe("[1,2,3,4,5,6,7,8,9,10]");
   });
 
   it("represents arrays with more than 10 items", () => {
-    const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
-    expect(repr(arr)).toBe("[1,2,3,...,11,12,13]");
+    const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+    expect(repr(array)).toBe("[1,2,3,...,11,12,13]");
   });
 
   it("represents Maps", () => {
@@ -289,9 +289,9 @@ describe("repr", () => {
   });
 
   it("represents objects with null prototype", () => {
-    const obj = Object.create(null);
-    obj.a = 1;
-    expect(repr(obj)).toBe('Object.create(null) {"a":1}');
+    const object = Object.create(null);
+    object.a = 1;
+    expect(repr(object)).toBe('Object.create(null) {"a":1}');
   });
 
   it("represents custom class instances", () => {
@@ -305,33 +305,33 @@ describe("repr", () => {
   });
 
   it("handles circular references", () => {
-    const obj: { self?: unknown } = {};
-    obj.self = obj;
-    const result = repr(obj);
+    const object: { self?: unknown } = {};
+    object.self = object;
+    const result = repr(object);
     expect(result).toContain("[Circular]");
   });
 
   it("handles circular references in arrays", () => {
-    const arr: unknown[] = [1, 2];
-    arr.push(arr);
-    const result = repr(arr);
+    const array: unknown[] = [1, 2];
+    array.push(array);
+    const result = repr(array);
     expect(result).toContain("[Circular]");
   });
 
   it("handles unserializable objects", () => {
-    const obj = {};
-    Object.defineProperty(obj, "prop", {
+    const object = {};
+    Object.defineProperty(object, "prop", {
       get() {
         throw new TypeError("big trouble");
       },
       enumerable: true,
     });
-    const result = repr(obj);
+    const result = repr(object);
     expect(result).toContain("[Unserializable");
   });
 
   it("handles objects with more than 10 properties", () => {
-    const obj = {
+    const object = {
       a: 1,
       b: 2,
       c: 3,
@@ -345,21 +345,21 @@ describe("repr", () => {
       k: 11,
       l: 12,
     };
-    const result = repr(obj);
+    const result = repr(object);
     expect(result).toContain("...");
     expect(result).toContain('"a":1');
     expect(result).toContain('"l":12');
   });
 
   it("handles non-TypeError when accessing object entries", () => {
-    const obj = {};
-    Object.defineProperty(obj, "prop", {
+    const object = {};
+    Object.defineProperty(object, "prop", {
       get() {
         throw new RangeError("non-type error");
       },
       enumerable: true,
     });
-    expect(() => repr(obj)).toThrow(RangeError);
+    expect(() => repr(object)).toThrow(RangeError);
   });
 
   it("represents mixed nested structures", () => {

@@ -38,7 +38,7 @@ export function assertMapSize(
 ): void {
   const matcher = mapOfSize(expectedSize);
 
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? buildMapSizeMessage(value, expectedSize),
       value,

@@ -232,12 +232,12 @@ describe("assertBufferEqual", () => {
     it("does not match a different TypedArray class with equal bytes", () => {
       const matcher = bufferEqualTo(new Uint8Array([255]));
 
-      expect(matcher.matches(new Int8Array([-1]))).toBe(false);
+      expect(matcher.isMatch(new Int8Array([-1]))).toBe(false);
     });
 
     it("matches equal TypedArrays", () => {
       expect(
-        bufferEqualTo(new Uint8Array([1, 2, 3])).matches(
+        bufferEqualTo(new Uint8Array([1, 2, 3])).isMatch(
           new Uint8Array([1, 2, 3]),
         ),
       ).toBe(true);
@@ -245,14 +245,14 @@ describe("assertBufferEqual", () => {
 
     it("does not match different TypedArrays", () => {
       expect(
-        bufferEqualTo(new Uint8Array([1, 2, 3])).matches(
+        bufferEqualTo(new Uint8Array([1, 2, 3])).isMatch(
           new Uint8Array([1, 2, 4]),
         ),
       ).toBe(false);
     });
 
     it("does not match non-TypedArrays", () => {
-      expect(bufferEqualTo(new Uint8Array([1, 2, 3])).matches([1, 2, 3])).toBe(
+      expect(bufferEqualTo(new Uint8Array([1, 2, 3])).isMatch([1, 2, 3])).toBe(
         false,
       );
     });

@@ -28,7 +28,7 @@ export function assertUuidV4(
  */
 export function assertUuidV4(value: unknown, message?: string): void {
   const matcher = uuidV4();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? `Expected ${desc(value)} to be a UUID v4 string.`,
       value,

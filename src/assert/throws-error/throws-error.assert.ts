@@ -20,23 +20,26 @@ import { desc } from "../../describe/describe.js";
  * // error is returned as Error; this assertion does not narrow another value.
  * ```
  */
-export function assertThrowsError(fn: () => unknown, message?: string): Error {
+export function assertThrowsError(
+  callable: () => unknown,
+  message?: string,
+): Error {
   try {
-    fn();
+    callable();
   } catch (error) {
     if (error instanceof Error) {
       return error;
     }
     throw new AssertionError(
       message ??
-        `Expected ${desc(fn)} to throw Error, but it threw ${desc(error)}.`,
+        `Expected ${desc(callable)} to throw Error, but it threw ${desc(error)}.`,
       error,
       Error,
     );
   }
 
   throw new AssertionError(
-    message ?? `Expected ${desc(fn)} to throw, but it did not.`,
+    message ?? `Expected ${desc(callable)} to throw, but it did not.`,
     undefined,
     Error,
   );

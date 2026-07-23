@@ -36,7 +36,7 @@ export function assertInstanceOf<TInstance>(
   message?: string,
 ): void {
   const matcher = instanceOf(classConstructor);
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(
       message ?? `Expected value to be ${matcher.describe()}, but it was not.`,
       value,

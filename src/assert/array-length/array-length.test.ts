@@ -351,30 +351,30 @@ describe("array-length", () => {
     it("matches arrays with the expected length", () => {
       const matcher = arrayOfLength(3);
 
-      expect(matcher.matches([1, 2, 3])).toBe(true);
+      expect(matcher.isMatch([1, 2, 3])).toBe(true);
     });
 
     it("does not match arrays with a different length", () => {
       const matcher = arrayOfLength(3);
 
-      expect(matcher.matches([1, 2])).toBe(false);
-      expect(matcher.matches([1, 2, 3, 4])).toBe(false);
+      expect(matcher.isMatch([1, 2])).toBe(false);
+      expect(matcher.isMatch([1, 2, 3, 4])).toBe(false);
     });
 
     it("matches empty arrays when expected length is zero", () => {
       const matcher = arrayOfLength(0);
 
-      expect(matcher.matches([])).toBe(true);
-      expect(matcher.matches([1])).toBe(false);
+      expect(matcher.isMatch([])).toBe(true);
+      expect(matcher.isMatch([1])).toBe(false);
     });
 
     it("does not match non-arrays", () => {
       const matcher = arrayOfLength(1);
 
-      expect(matcher.matches(1)).toBe(false);
-      expect(matcher.matches("a")).toBe(false);
-      expect(matcher.matches({ 0: "a", length: 1 })).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(1)).toBe(false);
+      expect(matcher.isMatch("a")).toBe(false);
+      expect(matcher.isMatch({ 0: "a", length: 1 })).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("describes the arrayOfLength matcher", () => {

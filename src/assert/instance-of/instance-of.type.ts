@@ -8,7 +8,7 @@ import type { AssertionMatcher, refinement } from "../../match/match.js";
  */
 export const instanceOfMatcher = Symbol("smartass.instanceOfMatcher");
 
-export type ClassConstructor<T> = abstract new (...args: never[]) => T;
+export type ClassConstructor<T> = abstract new (...arguments_: never[]) => T;
 
 /**
  * Type produced when an actual value is matched by instanceOf().

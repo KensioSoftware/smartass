@@ -182,25 +182,25 @@ describe("type-numeric", () => {
 
     it("matches number values", () => {
       const matcher = typeNumeric();
-      expect(matcher.matches(42)).toBe(true);
-      expect(matcher.matches(0)).toBe(true);
-      expect(matcher.matches(-1.5)).toBe(true);
+      expect(matcher.isMatch(42)).toBe(true);
+      expect(matcher.isMatch(0)).toBe(true);
+      expect(matcher.isMatch(-1.5)).toBe(true);
     });
 
     it("matches bigint values", () => {
       const matcher = typeNumeric();
-      expect(matcher.matches(42n)).toBe(true);
-      expect(matcher.matches(0n)).toBe(true);
-      expect(matcher.matches(-1n)).toBe(true);
+      expect(matcher.isMatch(42n)).toBe(true);
+      expect(matcher.isMatch(0n)).toBe(true);
+      expect(matcher.isMatch(-1n)).toBe(true);
     });
 
     it("does not match non-numeric values", () => {
       const matcher = typeNumeric();
-      expect(matcher.matches("42")).toBe(false);
-      expect(matcher.matches(null)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
-      expect(matcher.matches(true)).toBe(false);
-      expect(matcher.matches({})).toBe(false);
+      expect(matcher.isMatch("42")).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
+      expect(matcher.isMatch(true)).toBe(false);
+      expect(matcher.isMatch({})).toBe(false);
     });
 
     it("describes the matcher", () => {

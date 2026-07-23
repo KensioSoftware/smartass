@@ -20,7 +20,7 @@ export function assertTypeBigInt(
   message = `Expected ${desc(value)} to be of type bigint.`,
 ): asserts value is bigint {
   const matcher = typeBigInt();
-  if (!matcher.matches(value)) {
+  if (!matcher.isMatch(value)) {
     throw new AssertionError(message, value, matcher.represent());
   }
 }

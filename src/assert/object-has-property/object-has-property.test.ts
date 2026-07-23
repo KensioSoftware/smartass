@@ -27,13 +27,13 @@ describe("object-has-property", () => {
     });
 
     it("works with nested objects", () => {
-      const obj = { outer: { inner: "value" } };
+      const object = { outer: { inner: "value" } };
       expect(() => {
-        assertObjectHasProperty(obj, "outer");
+        assertObjectHasProperty(object, "outer");
       }).not.toThrow();
 
       expect(() => {
-        assertObjectHasProperty(obj.outer, "inner");
+        assertObjectHasProperty(object.outer, "inner");
       }).not.toThrow();
     });
 
@@ -44,10 +44,10 @@ describe("object-has-property", () => {
     });
 
     it("works with inherited properties", () => {
-      const obj = { a: 1 };
+      const object = { a: 1 };
       // Prototype property is accessible via 'toString'
       expect(() => {
-        assertObjectHasProperty(obj, "toString");
+        assertObjectHasProperty(object, "toString");
       }).not.toThrow();
     });
 
@@ -160,53 +160,53 @@ describe("object-has-property", () => {
     it("matches objects with the property", () => {
       const matcher = objectWithProperty("a");
 
-      expect(matcher.matches({ a: 1 })).toBe(true);
+      expect(matcher.isMatch({ a: 1 })).toBe(true);
     });
 
     it("does not match objects without the property", () => {
       const matcher = objectWithProperty("b");
 
-      expect(matcher.matches({ a: 1 })).toBe(false);
+      expect(matcher.isMatch({ a: 1 })).toBe(false);
     });
 
     it("matches inherited properties", () => {
       const matcher = objectWithProperty("toString");
 
-      expect(matcher.matches({ a: 1 })).toBe(true);
+      expect(matcher.isMatch({ a: 1 })).toBe(true);
     });
 
     it("matches properties with undefined values", () => {
       const matcher = objectWithProperty("a");
 
-      expect(matcher.matches({ a: undefined })).toBe(true);
+      expect(matcher.isMatch({ a: undefined })).toBe(true);
     });
 
     it("matches array properties", () => {
       const matcher = objectWithProperty("length");
 
-      expect(matcher.matches([1, 2, 3])).toBe(true);
+      expect(matcher.isMatch([1, 2, 3])).toBe(true);
     });
 
     it("matches symbol properties", () => {
       const key = Symbol("test");
       const matcher = objectWithProperty(key);
 
-      expect(matcher.matches({ [key]: 1 })).toBe(true);
-      expect(matcher.matches({})).toBe(false);
+      expect(matcher.isMatch({ [key]: 1 })).toBe(true);
+      expect(matcher.isMatch({})).toBe(false);
     });
 
     it("does not match null", () => {
       const matcher = objectWithProperty("a");
 
-      expect(matcher.matches(null)).toBe(false);
+      expect(matcher.isMatch(null)).toBe(false);
     });
 
     it("does not match non-object values", () => {
       const matcher = objectWithProperty("length");
 
-      expect(matcher.matches("abc")).toBe(false);
-      expect(matcher.matches(123)).toBe(false);
-      expect(matcher.matches(undefined)).toBe(false);
+      expect(matcher.isMatch("abc")).toBe(false);
+      expect(matcher.isMatch(123)).toBe(false);
+      expect(matcher.isMatch(undefined)).toBe(false);
     });
 
     it("describes the matcher", () => {
