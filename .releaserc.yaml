@@ -1,0 +1,108 @@
+---
+# How the commits on main become a published version. Run by
+# .github/workflows/release.yml, which holds the account-side setup this
+# depends on.
+#
+# YAML rather than JSON so the reasoning below can live next to the settings.
+
+branches:
+  - main
+
+plugins:
+  # Reads the commit subjects on main and works out the bump.
+  #
+  # Anything that ships is a patch. A minor is not something a commit subject
+  # can ask for: it is the checkbox on the workflow, below. The reasoning is
+  # that "is this significant enough to be a minor" is a judgement about the
+  # release as a whole, made once, by a person looking at the whole batch —
+  # not a judgement each commit subject should be trusted to make. Reserving
+  # it that way is also what keeps the minor number meaning something. A run
+  # that adds a new assertion is exactly the case for ticking the box.
+  #
+  # So the ladder is: patch automatically, minor by checkbox, major by hand
+  # and never from this workflow at all.
+  #
+  # The breaking rule has to come first and has to be here. Without it the
+  # feat rule below matches "feat!: …" too, and a breaking change would go out
+  # as a patch — worse than any of this, because it would be silent. With it,
+  # both "feat!: …" and a BREAKING CHANGE: footer reach the guard further
+  # down and fail the run.
+  #
+  # docs, test, chore, ci and style are absent on purpose: they change nothing
+  # a consumer installs, so they release nothing. build is present because
+  # this package's dependency bumps land under it and some of them, like the
+  # TypeScript ones, do change what consumers compile against.
+  - - "@semantic-release/commit-analyzer"
+    - preset: conventionalcommits
+      releaseRules:
+        - breaking: true
+          release: major
+        - type: feat
+          release: patch
+        - type: fix
+          release: patch
+        - type: perf
+          release: patch
+        - type: refactor
+          release: patch
+        - type: build
+          release: patch
+
+  # Turns those same commits into the GitHub Release notes. Same preset as the
+  # analyzer, so the notes group commits the way the analyzer read them.
+  - - "@semantic-release/release-notes-generator"
+    - preset: conventionalcommits
+
+  # The two ends of the ladder the analyzer above deliberately cannot reach.
+  #
+  # analyzeCommitsCmd raises the release to a minor when the workflow was
+  # started with its checkbox ticked. semantic-release takes the highest
+  # result across every analyzer, so this can only ever raise a patch to a
+  # minor — it cannot lower anything, and it leaves a major alone. Printing
+  # nothing, which is what happens when the box is unticked, is read as "no
+  # opinion" rather than "no release".
+  #
+  # Ticking the box with nothing releasable on main would publish a minor
+  # with empty notes. That is a deliberate act with an obvious result, so it
+  # is left possible rather than guarded against.
+  #
+  # verifyReleaseCmd refuses majors. A breaking change to assertions everyone
+  # imports by name is a decision about what consumers have to rewrite, so it
+  # is made by a person publishing by hand, not by a marker in a subject line.
+  # This runs after the version is worked out and before anything is
+  # published, so "feat!: …" or a BREAKING CHANGE: footer fails the run rather
+  # than shipping 2.0.0. Mapping breaking changes down to a minor was
+  # rejected: it would put a false version number against a genuinely
+  # breaking change.
+  - - "@semantic-release/exec"
+    - analyzeCommitsCmd: >-
+        if [ "$RELEASE_MINOR" = "true" ]; then echo minor; fi
+      verifyReleaseCmd: >-
+        if [ "${nextRelease.type}" = "major" ]; then
+        echo "Refusing to publish ${nextRelease.version} automatically:
+        major releases are published by hand." >&2;
+        exit 1;
+        fi
+
+  # Publishes to npm. No NPM_TOKEN anywhere: the npm CLI detects the OIDC
+  # token the workflow requests and exchanges it for a credential that lasts
+  # the length of this one publish, which is also what makes npm attach a
+  # provenance attestation. Needs npm >= 11.5.1, which the Node in .nvmrc
+  # carries. The tarball's dist/ is built by the prepack script this triggers.
+  - "@semantic-release/npm"
+
+  # Creates the git tag and the GitHub Release.
+  #
+  # Note there is no @semantic-release/git plugin: nothing here commits the
+  # bumped version back to main, so the version field in package.json stays at
+  # whatever the last hand-published release left there and stops being the
+  # number to read. That is partly taste — the tag and the registry are the
+  # version of record for a library — and partly that it could not work
+  # anyway, since the main ruleset requires pull requests, signed commits and
+  # linear history, and only an org admin bypasses it. Tags are unaffected,
+  # because the ruleset only covers the default branch.
+  - - "@semantic-release/github"
+    # The released-in comments this would otherwise leave on every merged pull
+    # request and closed issue. The GitHub Release is the announcement.
+    - successComment: false
+      failComment: false

@@ -38,6 +38,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "prepack": "pnpm build",
     "build:check": "tsc -p tsconfig.json --noEmit",
     "build:index": "bash scripts/build-index.sh",
     "build:readme": "bash scripts/build-readme-lists.sh",
@@ -54,9 +55,11 @@
     "narrowing"
   ],
   "devDependencies": {
+    "@semantic-release/exec": "7.1.0",
     "@types/node": "^26.0.0",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@vitest/coverage-v8": "^4.1.10",
+    "conventional-changelog-conventionalcommits": "10.2.1",
     "eslint": "^10.6.0",
     "eslint-plugin-jsdoc": "^63.0.12",
     "eslint-plugin-no-secrets": "^2.3.3",
@@ -65,6 +68,7 @@
     "oxlint": "^1.77.0",
     "oxlint-tsgolint": "^7.0.2001",
     "prettier": "^3.9.4",
+    "semantic-release": "25.0.9",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
     "vitest": "^4.1.10"
   }
