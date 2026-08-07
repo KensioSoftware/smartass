@@ -1,0 +1,176 @@
+---
+# Publishes @kensio/smartass, when someone runs it from the Actions tab.
+# What it does is decided by .releaserc.yaml; this file is the plumbing. It
+# replaces scripts/publish.sh, which did the same job from a laptop.
+#
+# Two things live outside the repository and have to exist for it to work:
+#
+#   1. A trusted publisher on npmjs.com for @kensio/smartass, pointing at this
+#      repository, this workflow file, and the "release" environment below,
+#      with npm publish as the only allowed action. This is what replaces a
+#      stored NPM_TOKEN — there is no npm credential in this repository.
+#
+#   2. A repository environment named "release". Adding a required reviewer
+#      makes a publish wait for a second pair of eyes, which is worth having
+#      if anyone else ever gains write access. Starting the run is already a
+#      deliberate act, so approving your own run adds little on its own. The
+#      choice is only made there, not here.
+#
+# Neither is recorded in the repository, so if publishes start failing with an
+# authentication error, check that the trusted publisher still names this
+# workflow file — renaming this file silently invalidates it.
+
+name: Release
+
+on:
+  # Started by hand, not by merging. Pull requests land here in bursts, mostly
+  # from Dependabot, and publishing each one would put a version on the
+  # registry that nobody installs any sooner. One run ships everything
+  # accumulated since the last tag, as a single version with one set of
+  # release notes.
+  #
+  # Running this from a branch other than main is harmless — .releaserc.yaml
+  # releases from main only, so semantic-release finds nothing to do.
+  workflow_dispatch:
+    inputs:
+      minor:
+        description: >-
+          Release a minor version. Leave unticked for a patch, which is
+          what everything releasable defaults to.
+        type: boolean
+        default: false
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CI: true
+
+# One release at a time, and never cancelled part-way: a run killed between
+# pushing the tag and publishing the tarball leaves a version that exists in
+# git and not on the registry, which is awkward to unpick.
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+# Nothing is granted by default; each job below asks for the scopes it needs
+# and no more.
+permissions: {}
+
+jobs:
+  # The checks pr.yml already ran, run again against main, and then publish.
+  #
+  # Re-running them is not belt and braces. The main ruleset does not require a
+  # pull request to be up to date with main before it merges, so two branches
+  # that were each green on their own can still break main together, and a
+  # release is the first thing after that which anyone would notice.
+  #
+  # One job for all three, for the same reason pr.yml uses one: lint, build and
+  # test each take a couple of seconds, far less than the ~30s of checkout,
+  # Node setup and install that splitting them would pay again per job. Keep
+  # this job and pr.yml's in step with each other.
+  #
+  # Named "Release check" rather than the bare "Check" pr.yml posts. That name
+  # is the required status check in the main ruleset, and a ruleset matches a
+  # check by name whatever workflow posted it, so a release dispatched from a
+  # branch with an open pull request would otherwise report into that pull
+  # request's gate.
+  check:
+    name: Release check
+    runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      # Actions are pinned to commit SHAs here rather than the tags pr.yml
+      # uses. A tag can be moved to point at new code, which is how the
+      # tj-actions/changed-files compromise reached the repositories using it;
+      # a SHA cannot. This is the workflow that mints a publish credential, so
+      # it is the one worth pinning. The trailing comment is the tag each SHA
+      # was resolved from, so a Dependabot bump is still readable in review.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: 11.13.1
+          cache: true
+
+      - run: pnpm install --frozen-lockfile --prefer-offline
+
+      # Spelled out rather than calling `pnpm check`, because that starts with
+      # `pnpm fmt`, which rewrites files instead of reporting on them.
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build:check
+
+      - name: Test
+        run: pnpm test:coverage
+
+  release:
+    name: Release
+    # Nothing runs here until the check above is green. It checks out the same
+    # commit this job publishes, so a green check is a statement about the
+    # tarball semantic-release is about to build.
+    needs: [check]
+
+    # A GitHub-hosted runner rather than the Blacksmith one the check uses.
+    # This is the job that mints the npm publish credential, and the publish
+    # path is the one place worth keeping third parties out of. The check holds
+    # no credential and produces nothing this job consumes, so it can run
+    # wherever is fastest without that reach following it here.
+    runs-on: ubuntu-latest
+
+    # What the npm trusted publisher is scoped to, and where any approval
+    # requirement lives. See the note at the top of this file.
+    environment: release
+
+    permissions:
+      # Push the tag and create the GitHub Release.
+      contents: write
+      # Mint the OIDC token npm exchanges for a short-lived publish
+      # credential. Without this, @semantic-release/npm falls back to looking
+      # for an NPM_TOKEN and fails.
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          # semantic-release works out the next version by reading the
+          # existing tags, so a shallow clone would have it start from zero.
+          fetch-depth: 0
+          # semantic-release authenticates its own push with GITHUB_TOKEN, so
+          # leaving checkout's credential in .git/config only widens what a
+          # later step could use.
+          persist-credentials: false
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+
+      - uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+        with:
+          version: 11.13.1
+          cache: true
+
+      - run: pnpm install --frozen-lockfile --prefer-offline
+
+      # Decides the version, publishes to npm, tags and writes the GitHub
+      # Release. Does nothing at all if the commits since the last tag are
+      # only chore/test/docs. See .releaserc.yaml. dist/ is built here by
+      # prepack, from this checkout — the check above proves the build works,
+      # it does not hand anything on.
+      - run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Read by analyzeCommitsCmd in .releaserc.yaml, which raises the
+          # release to a minor when this is "true".
+          RELEASE_MINOR: ${{ inputs.minor }}
