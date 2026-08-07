@@ -60,6 +60,20 @@ describe("smartassOxlintPlugin", () => {
         expect(selector).toMatch(/^CallExpression\[callee\.name='assert\w+']/);
       }
     });
+
+    it("guards every unquoted literal value with a typeof check", () => {
+      // An unquoted attribute value is matched against the string form of the node's value, so
+      // `[value=true]` also matches the string "true". Only a `[value=type(...)]` guard on the
+      // same attribute keeps the two apart.
+      for (const { selector } of preferSpecificAssertionRules) {
+        for (const _ of selector.matchAll(/\[value=(?!type\(|["'])[^\]]+]/g)) {
+          expect(
+            selector,
+            "an unquoted [value=...] needs a [value=type(...)] guard beside it",
+          ).toContain("[value=type(");
+        }
+      }
+    });
   });
 
   describe("running under Oxlint", () => {
@@ -72,6 +86,23 @@ describe("smartassOxlintPlugin", () => {
         { filename: "valid.ts", code: "assertIdentical(name, 'smartass');" },
         // The selectors are anchored to the assertion name, so lookalikes are left alone.
         { filename: "valid.ts", code: "expect(values.length > 0);" },
+        // A string that happens to spell a boolean is not a boolean, and assertTrue would be the
+        // wrong suggestion for it.
+        {
+          filename: "valid.ts",
+          code: "assertIdentical(valueAttribute(true), 'true');",
+        },
+        {
+          filename: "valid.ts",
+          code: "assertIdentical(valueAttribute(false), 'false');",
+        },
+        // Same for a string spelling `null`.
+        { filename: "valid.ts", code: "assertTrue(rawValue == 'null');" },
+        // `.length` comparisons are as much a string shape as an array one, and the array
+        // assertions throw on strings, so there is no suggestion for them.
+        { filename: "valid.ts", code: "assertTrue(text.length > 0);" },
+        { filename: "valid.ts", code: "assertTrue(text.length >= 3);" },
+        { filename: "valid.ts", code: "assertFalse(text.length === 0);" },
       ],
       invalid: [
         {
@@ -97,11 +128,31 @@ describe("smartassOxlintPlugin", () => {
         },
         {
           filename: "invalid.ts",
-          code: "assertTrue(values.length > 0);",
+          code: "assertIdentical(value, false);",
           errors: [
             {
               message:
-                "Use assertArrayNotEmpty(value) instead of assertTrue(value.length > 0) where the value is an array.",
+                "Use assertFalse(value) instead of assertIdentical(value, false).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(values.length === 2);",
+          errors: [
+            {
+              message:
+                "Use a more specific length assertion, such as assertArrayLength(value, expectedLength) or assertStringLength(value, expectedLength), instead of assertTrue(value.length === expectedLength).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(value != null);",
+          errors: [
+            {
+              message:
+                "Use assertNonNullable(value) instead of assertTrue(value != null).",
             },
           ],
         },
