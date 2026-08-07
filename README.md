@@ -168,10 +168,10 @@ structure.
 
 <!-- matcher-functions:end -->
 
-## Optional ESLint config
+## Optional lint rules
 
-The `@kensio/smartass` package also exports an optional ESLint flat config that discourages less
-specific assertion usage. For example:
+The `@kensio/smartass` package also exports optional lint rules that discourage less specific
+assertion usage. For example:
 
 ```typescript
 assertIdentical(foo.length, 2);
@@ -179,7 +179,10 @@ assertIdentical(foo.length, 2);
 assertArrayLength(foo, 2);
 ```
 
-You can use this in your ESLint config like this:
+The same suggestions are available for both ESLint and Oxlint, generated from a single table of
+selectors, so the two report identically.
+
+### ESLint
 
 ```typescript
 import { defineConfig } from "eslint/config";
@@ -191,4 +194,19 @@ export default defineConfig(
   ...tseslint.configs.recommended,
   ...smartassPreferSpecificAssertions,
 );
+```
+
+### Oxlint
+
+The `@kensio/smartass/oxlint` export is an [Oxlint JS
+plugin](https://oxc.rs/docs/guide/usage/linter/js-plugins.html). Register it under `jsPlugins` and
+turn the rule on:
+
+```json
+{
+  "jsPlugins": [{ "name": "smartass", "specifier": "@kensio/smartass/oxlint" }],
+  "rules": {
+    "smartass/prefer-specific-assertions": "warn"
+  }
+}
 ```

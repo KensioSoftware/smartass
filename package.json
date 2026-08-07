@@ -17,6 +17,10 @@
     "./eslint": {
       "types": "./dist/eslint/smartass-eslint.config.d.ts",
       "import": "./dist/eslint/smartass-eslint.config.js"
+    },
+    "./oxlint": {
+      "types": "./dist/oxlint/smartass-oxlint-plugin.d.ts",
+      "import": "./dist/oxlint/smartass-oxlint-plugin.js"
     }
   },
   "files": [
@@ -37,8 +41,8 @@
     "build:check": "tsc -p tsconfig.json --noEmit",
     "build:index": "bash scripts/build-index.sh",
     "build:readme": "bash scripts/build-readme-lists.sh",
-    "fmt": "eslint --fix . && prettier --write .",
-    "lint": "eslint . && prettier --check .",
+    "fmt": "oxlint --fix && prettier --write .",
+    "lint": "oxlint && prettier --check .",
     "test": "vitest run --typecheck",
     "test:coverage": "vitest run --typecheck --coverage",
     "check": "pnpm fmt && pnpm build:check && pnpm test:coverage"
@@ -50,23 +54,18 @@
     "narrowing"
   ],
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/eslint-plugin-security": "^3.0.1",
     "@types/node": "^26.0.0",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@vitest/coverage-v8": "^4.1.10",
-    "@vitest/eslint-plugin": "^1.6.22",
     "eslint": "^10.6.0",
-    "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsdoc": "^63.0.12",
     "eslint-plugin-no-secrets": "^2.3.3",
     "eslint-plugin-security": "^4.0.1",
     "eslint-plugin-unicorn": "^71.1.0",
-    "globals": "^17.7.0",
-    "jiti": "^2.7.0",
+    "oxlint": "^1.77.0",
+    "oxlint-tsgolint": "^7.0.2001",
     "prettier": "^3.9.4",
     "typescript": "npm:@typescript/typescript6@^6.0.2",
-    "typescript-eslint": "^8.63.0",
     "vitest": "^4.1.10"
   }
 }

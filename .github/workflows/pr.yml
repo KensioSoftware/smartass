@@ -13,48 +13,39 @@ defaults:
 env:
   CI: true
 
+# A new push to the PR makes the in-flight run irrelevant, so stop paying for it.
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
 jobs:
-  lint:
-    name: Lint
+  # Lint, test and build each take a couple of seconds, which is far less than the ~30s of
+  # checkout, Node setup and install that a separate job would pay to run them. One job it is.
+  check:
+    name: Check
     runs-on: blacksmith-4vcpu-ubuntu-2404
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7.0.0
         with:
-          node-version-file: .nvmrc
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 11.13.1
-          cache: true
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
+          persist-credentials: false
 
-  test:
-    name: Test
-    runs-on: blacksmith-4vcpu-ubuntu-2404
-    steps:
-      - uses: actions/checkout@v7
       - uses: actions/setup-node@v7.0.0
         with:
           node-version-file: .nvmrc
-      - uses: pnpm/action-setup@v6
-        with:
-          version: 11.13.1
-          cache: true
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm test:coverage
 
-  build:
-    name: Build
-    runs-on: blacksmith-4vcpu-ubuntu-2404
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7.0.0
-        with:
-          node-version-file: .nvmrc
       - uses: pnpm/action-setup@v6
         with:
           version: 11.13.1
           cache: true
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm build:check
+
+      - run: pnpm install --frozen-lockfile --prefer-offline
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build:check
+
+      - name: Test
+        run: pnpm test:coverage

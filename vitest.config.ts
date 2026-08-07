@@ -18,7 +18,7 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src/**/*.ts"],
-      exclude: [...configDefaults.exclude, "smartass-eslint.config.ts"],
+      exclude: [...configDefaults.exclude, "**/smartass-eslint.config.ts"],
       reporter: ["text", "lcov", "json-summary"],
       reportsDirectory: "./test/.coverage",
       thresholds: {
@@ -28,7 +28,14 @@ export default defineConfig({
         lines: 100,
       },
     },
+    // Worker threads start faster than forked processes, and nothing here mocks modules or
+    // mutates globals, so a shared module registry per worker is safe. Together these cut most
+    // of the per-file import cost.
+    pool: "threads",
+    isolate: false,
     restoreMocks: true,
-    testTimeout: 100,
+    // 100ms is a deliberately tight budget for assertion functions, but shared CI runners are
+    // slow enough at cold start to trip it on tests that are not actually slow.
+    testTimeout: process.env["CI"] === undefined ? 100 : 2000,
   },
 });
