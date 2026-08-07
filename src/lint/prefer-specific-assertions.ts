@@ -4,6 +4,16 @@
  * These are shared by the ESLint flat config (`@kensio/smartass/eslint`), which feeds them to
  * `no-restricted-syntax`, and by the Oxlint plugin (`@kensio/smartass/oxlint`), which registers
  * each selector as its own visitor. Keeping one table means both linters stay in step.
+ *
+ * Two things to keep in mind when adding a selector:
+ *
+ * - An unquoted attribute value is compared against the string form of the node's value, so
+ *   `Literal[value=true]` matches the string `"true"` as well as the boolean `true`. Pair it with
+ *   a `[value=type(...)]` guard, which both selector engines evaluate with `typeof`.
+ * - Neither linter has type information, so a selector cannot tell an array from a string, or a
+ *   `Set` from a `Map`. Where the shape is ambiguous the message names every assertion that could
+ *   apply rather than picking one; if only one side of an ambiguous shape has a specific assertion
+ *   to offer, there is no selector for it, because the suggestion would be wrong for the others.
  */
 
 /**
@@ -23,12 +33,12 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
   [
     {
       selector:
-        "CallExpression[callee.name='assertIdentical'] > Literal[value=true]:nth-child(2)",
+        "CallExpression[callee.name='assertIdentical'] > Literal[value=type(boolean)][value=true]:nth-child(2)",
       message: "Use assertTrue(value) instead of assertIdentical(value, true).",
     },
     {
       selector:
-        "CallExpression[callee.name='assertIdentical'] > Literal[value=false]:nth-child(2)",
+        "CallExpression[callee.name='assertIdentical'] > Literal[value=type(boolean)][value=false]:nth-child(2)",
       message:
         "Use assertFalse(value) instead of assertIdentical(value, false).",
     },
@@ -118,19 +128,19 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
     },
     {
       selector:
-        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='=='] > Literal[value=null]",
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='=='] > Literal[value=type(object)][value=null]",
       message:
         "Use assertIdentical(value, null) or a more specific null assertion if available. Do not use assertTrue(value == null) unless you intentionally want loose nullish equality.",
     },
     {
       selector:
-        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='!='] > Literal[value=null]",
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='!='] > Literal[value=type(object)][value=null]",
       message:
         "Use assertNonNullable(value) instead of assertTrue(value != null).",
     },
     {
       selector:
-        "CallExpression[callee.name='assertTrue'] > LogicalExpression[operator='&&'] BinaryExpression[operator='!=='] > Literal[value=null]",
+        "CallExpression[callee.name='assertTrue'] > LogicalExpression[operator='&&'] BinaryExpression[operator='!=='] > Literal[value=type(object)][value=null]",
       message:
         "Use assertNonNullable(value) instead of manually checking value !== null && value !== undefined.",
     },
@@ -152,18 +162,11 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
       message:
         "Use a more specific length assertion, such as assertArrayLength(value, expectedLength) or assertStringLength(value, expectedLength), instead of assertTrue(value.length === expectedLength).",
     },
-    {
-      selector:
-        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>='] > MemberExpression[property.name='length']",
-      message:
-        "Use assertArrayMinLength(value, minimumLength) instead of assertTrue(value.length >= minimumLength) where the value is an array.",
-    },
-    {
-      selector:
-        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>'] > MemberExpression[property.name='length']",
-      message:
-        "Use assertArrayNotEmpty(value) instead of assertTrue(value.length > 0) where the value is an array.",
-    },
+    // There is deliberately no selector for assertTrue(value.length >= minimumLength) or
+    // assertTrue(value.length > 0). `.length` is a string property as much as an array one, and
+    // assertArrayMinLength/assertArrayNotEmpty call Array.isArray, so suggesting them turns a
+    // passing string assertion into a failing one. Unlike the `.length ===` selectors, there is no
+    // string counterpart to name alongside the array one, so the pattern is left alone.
     {
       selector:
         "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='==='] > MemberExpression[property.name='size']",
@@ -232,16 +235,13 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
     },
     {
       selector:
-        "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='=='] > Literal[value=null]",
+        "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='=='] > Literal[value=type(object)][value=null]",
       message:
         "Use assertNonNullable(value) instead of assertFalse(value == null).",
     },
-    {
-      selector:
-        "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='==='] > MemberExpression[property.name='length']",
-      message:
-        "Use assertArrayNotEmpty(value) instead of assertFalse(value.length === 0) where the value is an array.",
-    },
+    // assertFalse(value.length === 0) is left alone for the same reason as the assertTrue length
+    // comparisons above: the selector cannot tell a string from an array, and assertArrayNotEmpty
+    // would throw on a string.
     {
       selector:
         "CallExpression[callee.name='assertFalse'] > UnaryExpression[operator='!'] > CallExpression[callee.property.name='isDirectory']",
