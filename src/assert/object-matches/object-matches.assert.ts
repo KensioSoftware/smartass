@@ -33,10 +33,7 @@ import type {
  * // and a role of "admin" | "editor"
  * ```
  */
-export function assertObjectMatches<
-  TActual,
-  const TExpected extends Record<PropertyKey, unknown>,
->(
+export function assertObjectMatches<TActual, const TExpected extends object>(
   actual: TActual,
   expected: TExpected,
   message?: string,

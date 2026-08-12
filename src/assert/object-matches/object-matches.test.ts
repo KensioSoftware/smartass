@@ -250,4 +250,20 @@ describe("object-matches", () => {
     expect(user.tags).toBeTypeOf("object");
     expect(user.id).toBeTypeOf("string");
   });
+
+  it("accepts an interface as the expected value", () => {
+    interface Version {
+      major: number;
+      label: string;
+    }
+
+    const expected: Version = { major: 1, label: "stable" };
+    const value: unknown = { major: 1, label: "stable", extra: true };
+
+    assertObjectMatches(value, expected);
+
+    expectTypeOf(value.major).toEqualTypeOf<number>();
+    expectTypeOf(value.label).toEqualTypeOf<string>();
+    expect(value.major).toBe(1);
+  });
 });
