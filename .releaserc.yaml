@@ -50,8 +50,38 @@ plugins:
 
   # Turns those same commits into the GitHub Release notes. Same preset as the
   # analyzer, so the notes group commits the way the analyzer read them.
+  #
+  # `types` is the whole list rather than an addition to the preset's, because
+  # a type not named here is left out of the notes entirely. The stock preset
+  # sections feat, fix and perf and hides the rest, so without this a release
+  # triggered only by a `build:` or a `refactor:` — both of which release,
+  # per the analyzer above — would go out with a version number and nothing
+  # written under it. So this is the list from the analyzer, given section
+  # headings.
+  #
+  # conventional-changelog-conventionalcommits is pinned to 9.3.1 in
+  # package.json and cannot be taken to 10 while semantic-release is on 25.
+  # Both plugins here reach for that package by name from the project root, but
+  # the notes are rendered through conventional-changelog-writer 8, which is
+  # Handlebars and reads `mainTemplate` and the partials as strings; the
+  # preset's 10 line returns functions instead. Nothing errors when they are
+  # mismatched. The header renders, every commit is dropped, and the release
+  # goes out with a version number and no notes under it. Checked by running
+  # `semantic-release --dry-run` against both, which is the only way to see it.
   - - "@semantic-release/release-notes-generator"
     - preset: conventionalcommits
+      presetConfig:
+        types:
+          - type: feat
+            section: Added
+          - type: fix
+            section: Fixed
+          - type: perf
+            section: Faster
+          - type: refactor
+            section: Changed
+          - type: build
+            section: Packaging
 
   # The two ends of the ladder the analyzer above deliberately cannot reach.
   #
