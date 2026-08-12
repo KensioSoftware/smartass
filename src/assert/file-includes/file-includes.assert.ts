@@ -2,7 +2,7 @@ import path from "node:path";
 
 import { AssertionError } from "../../assertion-error.js";
 import { repr } from "../../describe/describe.js";
-import { fileIncludesSubstring } from "../../compare/file-includes.js";
+import { hasSubstring } from "../../compare/file-includes.js";
 
 /**
  * Assert that a file includes a given substring.
@@ -12,21 +12,21 @@ import { fileIncludesSubstring } from "../../compare/file-includes.js";
  *
  * const filePath = "README.md";
  *
- * await assertFileIncludes(filePath, "Installation");
+ * assertFileIncludes(filePath, "Installation");
  *
  * // This validates file contents at runtime without changing the path type.
  * ```
  */
-export async function assertFileIncludes(
+export function assertFileIncludes(
   filePath: string | string[],
   substring: string,
   message?: string,
-): Promise<void> {
+): void {
   const resolvedFilePath = Array.isArray(filePath)
     ? path.join(...filePath)
     : filePath;
 
-  if (!(await fileIncludesSubstring(resolvedFilePath, substring))) {
+  if (!hasSubstring(resolvedFilePath, substring)) {
     throw new AssertionError(
       message ??
         `Expected file ${repr(resolvedFilePath)} to include ${repr(substring)}, but it did not.`,
