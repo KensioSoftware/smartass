@@ -20,9 +20,7 @@ import { findObjectComparisonMismatch } from "../../compare/object-comparison.js
  * // user is now narrowed to { readonly id: 1; readonly name: "Ada" }
  * ```
  */
-export function assertObjectEquals<
-  const TExpected extends Record<PropertyKey, unknown>,
->(
+export function assertObjectEquals<const TExpected extends object>(
   actual: unknown,
   expected: TExpected,
   message?: string,

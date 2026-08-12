@@ -155,4 +155,20 @@ describe("object-equals", () => {
     expect(value.status).toBe("active");
     expect(value.nested.count).toBe(1);
   });
+
+  it("accepts an interface as the expected value", () => {
+    interface Version {
+      major: number;
+      minor: number;
+    }
+
+    const expected: Version = { major: 1, minor: 37 };
+    const value: unknown = { major: 1, minor: 37 };
+
+    assertObjectEquals(value, expected);
+
+    expectTypeOf(value).toEqualTypeOf<Version>();
+    expectTypeOf(value.major).toEqualTypeOf<number>();
+    expect(value.minor).toBe(37);
+  });
 });
