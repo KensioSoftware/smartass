@@ -5,6 +5,19 @@ on:
   pull_request:
     branches:
       - main
+  # The version job in release.yml opens its pull request with GITHUB_TOKEN,
+  # and a pull request opened with that token does not fire `pull_request` —
+  # GitHub declines to let a workflow start another workflow. Without this the
+  # main ruleset's required Check would never report on it, and it could never
+  # be merged.
+  #
+  # A ruleset matches a check by name whatever workflow posted it, and this is
+  # the same job under the same name, so running it on the push satisfies the
+  # same gate. Scoped to the branch prefix that job uses, so ordinary branches
+  # still get one run rather than two.
+  push:
+    branches:
+      - "release/**"
 
 defaults:
   run:
@@ -14,8 +27,12 @@ env:
   CI: true
 
 # A new push to the PR makes the in-flight run irrelevant, so stop paying for it.
+#
+# The fallback is what keeps that true on the push trigger above, where there
+# is no pull request number: without it every release/** push would share one
+# group named "pr-" and cancel the run before it.
 concurrency:
-  group: pr-${{ github.event.pull_request.number }}
+  group: pr-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
