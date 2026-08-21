@@ -9,6 +9,8 @@ export * from "./assert/array-min-length/array-min-length.assert.js";
 export * from "./assert/array-min-length/array-min-length.match.js";
 export * from "./assert/array-not-empty/array-not-empty.assert.js";
 export * from "./assert/array-not-empty/array-not-empty.match.js";
+export * from "./assert/array-not-includes/array-not-includes.assert.js";
+export * from "./assert/array-not-includes/array-not-includes.match.js";
 export * from "./assert/buffer-equal/buffer-equal.assert.js";
 export * from "./assert/buffer-equal/buffer-equal.match.js";
 export * from "./assert/directory-exists/directory-exists.assert.js";
