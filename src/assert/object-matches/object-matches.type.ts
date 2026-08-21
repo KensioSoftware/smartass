@@ -31,6 +31,10 @@ import type {
   NonEmptyArrayMatch,
   NonEmptyArrayMatcher,
 } from "../array-not-empty/array-not-empty.type.js";
+import type {
+  ArrayNotIncludingMatch,
+  ArrayNotIncludingMatcher,
+} from "../array-not-includes/array-not-includes.type.js";
 import type { OneOfMatch, OneOfMatcher } from "../one-of/one-of.type.js";
 import type {
   StringEndingWithMatch,
@@ -185,15 +189,17 @@ type FirstMatch<TCandidate, TFallback> = [TCandidate] extends [never]
 type ArrayMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
   TExpected extends ArrayIncludingMatcher<infer TElement>
     ? ArrayIncludingMatch<TActual, TElement>
-    : TExpected extends ArrayIncludingAllMatcher<infer TElement, infer N>
-      ? ArrayIncludingAllMatch<TActual, TElement, N>
-      : TExpected extends ArrayOfLengthMatcher<infer N>
-        ? ArrayOfLengthMatch<TActual, N>
-        : TExpected extends ArrayOfMinLengthMatcher<infer N>
-          ? ArrayOfMinLengthMatch<TActual, N>
-          : TExpected extends NonEmptyArrayMatcher
-            ? NonEmptyArrayMatch<TActual>
-            : never;
+    : TExpected extends ArrayNotIncludingMatcher
+      ? ArrayNotIncludingMatch<TActual>
+      : TExpected extends ArrayIncludingAllMatcher<infer TElement, infer N>
+        ? ArrayIncludingAllMatch<TActual, TElement, N>
+        : TExpected extends ArrayOfLengthMatcher<infer N>
+          ? ArrayOfLengthMatch<TActual, N>
+          : TExpected extends ArrayOfMinLengthMatcher<infer N>
+            ? ArrayOfMinLengthMatch<TActual, N>
+            : TExpected extends NonEmptyArrayMatcher
+              ? NonEmptyArrayMatch<TActual>
+              : never;
 
 /**
  * Explicit refinement branches for string-specific matchers.

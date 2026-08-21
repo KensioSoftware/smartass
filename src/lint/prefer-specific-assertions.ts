@@ -270,7 +270,7 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
       selector:
         "CallExpression[callee.name='assertFalse'] > CallExpression[callee.property.name='includes']",
       message:
-        "Use a more specific negative includes assertion where available, such as assertStringNotIncludes(value, unexpectedSubstring), instead of assertFalse(value.includes(unexpected)).",
+        "Use a more specific negative includes assertion, such as assertArrayNotIncludes(value, unexpectedItem) or assertStringNotIncludes(value, unexpectedSubstring), instead of assertFalse(value.includes(unexpected)).",
     },
     {
       selector:
