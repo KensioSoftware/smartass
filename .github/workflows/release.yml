@@ -84,7 +84,7 @@ jobs:
   # request's gate.
   check:
     name: Release check
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read

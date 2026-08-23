@@ -20,7 +20,7 @@ concurrency:
 jobs:
   coverage-badge:
     name: Coverage Badge
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7

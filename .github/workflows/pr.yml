@@ -40,7 +40,7 @@ jobs:
   # checkout, Node setup and install that a separate job would pay to run them. One job it is.
   check:
     name: Check
-    runs-on: blacksmith-4vcpu-ubuntu-2404
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
