@@ -49,6 +49,10 @@ import type {
   StringOfLengthMatcher,
 } from "../string-length/string-length.type.js";
 import type {
+  StringMatchingMatch,
+  StringMatchingMatcher,
+} from "../string-matches/string-matches.type.js";
+import type {
   StringNotIncludingMatch,
   StringNotIncludingMatcher,
 } from "../string-not-includes/string-not-includes.type.js";
@@ -212,13 +216,15 @@ type StringMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
     ? StringEndingWithMatch<TActual, TSuffix>
     : TExpected extends StringIncludingMatcher<infer TSubstring>
       ? StringIncludingMatch<TActual, TSubstring>
-      : TExpected extends StringNotIncludingMatcher<infer TSubstring>
-        ? StringNotIncludingMatch<TActual, TSubstring>
-        : TExpected extends StringStartingWithMatcher<infer TPrefix>
-          ? StringStartingWithMatch<TActual, TPrefix>
-          : TExpected extends StringOfLengthMatcher<infer N>
-            ? StringOfLengthMatch<TActual, N>
-            : never;
+      : TExpected extends StringMatchingMatcher
+        ? StringMatchingMatch<TActual>
+        : TExpected extends StringNotIncludingMatcher<infer TSubstring>
+          ? StringNotIncludingMatch<TActual, TSubstring>
+          : TExpected extends StringStartingWithMatcher<infer TPrefix>
+            ? StringStartingWithMatch<TActual, TPrefix>
+            : TExpected extends StringOfLengthMatcher<infer N>
+              ? StringOfLengthMatch<TActual, N>
+              : never;
 
 /**
  * Explicit refinement branches for primitive type matchers.

@@ -76,6 +76,12 @@ describe("smartassPreferSpecificAssertions", () => {
       ]);
     });
 
+    it("suggests assertStringMatches for a regular expression test", () => {
+      expect(lint("assertTrue(keyPattern.test(key));")).toStrictEqual([
+        "Use assertStringMatches(value, pattern) instead of assertTrue(pattern.test(value)). Note that the arguments swap round: the value comes first.",
+      ]);
+    });
+
     it("leaves assertions that are already specific alone", () => {
       expect(lint("assertArrayNotEmpty(values);")).toStrictEqual([]);
       expect(lint("assertIdentical(name, 'smartass');")).toStrictEqual([]);

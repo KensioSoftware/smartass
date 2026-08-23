@@ -48,6 +48,8 @@ export * from "./assert/string-includes/string-includes.assert.js";
 export * from "./assert/string-includes/string-includes.match.js";
 export * from "./assert/string-length/string-length.assert.js";
 export * from "./assert/string-length/string-length.match.js";
+export * from "./assert/string-matches/string-matches.assert.js";
+export * from "./assert/string-matches/string-matches.match.js";
 export * from "./assert/string-not-includes/string-not-includes.assert.js";
 export * from "./assert/string-not-includes/string-not-includes.match.js";
 export * from "./assert/string-starts-with/string-starts-with.assert.js";
