@@ -110,6 +110,12 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
     },
     {
       selector:
+        "CallExpression[callee.name='assertIdentical'] > CallExpression[callee.property.name='test']:first-child",
+      message:
+        "Use assertStringMatches(value, pattern) instead of assertIdentical(pattern.test(value), true). Note that the arguments swap round: the value comes first.",
+    },
+    {
+      selector:
         "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='==='] > UnaryExpression[operator='typeof']",
       message:
         "Use a more specific type assertion, such as assertTypeString(value), assertTypeNumber(value), or assertTypeBoolean(value), instead of assertTrue(typeof value === expectedType).",
@@ -223,6 +229,12 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
     },
     {
       selector:
+        "CallExpression[callee.name='assertTrue'] > CallExpression[callee.property.name='test']",
+      message:
+        "Use assertStringMatches(value, pattern) instead of assertTrue(pattern.test(value)). Note that the arguments swap round: the value comes first.",
+    },
+    {
+      selector:
         "CallExpression[callee.name='assertTrue'] > LogicalExpression[operator='&&']",
       message:
         "Use a more specific assertion where available instead of assertTrue(left && right). For example, use assertNumberBetween(value, min, max) for inclusive range checks.",
@@ -301,5 +313,11 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
         "CallExpression[callee.name='assertFalse'] > UnaryExpression[operator='!'] > CallExpression[callee.property.name='endsWith']",
       message:
         "Use assertStringEndsWith(value, expectedSuffix) instead of assertFalse(!value.endsWith(expectedSuffix)).",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertFalse'] > UnaryExpression[operator='!'] > CallExpression[callee.property.name='test']",
+      message:
+        "Use assertStringMatches(value, pattern) instead of assertFalse(!pattern.test(value)). Note that the arguments swap round: the value comes first.",
     },
   ];

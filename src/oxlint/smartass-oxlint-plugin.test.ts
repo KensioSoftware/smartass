@@ -158,6 +158,16 @@ describe("smartassOxlintPlugin", () => {
         },
         {
           filename: "invalid.ts",
+          code: "assertTrue(keyPattern.test(key));",
+          errors: [
+            {
+              message:
+                "Use assertStringMatches(value, pattern) instead of assertTrue(pattern.test(value)). Note that the arguments swap round: the value comes first.",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
           code: "assertFalse(!existsSync(path));",
           errors: [
             {
