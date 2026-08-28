@@ -81,6 +81,7 @@ structure.
 
 <!-- assertion-functions:start -->
 
+- [assertArrayEmpty](src/assert/array-empty/array-empty.assert.ts)
 - [assertArrayEquals](src/assert/array-equals/array-equals.assert.ts)
 - [assertArrayIncludesAll](src/assert/array-includes-all/array-includes-all.assert.ts)
 - [assertArrayIncludes](src/assert/array-includes/array-includes.assert.ts)
@@ -137,6 +138,7 @@ structure.
 
 <!-- matcher-functions:start -->
 
+- [emptyArray](src/assert/array-empty/array-empty.match.ts)
 - [arrayIncludingAll](src/assert/array-includes-all/array-includes-all.match.ts)
 - [arrayIncluding](src/assert/array-includes/array-includes.match.ts)
 - [arrayOfLength](src/assert/array-length/array-length.match.ts)

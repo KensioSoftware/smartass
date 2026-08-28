@@ -82,6 +82,18 @@ describe("smartassPreferSpecificAssertions", () => {
       ]);
     });
 
+    it("suggests assertArrayEmpty for a zero expected length", () => {
+      expect(lint("assertArrayLength(values, 0);")).toStrictEqual([
+        "Use assertArrayEmpty(value) instead of assertArrayLength(value, 0).",
+      ]);
+    });
+
+    it("leaves a non-zero or non-literal expected length alone", () => {
+      expect(lint("assertArrayLength(values, 2);")).toStrictEqual([]);
+      expect(lint("assertArrayLength(values, expected);")).toStrictEqual([]);
+      expect(lint("assertStringLength(text, 0);")).toStrictEqual([]);
+    });
+
     it("leaves assertions that are already specific alone", () => {
       expect(lint("assertArrayNotEmpty(values);")).toStrictEqual([]);
       expect(lint("assertIdentical(name, 'smartass');")).toStrictEqual([]);

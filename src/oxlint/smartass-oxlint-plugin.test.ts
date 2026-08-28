@@ -82,6 +82,9 @@ describe("smartassOxlintPlugin", () => {
     ruleTester.run("prefer-specific-assertions", preferSpecificAssertions, {
       valid: [
         { filename: "valid.ts", code: "assertArrayLength(values, 2);" },
+        // Only a literal 0 in the length position is a hidden emptiness assertion.
+        { filename: "valid.ts", code: "assertArrayLength(values, expected);" },
+        { filename: "valid.ts", code: "assertStringLength(text, 0);" },
         { filename: "valid.ts", code: "assertTrue(isReady);" },
         { filename: "valid.ts", code: "assertIdentical(name, 'smartass');" },
         // The selectors are anchored to the assertion name, so lookalikes are left alone.
@@ -133,6 +136,16 @@ describe("smartassOxlintPlugin", () => {
             {
               message:
                 "Use assertFalse(value) instead of assertIdentical(value, false).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertArrayLength(values, 0);",
+          errors: [
+            {
+              message:
+                "Use assertArrayEmpty(value) instead of assertArrayLength(value, 0).",
             },
           ],
         },
