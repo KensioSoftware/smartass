@@ -49,6 +49,15 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
         "Use assertUndefined(value) instead of assertIdentical(value, undefined).",
     },
     {
+      // The only selector that starts from a specific assertion. Both linters run without type
+      // information, but assertArrayLength has already committed to an array in its callee name,
+      // so the string/array ambiguity that blocks the `.length` selectors below does not arise.
+      selector:
+        "CallExpression[callee.name='assertArrayLength'] > Literal[value=type(number)][value=0]:nth-child(2)",
+      message:
+        "Use assertArrayEmpty(value) instead of assertArrayLength(value, 0).",
+    },
+    {
       selector:
         "CallExpression[callee.name='assertIdentical'] > UnaryExpression[operator='typeof']:first-child",
       message:

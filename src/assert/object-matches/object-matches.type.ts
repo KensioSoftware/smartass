@@ -32,6 +32,10 @@ import type {
   NonEmptyArrayMatcher,
 } from "../array-not-empty/array-not-empty.type.js";
 import type {
+  EmptyArrayMatch,
+  EmptyArrayMatcher,
+} from "../array-empty/array-empty.type.js";
+import type {
   ArrayNotIncludingMatch,
   ArrayNotIncludingMatcher,
 } from "../array-not-includes/array-not-includes.type.js";
@@ -203,7 +207,9 @@ type ArrayMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
             ? ArrayOfMinLengthMatch<TActual, N>
             : TExpected extends NonEmptyArrayMatcher
               ? NonEmptyArrayMatch<TActual>
-              : never;
+              : TExpected extends EmptyArrayMatcher
+                ? EmptyArrayMatch<TActual>
+                : never;
 
 /**
  * Explicit refinement branches for string-specific matchers.
