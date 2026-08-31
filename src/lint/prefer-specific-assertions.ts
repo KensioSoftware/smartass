@@ -75,6 +75,15 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
       message:
         "Use a more specific size assertion, such as assertSetSize(value, expectedSize) or assertMapSize(value, expectedSize), instead of assertIdentical(value.size, expectedSize).",
     },
+    // Without type information, a `.status` property could belong to any object. A numeric literal
+    // in the expected position makes the Response interpretation specific enough to suggest the
+    // HTTP assertion while leaving string-valued application statuses alone.
+    {
+      selector:
+        "CallExpression[callee.name='assertIdentical']:has(> MemberExpression[property.name='status']:first-child):has(> Literal[value=type(number)]:nth-child(2))",
+      message:
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertIdentical(response.status, expectedStatus).",
+    },
     {
       selector:
         "CallExpression[callee.name='assertIdentical'] > BinaryExpression[operator='===']:first-child",
@@ -190,6 +199,18 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
     },
     {
       selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='===']:has(> MemberExpression[property.name='status']):has(> Literal[value=type(number)])",
+      message:
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertTrue(response.status === expectedStatus).",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='==']:has(> MemberExpression[property.name='status']):has(> Literal[value=type(number)])",
+      message:
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertTrue(response.status == expectedStatus).",
+    },
+    {
+      selector:
         "CallExpression[callee.name='assertTrue'] > CallExpression[callee.property.name='includes']",
       message:
         "Use a more specific includes assertion, such as assertArrayIncludes(value, expectedItem), assertStringIncludes(value, expectedSubstring), or assertOneOf(value, allowedValues), instead of assertTrue(value.includes(expected)).",
@@ -259,6 +280,18 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
         "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='=='] > Literal[value=type(object)][value=null]",
       message:
         "Use assertNonNullable(value) instead of assertFalse(value == null).",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='!==']:has(> MemberExpression[property.name='status']):has(> Literal[value=type(number)])",
+      message:
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertFalse(response.status !== expectedStatus).",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='!=']:has(> MemberExpression[property.name='status']):has(> Literal[value=type(number)])",
+      message:
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertFalse(response.status != expectedStatus).",
     },
     // assertFalse(value.length === 0) is left alone for the same reason as the assertTrue length
     // comparisons above: the selector cannot tell a string from an array, and assertArrayNotEmpty

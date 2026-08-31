@@ -67,4 +67,6 @@ own — `@typescript-eslint/only-throw-error` suppresses `typescript/only-throw-
 
 `@kensio/smartass/eslint` and `@kensio/smartass/oxlint` are generated from one table in
 [`src/lint/prefer-specific-assertions.ts`](../src/lint/prefer-specific-assertions.ts), so both
-linters report identically. See the README for consumer setup.
+linters report identically. Status checks against numeric literals suggest `assertResponseStatus`
+with `describeResponse`. Failure messages include the response metadata and body. See the README
+for consumer setup.

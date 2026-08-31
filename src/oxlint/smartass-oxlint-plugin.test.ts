@@ -87,6 +87,10 @@ describe("smartassOxlintPlugin", () => {
         { filename: "valid.ts", code: "assertStringLength(text, 0);" },
         { filename: "valid.ts", code: "assertTrue(isReady);" },
         { filename: "valid.ts", code: "assertIdentical(name, 'smartass');" },
+        {
+          filename: "valid.ts",
+          code: "assertResponseStatus(response, 200, await describeResponse(response));",
+        },
         // The selectors are anchored to the assertion name, so lookalikes are left alone.
         { filename: "valid.ts", code: "expect(values.length > 0);" },
         // A string that happens to spell a boolean is not a boolean, and assertTrue would be the
@@ -98,6 +102,14 @@ describe("smartassOxlintPlugin", () => {
         {
           filename: "valid.ts",
           code: "assertIdentical(valueAttribute(false), 'false');",
+        },
+        {
+          filename: "valid.ts",
+          code: "assertIdentical(job.status, 'active');",
+        },
+        {
+          filename: "valid.ts",
+          code: "assertTrue(job.status === 'active');",
         },
         // Same for a string spelling `null`.
         { filename: "valid.ts", code: "assertTrue(rawValue == 'null');" },
@@ -176,6 +188,56 @@ describe("smartassOxlintPlugin", () => {
             {
               message:
                 "Use assertStringMatches(value, pattern) instead of assertTrue(pattern.test(value)). Note that the arguments swap round: the value comes first.",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertIdentical(response.status, 200);",
+          errors: [
+            {
+              message:
+                "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertIdentical(response.status, expectedStatus).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(response.status === 200);",
+          errors: [
+            {
+              message:
+                "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertTrue(response.status === expectedStatus).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(response.status == 200);",
+          errors: [
+            {
+              message:
+                "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertTrue(response.status == expectedStatus).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertFalse(response.status !== 200);",
+          errors: [
+            {
+              message:
+                "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertFalse(response.status !== expectedStatus).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertFalse(response.status != 200);",
+          errors: [
+            {
+              message:
+                "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertFalse(response.status != expectedStatus).",
             },
           ],
         },

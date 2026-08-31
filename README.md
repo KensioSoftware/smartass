@@ -185,6 +185,14 @@ assertIdentical(foo.length, 2);
 assertArrayLength(foo, 2);
 ```
 
+Response status suggestions include the response description used on failure:
+
+```typescript
+assertIdentical(response.status, 200);
+// suggested improvement:
+assertResponseStatus(response, 200, await describeResponse(response));
+```
+
 The same suggestions are available for both ESLint and Oxlint, generated from a single table of
 selectors, so the two report identically.
 

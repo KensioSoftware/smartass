@@ -20,8 +20,8 @@ export interface ResponseDescription {
  * been consumed, or if cloning or reading the body fails, the returned
  * description still includes the synchronously available response metadata.
  *
- * The result can be passed to assertResponseStatus() as the third argument to
- * include body text and other captured details in assertion failure messages.
+ * Pass the result to assertResponseStatus() as the third argument. Its failure
+ * message then includes the body text and other captured details.
  * @example
  * ```ts
  * import { assertResponseStatus, describeResponse } from "@kensio/smartass";

@@ -50,7 +50,8 @@ export interface OxlintPlugin {
 }
 
 /**
- * Suggests a more specific assertion wherever a broad one is doing a specific job.
+ * Suggests a more specific assertion wherever a broad one is doing a specific job. Response status
+ * suggestions include describeResponse(). Failure messages show the response metadata and body.
  *
  * This is the Oxlint counterpart of the `no-restricted-syntax` entries in
  * `@kensio/smartass/eslint`; both are generated from the same selector table, so the two linters
