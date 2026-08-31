@@ -6,25 +6,21 @@ import { assertInstanceOf } from "../instance-of/instance-of.assert.js";
 
 /**
  * Assert that a Response has a specific HTTP status code, with type narrowing.
- * Optionally use describeResponse() for the third argument to get more detailed
- * diagnostic information if the assertion fails.
- * @example
- * ```ts
- * import { assertResponseStatus } from "@kensio/smartass";
- *
- * const response = await fetch("https://example.com");
- *
- * assertResponseStatus(response, 200);
- *
- * // response.status is now narrowed to 200
- * ```
+ * Pass describeResponse() as the third argument to include the response metadata
+ * and body in the failure message.
  * @example
  * ```ts
  * import { assertResponseStatus, describeResponse } from "@kensio/smartass";
  *
- * const res = await fetch("https://example.com");
+ * const response = await fetch("https://example.com");
  *
- * assertResponseStatus(res, 200, await describeResponse(res));
+ * assertResponseStatus(
+ *   response,
+ *   200,
+ *   await describeResponse(response),
+ * );
+ *
+ * // response.status is now narrowed to 200
  * ```
  */
 export function assertResponseStatus<const TStatus extends number>(

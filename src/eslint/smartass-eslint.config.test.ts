@@ -94,9 +94,73 @@ describe("smartassPreferSpecificAssertions", () => {
       expect(lint("assertStringLength(text, 0);")).toStrictEqual([]);
     });
 
+    it("suggests a described response status assertion for a status property", () => {
+      // Given a broad assertion against a Response status property.
+      const code = "assertIdentical(response.status, 200);";
+
+      // When ESLint checks it with the published config.
+      const messages = lint(code);
+
+      // Then it recommends the response assertion with failure diagnostics.
+      expect(messages).toStrictEqual([
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertIdentical(response.status, expectedStatus).",
+      ]);
+    });
+
+    it("suggests a described response status assertion for a status comparison", () => {
+      // Given a boolean assertion around an exact Response status comparison.
+      const code = "assertTrue(response.status === 200);";
+
+      // When ESLint checks it with the published config.
+      const messages = lint(code);
+
+      // Then it recommends the response assertion with failure diagnostics.
+      expect(messages).toStrictEqual([
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertTrue(response.status === expectedStatus).",
+      ]);
+    });
+
+    it("recognises loose and negated status comparisons", () => {
+      // Given other boolean forms that assert a Response has one status.
+      const code = [
+        "assertTrue(response.status == 200);",
+        "assertFalse(response.status !== 200);",
+        "assertFalse(response.status != 200);",
+      ].join("\n");
+
+      // When ESLint checks them with the published config.
+      const messages = lint(code);
+
+      // Then every form points to the described response status assertion.
+      expect(messages).toStrictEqual([
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertTrue(response.status == expectedStatus).",
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertFalse(response.status !== expectedStatus).",
+        "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertFalse(response.status != expectedStatus).",
+      ]);
+    });
+
+    it("leaves string-valued application statuses alone", () => {
+      // Given status properties that cannot represent an HTTP status code.
+      const code = [
+        "assertIdentical(job.status, 'active');",
+        "assertTrue(job.status === 'active');",
+      ].join("\n");
+
+      // When ESLint checks them with the published config.
+      const messages = lint(code);
+
+      // Then it makes no Response-specific suggestion.
+      expect(messages).toStrictEqual([]);
+    });
+
     it("leaves assertions that are already specific alone", () => {
       expect(lint("assertArrayNotEmpty(values);")).toStrictEqual([]);
       expect(lint("assertIdentical(name, 'smartass');")).toStrictEqual([]);
+      expect(
+        lint(
+          "assertResponseStatus(response, 200, await describeResponse(response));",
+        ),
+      ).toStrictEqual([]);
     });
   });
 });

@@ -3,7 +3,9 @@ import { defineConfig } from "eslint/config";
 import { preferSpecificAssertionRules } from "../lint/prefer-specific-assertions.js";
 
 /**
- * An ESLint flat config that nudges you from broad assertions towards the specific ones.
+ * An ESLint flat config that nudges you from broad assertions towards the specific ones. Response
+ * status suggestions include describeResponse(). Failure messages show the response metadata and
+ * body.
  *
  * The same suggestions are available to Oxlint users via `@kensio/smartass/oxlint`.
  */
