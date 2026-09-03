@@ -67,7 +67,6 @@ describe("smartassPreferSpecificAssertions", () => {
     it("leaves length comparisons alone, which could be strings", () => {
       expect(lint("assertTrue(text.length > 0);")).toStrictEqual([]);
       expect(lint("assertTrue(text.length >= 3);")).toStrictEqual([]);
-      expect(lint("assertFalse(text.length === 0);")).toStrictEqual([]);
     });
 
     it("still suggests both length assertions for an exact length check", () => {
@@ -79,6 +78,36 @@ describe("smartassPreferSpecificAssertions", () => {
     it("suggests assertStringMatches for a regular expression test", () => {
       expect(lint("assertTrue(keyPattern.test(key));")).toStrictEqual([
         "Use assertStringMatches(value, pattern) instead of assertTrue(pattern.test(value)). Note that the arguments swap round: the value comes first.",
+      ]);
+    });
+
+    it("suggests assertNotEqual for bare identity comparisons", () => {
+      // Given both boolean forms of an assertion that two values differ.
+      const code = [
+        "assertTrue(actual !== unexpected);",
+        "assertFalse(actual === unexpected);",
+      ].join("\n");
+
+      // When ESLint checks them with the published config.
+      const messages = lint(code);
+
+      // Then both forms point to the deep inequality assertion.
+      expect(messages).toStrictEqual([
+        "Use assertNotEqual(actual, unexpected) instead of assertTrue(actual !== unexpected).",
+        "Use assertNotEqual(actual, unexpected) instead of assertFalse(actual === unexpected).",
+      ]);
+    });
+
+    it("keeps the type-specific message for typeof inequality", () => {
+      // Given an inequality comparison that checks a value's type.
+      const code = "assertTrue(typeof value !== 'string');";
+
+      // When ESLint checks it with the published config.
+      const messages = lint(code);
+
+      // Then it reports one type-specific suggestion.
+      expect(messages).toStrictEqual([
+        "Use assertFalse(typeof value === expectedType) only when you mean to assert the value is not that type. If you mean the value has that type, use a specific assertion such as assertTypeString(value), assertTypeNumber(value), or assertTypeBoolean(value).",
       ]);
     });
 

@@ -87,6 +87,7 @@ describe("smartassOxlintPlugin", () => {
         { filename: "valid.ts", code: "assertStringLength(text, 0);" },
         { filename: "valid.ts", code: "assertTrue(isReady);" },
         { filename: "valid.ts", code: "assertIdentical(name, 'smartass');" },
+        { filename: "valid.ts", code: "assertNotEqual(actual, unexpected);" },
         {
           filename: "valid.ts",
           code: "assertResponseStatus(response, 200, await describeResponse(response));",
@@ -117,7 +118,6 @@ describe("smartassOxlintPlugin", () => {
         // assertions throw on strings, so there is no suggestion for them.
         { filename: "valid.ts", code: "assertTrue(text.length > 0);" },
         { filename: "valid.ts", code: "assertTrue(text.length >= 3);" },
-        { filename: "valid.ts", code: "assertFalse(text.length === 0);" },
       ],
       invalid: [
         {
@@ -178,6 +178,36 @@ describe("smartassOxlintPlugin", () => {
             {
               message:
                 "Use assertNonNullable(value) instead of assertTrue(value != null).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(actual !== unexpected);",
+          errors: [
+            {
+              message:
+                "Use assertNotEqual(actual, unexpected) instead of assertTrue(actual !== unexpected).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertFalse(actual === unexpected);",
+          errors: [
+            {
+              message:
+                "Use assertNotEqual(actual, unexpected) instead of assertFalse(actual === unexpected).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(typeof value !== 'string');",
+          errors: [
+            {
+              message:
+                "Use assertFalse(typeof value === expectedType) only when you mean to assert the value is not that type. If you mean the value has that type, use a specific assertion such as assertTypeString(value), assertTypeNumber(value), or assertTypeBoolean(value).",
             },
           ],
         },

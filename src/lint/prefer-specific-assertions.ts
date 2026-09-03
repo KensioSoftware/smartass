@@ -146,6 +146,12 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
     },
     {
       selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='!==']:not(:has(> UnaryExpression[operator='typeof']))",
+      message:
+        "Use assertNotEqual(actual, unexpected) instead of assertTrue(actual !== unexpected).",
+    },
+    {
+      selector:
         "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='==='] > Identifier[name='undefined']",
       message:
         "Use assertUndefined(value) instead of assertTrue(value === undefined).",
@@ -277,6 +283,12 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
     },
     {
       selector:
+        "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='===']",
+      message:
+        "Use assertNotEqual(actual, unexpected) instead of assertFalse(actual === unexpected).",
+    },
+    {
+      selector:
         "CallExpression[callee.name='assertFalse'] > BinaryExpression[operator='=='] > Literal[value=type(object)][value=null]",
       message:
         "Use assertNonNullable(value) instead of assertFalse(value == null).",
@@ -293,9 +305,6 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
       message:
         "Use assertResponseStatus(response, expectedStatus, await describeResponse(response)) instead of assertFalse(response.status != expectedStatus).",
     },
-    // assertFalse(value.length === 0) is left alone for the same reason as the assertTrue length
-    // comparisons above: the selector cannot tell a string from an array, and assertArrayNotEmpty
-    // would throw on a string.
     {
       selector:
         "CallExpression[callee.name='assertFalse'] > UnaryExpression[operator='!'] > CallExpression[callee.property.name='isDirectory']",
