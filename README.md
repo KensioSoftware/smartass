@@ -100,6 +100,7 @@ structure.
 - [assertInstanceOf](src/assert/instance-of/instance-of.assert.ts)
 - [assertMapSize](src/assert/map-size/map-size.assert.ts)
 - [assertNonNullable](src/assert/non-nullable/non-nullable.assert.ts)
+- [assertNotEqual](src/assert/not-equal/not-equal.assert.ts)
 - [assertNumberBetween](src/assert/number-between/number-between.assert.ts)
 - [assertNumberToNearest](src/assert/number-to-nearest/number-to-nearest.assert.ts)
 - [assertObjectEquals](src/assert/object-equals/object-equals.assert.ts)

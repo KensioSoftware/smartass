@@ -28,6 +28,7 @@ export * from "./assert/map-size/map-size.assert.js";
 export * from "./assert/map-size/map-size.match.js";
 export * from "./assert/non-nullable/non-nullable.assert.js";
 export * from "./assert/non-nullable/non-nullable.match.js";
+export * from "./assert/not-equal/not-equal.assert.js";
 export * from "./assert/number-between/number-between.assert.js";
 export * from "./assert/number-between/number-between.match.js";
 export * from "./assert/number-to-nearest/number-to-nearest.assert.js";
