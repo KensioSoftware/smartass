@@ -11,22 +11,32 @@ branches:
 plugins:
   # Reads the commit subjects on main and works out the bump.
   #
-  # Anything that ships is a patch. A minor is not something a commit subject
-  # can ask for: it is the checkbox on the workflow, below. The reasoning is
-  # that "is this significant enough to be a minor" is a judgement about the
-  # release as a whole, made once, by a person looking at the whole batch —
-  # not a judgement each commit subject should be trusted to make. Reserving
-  # it that way is also what keeps the minor number meaning something. A run
-  # that adds a new assertion is exactly the case for ticking the box.
+  # A commit subject decides whether the commit ships anything, and that is
+  # the whole of its say. Everything that ships is a patch. How big the
+  # release is comes from the checkbox on the workflow below, ticked once by a
+  # person looking at the whole batch. "Is this significant enough to be a
+  # minor" is a judgement about the release, and no single commit subject is
+  # placed to make it. Reserving the minor that way is also what keeps the
+  # minor number meaning something. A run that adds a new assertion is exactly
+  # the case for ticking the box.
   #
   # So the ladder is: patch automatically, minor by checkbox, major by hand
   # and never from this workflow at all.
   #
-  # The breaking rule has to come first and has to be here. Without it the
-  # feat rule below matches "feat!: …" too, and a breaking change would go out
-  # as a patch — worse than any of this, because it would be silent. With it,
-  # both "feat!: …" and a BREAKING CHANGE: footer reach the guard further
-  # down and fail the run.
+  # The breaking rule follows from that. "feat!: …" and a BREAKING CHANGE:
+  # footer release a patch like everything else, and the size of the release
+  # is still the checkbox. The marker survives into the release notes, where
+  # the generator below gives breaking changes a section of their own off the
+  # same footers. What it no longer does is choose the version number over the
+  # head of the person running the workflow.
+  #
+  # The rule also has to be here to keep a breaking change away from the
+  # plugin's built-in rules, which release a major for one. Custom rules are
+  # tried first and the built-in ones run only when none of these match. A
+  # "chore!: …" has no rule of its own below, so without this one it would
+  # work out as 2.0.0 and fail the guard further down. This rule catches every
+  # commit carrying a breaking footer whatever its type. A breaking chore
+  # therefore releases a patch where a plain one releases nothing.
   #
   # docs, test, chore, ci and style are absent on purpose: they change nothing
   # a consumer installs, so they release nothing. build is present because
@@ -36,7 +46,7 @@ plugins:
     - preset: conventionalcommits
       releaseRules:
         - breaking: true
-          release: major
+          release: patch
         - type: feat
           release: patch
         - type: fix
@@ -97,13 +107,11 @@ plugins:
   # is left possible rather than guarded against.
   #
   # verifyReleaseCmd refuses majors. A breaking change to assertions everyone
-  # imports by name is a decision about what consumers have to rewrite, so it
-  # is made by a person publishing by hand, not by a marker in a subject line.
-  # This runs after the version is worked out and before anything is
-  # published, so "feat!: …" or a BREAKING CHANGE: footer fails the run rather
-  # than shipping 2.0.0. Mapping breaking changes down to a minor was
-  # rejected: it would put a false version number against a genuinely
-  # breaking change.
+  # imports by name is a decision about what consumers have to rewrite, and it
+  # belongs to a person publishing by hand. The rules above can no longer work
+  # a major out on their own. This is a backstop against a later edit that
+  # lets one through. It runs after the version is decided and before anything
+  # is published, and it fails the run with 2.0.0 unpublished.
   - - "@semantic-release/exec"
     - analyzeCommitsCmd: >-
         if [ "$RELEASE_MINOR" = "true" ]; then echo minor; fi
