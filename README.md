@@ -83,6 +83,7 @@ structure.
 
 - [assertArrayEmpty](src/assert/array-empty/array-empty.assert.ts)
 - [assertArrayEquals](src/assert/array-equals/array-equals.assert.ts)
+- [assertArrayIdentical](src/assert/array-identical/array-identical.assert.ts)
 - [assertArrayIncludesAll](src/assert/array-includes-all/array-includes-all.assert.ts)
 - [assertArrayIncludes](src/assert/array-includes/array-includes.assert.ts)
 - [assertArrayLength](src/assert/array-length/array-length.assert.ts)
