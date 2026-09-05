@@ -1,6 +1,7 @@
 export * from "./assert/array-empty/array-empty.assert.js";
 export * from "./assert/array-empty/array-empty.match.js";
 export * from "./assert/array-equals/array-equals.assert.js";
+export * from "./assert/array-identical/array-identical.assert.js";
 export * from "./assert/array-includes-all/array-includes-all.assert.js";
 export * from "./assert/array-includes-all/array-includes-all.match.js";
 export * from "./assert/array-includes/array-includes.assert.js";
