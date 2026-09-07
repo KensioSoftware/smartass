@@ -41,6 +41,10 @@ export function findObjectComparisonMismatch(
     return findObjectMismatch(actual, expected, options, path);
   }
 
+  if (expected instanceof Date) {
+    return findDateMismatch(actual, expected, path);
+  }
+
   if (!Object.is(actual, expected)) {
     return {
       path,
@@ -50,6 +54,33 @@ export function findObjectComparisonMismatch(
   }
 
   return undefined;
+}
+
+/**
+ * Compare two Dates by the instant they hold.
+ *
+ * Two Dates built from the same instant are separate objects, and Object.is puts them apart.
+ * A test that builds an expected Date to compare against a returned one means the instant, and
+ * comparing the time values gives it. Object.is on the time value also pairs an Invalid Date
+ * with another Invalid Date, both of which carry NaN.
+ */
+function findDateMismatch(
+  actual: unknown,
+  expected: Date,
+  path: string,
+): ObjectComparisonMismatch | undefined {
+  if (
+    actual instanceof Date &&
+    Object.is(actual.getTime(), expected.getTime())
+  ) {
+    return undefined;
+  }
+
+  return {
+    path,
+    actual,
+    expected,
+  };
 }
 
 function findArrayMismatch(

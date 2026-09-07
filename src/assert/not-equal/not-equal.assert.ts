@@ -6,7 +6,8 @@ import { desc } from "../../describe/describe.js";
  * Assert that two values differ under a deep comparison.
  *
  * Plain objects and arrays are compared recursively by value. Object keys must
- * match exactly. Class instances and other values are compared using Object.is.
+ * match exactly. Dates are compared by the instant they hold. Class instances
+ * and other values are compared using Object.is.
  * @example
  * ```ts
  * import { assertNotEqual } from "@kensio/smartass";
