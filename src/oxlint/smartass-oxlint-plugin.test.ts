@@ -66,11 +66,13 @@ describe("smartassOxlintPlugin", () => {
       // `[value=true]` also matches the string "true". Only a `[value=type(...)]` guard on the
       // same attribute keeps the two apart.
       for (const { selector } of preferSpecificAssertionRules) {
-        for (const _ of selector.matchAll(/\[value=(?!type\(|["'])[^\]]+]/g)) {
+        for (const _ of selector.matchAll(
+          /\[\w*\.?value=(?!type\(|["'])[^\]]+]/g,
+        )) {
           expect(
             selector,
             "an unquoted [value=...] needs a [value=type(...)] guard beside it",
-          ).toContain("[value=type(");
+          ).toContain("value=type(");
         }
       }
     });
@@ -114,10 +116,10 @@ describe("smartassOxlintPlugin", () => {
         },
         // Same for a string spelling `null`.
         { filename: "valid.ts", code: "assertTrue(rawValue == 'null');" },
-        // `.length` comparisons are as much a string shape as an array one, and the array
-        // assertions throw on strings, so there is no suggestion for them.
-        { filename: "valid.ts", code: "assertTrue(text.length > 0);" },
-        { filename: "valid.ts", code: "assertTrue(text.length >= 3);" },
+        // A comparison between two identifiers could be ordering strings or Dates, and the
+        // ordering assertions take number and bigint only.
+        { filename: "valid.ts", code: "assertTrue(later > earlier);" },
+        { filename: "valid.ts", code: "assertTrue(version >= '2.0.0');" },
       ],
       invalid: [
         {
@@ -168,6 +170,96 @@ describe("smartassOxlintPlugin", () => {
             {
               message:
                 "Use a more specific length assertion, such as assertArrayLength(value, expectedLength) or assertStringLength(value, expectedLength), instead of assertTrue(value.length === expectedLength).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(elapsed > 0);",
+          errors: [
+            {
+              message:
+                "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(elapsed < 60);",
+          errors: [
+            {
+              message:
+                "Use assertLessThan(actual, expected) instead of assertTrue(actual < expected).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(attempts >= 1);",
+          errors: [
+            {
+              message:
+                "Use assertGreaterThanOrEqual(actual, expected) instead of assertTrue(actual >= expected).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(errorRate <= 0);",
+          errors: [
+            {
+              message:
+                "Use assertLessThanOrEqual(actual, expected) instead of assertTrue(actual <= expected).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(0 > elapsed);",
+          errors: [
+            {
+              message:
+                "Use assertLessThan(actual, expected) instead of assertTrue(expected > actual). Note that the arguments swap round: the value comes first.",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(60 < elapsed);",
+          errors: [
+            {
+              message:
+                "Use assertGreaterThan(actual, expected) instead of assertTrue(expected < actual). Note that the arguments swap round: the value comes first.",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(1 >= attempts);",
+          errors: [
+            {
+              message:
+                "Use assertLessThanOrEqual(actual, expected) instead of assertTrue(expected >= actual). Note that the arguments swap round: the value comes first.",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(0 <= errorRate);",
+          errors: [
+            {
+              message:
+                "Use assertGreaterThanOrEqual(actual, expected) instead of assertTrue(expected <= actual). Note that the arguments swap round: the value comes first.",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertTrue(text.length > 0);",
+          errors: [
+            {
+              message:
+                "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
             },
           ],
         },
