@@ -63,10 +63,65 @@ describe("smartassPreferSpecificAssertions", () => {
 
     // `.length` belongs to strings as much as to arrays, and assertArrayNotEmpty/
     // assertArrayMinLength call Array.isArray, so following such a suggestion on a string would
-    // turn a passing assertion into a failing one.
-    it("leaves length comparisons alone, which could be strings", () => {
-      expect(lint("assertTrue(text.length > 0);")).toStrictEqual([]);
-      expect(lint("assertTrue(text.length >= 3);")).toStrictEqual([]);
+    // turn a passing assertion into a failing one. The ordering suggestion is safe either way,
+    // because `.length` is a number whichever it belongs to.
+    it("suggests only the ordering assertion for a length comparison", () => {
+      expect(lint("assertTrue(text.length > 0);")).toStrictEqual([
+        "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
+      ]);
+      expect(lint("assertTrue(text.length >= 3);")).toStrictEqual([
+        "Use assertGreaterThanOrEqual(actual, expected) instead of assertTrue(actual >= expected).",
+      ]);
+    });
+
+    it("suggests an ordering assertion for each comparison operator", () => {
+      // Given the four ordering comparisons against a numeric literal.
+      const code = [
+        "assertTrue(elapsed > 0);",
+        "assertTrue(elapsed < 60);",
+        "assertTrue(attempts >= 1);",
+        "assertTrue(errorRate <= 0);",
+      ].join("\n");
+
+      // When ESLint checks them with the published config.
+      const messages = lint(code);
+
+      // Then each one points at its own assertion.
+      expect(messages).toStrictEqual([
+        "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
+        "Use assertLessThan(actual, expected) instead of assertTrue(actual < expected).",
+        "Use assertGreaterThanOrEqual(actual, expected) instead of assertTrue(actual >= expected).",
+        "Use assertLessThanOrEqual(actual, expected) instead of assertTrue(actual <= expected).",
+      ]);
+    });
+
+    it("flips the assertion when the literal comes first", () => {
+      // Given the same comparisons written the other way round.
+      const code = [
+        "assertTrue(0 > elapsed);",
+        "assertTrue(60 < elapsed);",
+        "assertTrue(1 >= attempts);",
+        "assertTrue(0 <= errorRate);",
+      ].join("\n");
+
+      // When ESLint checks them with the published config.
+      const messages = lint(code);
+
+      // Then each suggestion names the opposite assertion and the argument order.
+      expect(messages).toStrictEqual([
+        "Use assertLessThan(actual, expected) instead of assertTrue(expected > actual). Note that the arguments swap round: the value comes first.",
+        "Use assertGreaterThan(actual, expected) instead of assertTrue(expected < actual). Note that the arguments swap round: the value comes first.",
+        "Use assertLessThanOrEqual(actual, expected) instead of assertTrue(expected >= actual). Note that the arguments swap round: the value comes first.",
+        "Use assertGreaterThanOrEqual(actual, expected) instead of assertTrue(expected <= actual). Note that the arguments swap round: the value comes first.",
+      ]);
+    });
+
+    // A comparison between two identifiers could be ordering strings or Dates, and the ordering
+    // assertions take number and bigint only.
+    it("leaves a comparison without a numeric literal alone", () => {
+      expect(lint("assertTrue(later > earlier);")).toStrictEqual([]);
+      expect(lint("assertTrue(name < other.name);")).toStrictEqual([]);
+      expect(lint("assertTrue(version >= '2.0.0');")).toStrictEqual([]);
     });
 
     it("still suggests both length assertions for an exact length check", () => {

@@ -5,11 +5,15 @@
  * `no-restricted-syntax`, and by the Oxlint plugin (`@kensio/smartass/oxlint`), which registers
  * each selector as its own visitor. Keeping one table means both linters stay in step.
  *
- * Two things to keep in mind when adding a selector:
+ * Three things to keep in mind when adding a selector:
  *
  * - An unquoted attribute value is compared against the string form of the node's value, so
  *   `Literal[value=true]` matches the string `"true"` as well as the boolean `true`. Pair it with
  *   a `[value=type(...)]` guard, which both selector engines evaluate with `typeof`.
+ * - `:nth-child`, `:first-child` and `:last-child` count children held in an array-valued key,
+ *   such as a call's `arguments`. A `BinaryExpression` keeps its operands in `left` and `right`,
+ *   and a positional pseudo-class against one of those matches nothing at all. Reach for the
+ *   attribute path instead, as in `[right.value=type(number)]`.
  * - Neither linter has type information, so a selector cannot tell an array from a string, or a
  *   `Set` from a `Map`. Where the shape is ambiguous the message names every assertion that could
  *   apply rather than picking one; if only one side of an ambiguous shape has a specific assertion
@@ -192,16 +196,69 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
       message:
         "Use a more specific length assertion, such as assertArrayLength(value, expectedLength) or assertStringLength(value, expectedLength), instead of assertTrue(value.length === expectedLength).",
     },
-    // There is deliberately no selector for assertTrue(value.length >= minimumLength) or
-    // assertTrue(value.length > 0). `.length` is a string property as much as an array one, and
-    // assertArrayMinLength/assertArrayNotEmpty call Array.isArray, so suggesting them turns a
-    // passing string assertion into a failing one. Unlike the `.length ===` selectors, there is no
-    // string counterpart to name alongside the array one, so the pattern is left alone.
+    // No selector suggests assertArrayMinLength or assertArrayNotEmpty for
+    // assertTrue(value.length >= minimumLength). `.length` is a string property as much as an
+    // array one, both of those assertions call Array.isArray, and following the suggestion on a
+    // string turns a passing assertion into a failing one. The ordering selectors below reach the
+    // same code from another direction. `.length` is a number whatever it belongs to, and
+    // assertGreaterThan compares numbers.
     {
       selector:
         "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='==='] > MemberExpression[property.name='size']",
       message:
         "Use a more specific size assertion, such as assertSetSize(value, expectedSize) or assertMapSize(value, expectedSize), instead of assertTrue(value.size === expectedSize).",
+    },
+    // Ordering. `>` and its siblings apply to strings and Dates as well as numbers, and the
+    // ordering assertions take number and bigint only. A numeric literal on one side of the
+    // comparison settles the type, the same way it settles the `.status` selectors. A comparison
+    // between two identifiers has no such tell and is left alone.
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>'][right.type='Literal'][right.value=type(number)]",
+      message:
+        "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='<'][right.type='Literal'][right.value=type(number)]",
+      message:
+        "Use assertLessThan(actual, expected) instead of assertTrue(actual < expected).",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>='][right.type='Literal'][right.value=type(number)]",
+      message:
+        "Use assertGreaterThanOrEqual(actual, expected) instead of assertTrue(actual >= expected).",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='<='][right.type='Literal'][right.value=type(number)]",
+      message:
+        "Use assertLessThanOrEqual(actual, expected) instead of assertTrue(actual <= expected).",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>'][left.type='Literal'][left.value=type(number)]",
+      message:
+        "Use assertLessThan(actual, expected) instead of assertTrue(expected > actual). Note that the arguments swap round: the value comes first.",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='<'][left.type='Literal'][left.value=type(number)]",
+      message:
+        "Use assertGreaterThan(actual, expected) instead of assertTrue(expected < actual). Note that the arguments swap round: the value comes first.",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>='][left.type='Literal'][left.value=type(number)]",
+      message:
+        "Use assertLessThanOrEqual(actual, expected) instead of assertTrue(expected >= actual). Note that the arguments swap round: the value comes first.",
+    },
+    {
+      selector:
+        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='<='][left.type='Literal'][left.value=type(number)]",
+      message:
+        "Use assertGreaterThanOrEqual(actual, expected) instead of assertTrue(expected <= actual). Note that the arguments swap round: the value comes first.",
     },
     {
       selector:
