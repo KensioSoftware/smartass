@@ -67,12 +67,30 @@ export function repr(value: unknown, seen = new WeakSet<object>()): string {
     return value.represent();
   }
 
-  // Avoid infinite recursion on circular references.
-  if (value !== null && typeof value === "object") {
-    if (seen.has(value)) return "[Circular]";
-    seen.add(value);
+  if (value === null || typeof value !== "object") {
+    return reprValue(value, seen);
   }
 
+  // [Circular] names a value this walk is inside. Recording it on the way in and letting it go on
+  // the way out is what separates a cycle from a value held in two places, which is reachable
+  // twice and refers back to nothing. That one prints in full each time it is reached.
+  if (seen.has(value)) {
+    return "[Circular]";
+  }
+
+  seen.add(value);
+
+  try {
+    return reprValue(value, seen);
+  } finally {
+    seen.delete(value);
+  }
+}
+
+/**
+ * Build the representation of one value, with cycles already accounted for.
+ */
+function reprValue(value: unknown, seen: WeakSet<object>): string {
   if (value === null) return "null";
 
   if (value === undefined) return "undefined";
