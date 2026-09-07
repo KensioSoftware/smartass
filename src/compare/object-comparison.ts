@@ -45,6 +45,10 @@ export function findObjectComparisonMismatch(
     return findDateMismatch(actual, expected, path);
   }
 
+  if (expected instanceof Set) {
+    return findSetMismatch(actual, expected, options, path);
+  }
+
   if (!Object.is(actual, expected)) {
     return {
       path,
@@ -81,6 +85,66 @@ function findDateMismatch(
     actual,
     expected,
   };
+}
+
+/**
+ * Compare two Sets by the members they hold.
+ *
+ * A Set finds its own members with SameValueZero, and never pairs an object with an equal-valued
+ * object held under another reference. Pairing members here is a search. Each expected member takes
+ * the first unpaired member of the actual Set that compares equal to it.
+ *
+ * The search is greedy, and it can pick wrongly where one member compares equal to several expected
+ * members. Reaching that case takes a Set holding equal-valued objects, such as
+ * new Set([{ a: 1 }, { a: 1 }]).
+ */
+function findSetMismatch(
+  actual: unknown,
+  expected: ReadonlySet<unknown>,
+  options: ObjectComparisonOptions,
+  path: string,
+): ObjectComparisonMismatch | undefined {
+  if (!(actual instanceof Set)) {
+    return {
+      path,
+      actual,
+      expected,
+    };
+  }
+
+  if (actual.size !== expected.size) {
+    return {
+      path: `${path}.size`,
+      actual: actual.size,
+      expected: expected.size,
+    };
+  }
+
+  const unpaired: unknown[] = [...actual];
+
+  for (const expectedMember of expected) {
+    const index = unpaired.findIndex(
+      (candidate) =>
+        findObjectComparisonMismatch(
+          candidate,
+          expectedMember,
+          options,
+          path,
+        ) === undefined,
+    );
+
+    if (index === -1) {
+      return {
+        path: `${path}.members`,
+        actual,
+        expected: expectedMember,
+      };
+    }
+
+    unpaired.splice(index, 1);
+  }
+
+  return undefined;
 }
 
 function findArrayMismatch(
