@@ -318,6 +318,55 @@ describe("repr", () => {
     expect(result).toContain("[Circular]");
   });
 
+  it("handles mutually recursive objects", () => {
+    interface Node {
+      name: string;
+      other?: Node;
+    }
+
+    const first: Node = { name: "first" };
+    const second: Node = { name: "second", other: first };
+    first.other = second;
+
+    expect(repr(first)).toBe(
+      '{"name":"first","other":{"name":"second","other":[Circular]}}',
+    );
+  });
+
+  it("prints a value held under two keys in full both times", () => {
+    const shared = { a: 1 };
+
+    expect(repr({ x: shared, y: shared })).toBe('{"x":{"a":1},"y":{"a":1}}');
+  });
+
+  it("prints a value held twice in one array in full both times", () => {
+    const shared = { a: 1 };
+
+    expect(repr([shared, shared])).toBe('[{"a":1},{"a":1}]');
+  });
+
+  it("prints a value held in both a key and an array element", () => {
+    const shared = { a: 1 };
+
+    expect(repr({ x: shared, list: [shared] })).toBe(
+      '{"x":{"a":1},"list":[{"a":1}]}',
+    );
+  });
+
+  it("prints a value held twice in one Set in full both times", () => {
+    const shared = { a: 1 };
+
+    expect(repr(new Set([shared, { a: 1 }]))).toBe('Set([{"a":1},{"a":1}])');
+  });
+
+  it("describes a repeated value the way it represents one", () => {
+    const shared = { a: 1 };
+
+    expect(desc({ x: shared, y: shared })).toBe(
+      'object {"x":{"a":1},"y":{"a":1}}',
+    );
+  });
+
   it("handles unserializable objects", () => {
     const object = {};
     Object.defineProperty(object, "prop", {

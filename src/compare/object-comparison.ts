@@ -13,6 +13,13 @@ interface ObjectComparisonOptions {
 }
 
 /**
+ * Pairs the walk is inside, held as the expected values reached under each actual value.
+ *
+ * One of these belongs to one top-level comparison, and it is dropped when that comparison returns.
+ */
+type PairsInProgress = Map<object, Set<object>>;
+
+/**
  * Find a mismatch between two objects, if any.
  */
 export function findObjectComparisonMismatch(
@@ -20,6 +27,7 @@ export function findObjectComparisonMismatch(
   expected: unknown,
   options: ObjectComparisonOptions,
   path = "$",
+  inProgress: PairsInProgress = new Map(),
 ): ObjectComparisonMismatch | undefined {
   if (isMatcher(expected)) {
     if (!expected.isMatch(actual)) {
@@ -34,11 +42,15 @@ export function findObjectComparisonMismatch(
   }
 
   if (Array.isArray(expected)) {
-    return findArrayMismatch(actual, expected, options, path);
+    return comparePairInProgress(actual, expected, inProgress, () =>
+      findArrayMismatch(actual, expected, options, path, inProgress),
+    );
   }
 
   if (isPlainObject(expected)) {
-    return findObjectMismatch(actual, expected, options, path);
+    return comparePairInProgress(actual, expected, inProgress, () =>
+      findObjectMismatch(actual, expected, options, path, inProgress),
+    );
   }
 
   if (expected instanceof Date) {
@@ -46,7 +58,9 @@ export function findObjectComparisonMismatch(
   }
 
   if (expected instanceof Set) {
-    return findSetMismatch(actual, expected, options, path);
+    return comparePairInProgress(actual, expected, inProgress, () =>
+      findSetMismatch(actual, expected, options, path, inProgress),
+    );
   }
 
   if (!Object.is(actual, expected)) {
@@ -58,6 +72,48 @@ export function findObjectComparisonMismatch(
   }
 
   return undefined;
+}
+
+/**
+ * Compare a pair while recording that the walk is inside it.
+ *
+ * A pair the walk is already inside is a cycle. It compares equal, because two values that refer
+ * back to themselves the same way carry the same structure, and going round again reads nothing
+ * the walk has yet to see. Without the record the walk goes round forever and the run dies on a
+ * stack overflow.
+ *
+ * The record is removed on the way out, so a value reached twice by separate routes is compared
+ * each time. A repeated sibling is a shared reference and not a cycle.
+ *
+ * Only an object actual is recorded. A primitive one cannot refer back to anything, and every
+ * branch that walks into a structure reports a mismatch against a primitive and stops.
+ */
+function comparePairInProgress(
+  actual: unknown,
+  expected: object,
+  inProgress: PairsInProgress,
+  compare: () => ObjectComparisonMismatch | undefined,
+): ObjectComparisonMismatch | undefined {
+  if (actual === null || typeof actual !== "object") {
+    return compare();
+  }
+
+  let reached = inProgress.get(actual);
+
+  if (reached === undefined) {
+    reached = new Set();
+    inProgress.set(actual, reached);
+  } else if (reached.has(expected)) {
+    return undefined;
+  }
+
+  reached.add(expected);
+
+  try {
+    return compare();
+  } finally {
+    reached.delete(expected);
+  }
 }
 
 /**
@@ -98,6 +154,7 @@ function findSetMismatch(
   expected: ReadonlySet<unknown>,
   options: ObjectComparisonOptions,
   path: string,
+  inProgress: PairsInProgress,
 ): ObjectComparisonMismatch | undefined {
   if (!(actual instanceof Set)) {
     return {
@@ -115,7 +172,12 @@ function findSetMismatch(
     };
   }
 
-  const { missing } = findUnpairedSetMembers(actual, expected, options);
+  const { missing } = findUnpairedSetMembers(
+    actual,
+    expected,
+    options,
+    inProgress,
+  );
 
   // The two Sets are the same size here, so nothing is left over on the actual side either.
   if (missing.length > 0) {
@@ -143,6 +205,8 @@ interface SetPairing {
   readonly actualMembers: readonly unknown[];
   readonly expectedMembers: readonly unknown[];
   readonly options: ObjectComparisonOptions;
+  /** Pairs the enclosing walk is inside, so a member that is the Set itself is not walked again. */
+  readonly inProgress: PairsInProgress;
   /** Expected member holding each actual member, by index. Absent while the member is unpaired. */
   readonly holders: Map<number, number>;
   /** Actual members each expected member can take, worked out once per expected member. */
@@ -169,12 +233,14 @@ export function findUnpairedSetMembers(
   actual: ReadonlySet<unknown>,
   expected: ReadonlySet<unknown>,
   options: ObjectComparisonOptions,
+  inProgress: PairsInProgress = new Map(),
 ): UnpairedSetMembers {
   const actualMembers = [...actual];
   const pairing: SetPairing = {
     actualMembers,
     expectedMembers: [...expected],
     options,
+    inProgress,
     holders: new Map(),
     candidates: new Map(),
   };
@@ -248,6 +314,8 @@ function candidatesFor(
         actualMember,
         expectedMember,
         pairing.options,
+        "$",
+        pairing.inProgress,
       ) === undefined
     ) {
       found.push(actualIndex);
@@ -263,6 +331,7 @@ function findArrayMismatch(
   expected: readonly unknown[],
   options: ObjectComparisonOptions,
   path: string,
+  inProgress: PairsInProgress,
 ): ObjectComparisonMismatch | undefined {
   if (!Array.isArray(actual)) {
     return {
@@ -286,6 +355,7 @@ function findArrayMismatch(
       expectedElement,
       options,
       `${path}[${String(index)}]`,
+      inProgress,
     );
 
     if (mismatch !== undefined) {
@@ -301,6 +371,7 @@ function findObjectMismatch(
   expected: Record<PropertyKey, unknown>,
   options: ObjectComparisonOptions,
   path: string,
+  inProgress: PairsInProgress,
 ): ObjectComparisonMismatch | undefined {
   if (!isComparableObject(actual, options)) {
     return {
@@ -338,6 +409,7 @@ function findObjectMismatch(
       expected[key],
       options,
       formatPath(path, key),
+      inProgress,
     );
 
     if (mismatch !== undefined) {
