@@ -2,6 +2,8 @@ import { describe, expect, expectTypeOf, it } from "vitest";
 import { desc, repr } from "../../describe/describe.js";
 import { assertObjectEquals } from "../object-equals/object-equals.assert.js";
 import { assertObjectMatches } from "../object-matches/object-matches.assert.js";
+import { stringStartingWith } from "../string-starts-with/string-starts-with.match.js";
+import { typeString } from "../type-string/type-string.match.js";
 import { assertSetEquals } from "./set-equals.assert.js";
 import { setOf } from "./set-equals.match.js";
 
@@ -145,13 +147,55 @@ describe("set-equals", () => {
       }).not.toThrow();
     });
 
-    it("reports equal-valued object members greedy pairing leaves over", () => {
+    it("reports members that no pairing can cover", () => {
       expect(() => {
         assertSetEquals(
           new Set([{ a: 1 }, { a: 2 }]),
           new Set([{ a: 1 }, { a: 1 }]),
         );
       }).toThrow('missing [{"a":1}], unexpected [{"a":2}]');
+    });
+
+    it("pairs matchers up whatever order the expected Set holds them in", () => {
+      // typeString() matches both members and stringStartingWith("a") matches
+      // only one, so the pair only works out if typeString() gives "abc" up.
+      // Taking the first member that compares equal would turn on the order
+      // these two went into the Set.
+      expect(() => {
+        assertSetEquals(
+          new Set(["abc", "xyz"]),
+          new Set([typeString(), stringStartingWith("a")]),
+        );
+      }).not.toThrow();
+
+      expect(() => {
+        assertSetEquals(
+          new Set(["abc", "xyz"]),
+          new Set([stringStartingWith("a"), typeString()]),
+        );
+      }).not.toThrow();
+    });
+
+    it("moves several matchers along to find a complete pairing", () => {
+      expect(() => {
+        assertSetEquals(
+          new Set(["ab", "ax", "zz"]),
+          new Set([
+            typeString(),
+            stringStartingWith("ab"),
+            stringStartingWith("a"),
+          ]),
+        );
+      }).not.toThrow();
+    });
+
+    it("still reports a matcher that no member is left for", () => {
+      expect(() => {
+        assertSetEquals(
+          new Set(["abc", "abd"]),
+          new Set([stringStartingWith("a"), stringStartingWith("z")]),
+        );
+      }).toThrow('missing ["z…"], unexpected ["abd"]');
     });
 
     it("narrows an unknown value to the expected Set type", () => {

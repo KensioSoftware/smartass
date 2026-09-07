@@ -1,6 +1,6 @@
 import { AssertionError } from "../../assertion-error.js";
 import { desc, repr } from "../../describe/describe.js";
-import { findObjectComparisonMismatch } from "../../compare/object-comparison.js";
+import { findUnpairedSetMembers } from "../../compare/object-comparison.js";
 import { setMemberComparison, setOf } from "./set-equals.match.js";
 
 /**
@@ -46,7 +46,11 @@ function buildSetEqualsMessage(
     return `Expected ${desc(actual)} to be a Set equal to ${desc(expected)}.`;
   }
 
-  const { missing, unexpected } = findUnpairedMembers(actual, expected);
+  const { missing, unexpected } = findUnpairedSetMembers(
+    actual,
+    expected,
+    setMemberComparison,
+  );
   const parts: string[] = [];
 
   if (missing.length > 0) {
@@ -59,41 +63,4 @@ function buildSetEqualsMessage(
 
   // A failed match always leaves at least one member unpaired, so parts is never empty here.
   return `Expected ${desc(actual)} to equal ${desc(expected)}, ${parts.join(", ")}.`;
-}
-
-/**
- * Pair the members of the two Sets up, and report what is left over on each
- * side.
- *
- * Each expected member takes the first unpaired member of the actual Set that
- * compares equal to it. The pairing is greedy, and it can leave members on both
- * sides where one member compares equal to several expected members. Reaching
- * that case takes a Set holding equal-valued objects, such as
- * new Set([{ a: 1 }, { a: 1 }]).
- */
-function findUnpairedMembers(
-  actual: ReadonlySet<unknown>,
-  expected: ReadonlySet<unknown>,
-): { missing: unknown[]; unexpected: unknown[] } {
-  const unexpected: unknown[] = [...actual];
-  const missing: unknown[] = [];
-
-  for (const expectedMember of expected) {
-    const index = unexpected.findIndex(
-      (candidate) =>
-        findObjectComparisonMismatch(
-          candidate,
-          expectedMember,
-          setMemberComparison,
-        ) === undefined,
-    );
-
-    if (index === -1) {
-      missing.push(expectedMember);
-    } else {
-      unexpected.splice(index, 1);
-    }
-  }
-
-  return { missing, unexpected };
 }
