@@ -110,6 +110,18 @@ import type {
   SetOfSizeMatcher,
 } from "../set-size/set-size.type.js";
 import type {
+  SetOfMatch,
+  SetOfMatcher,
+} from "../set-equals/set-equals.type.js";
+import type {
+  SetIncludingMatch,
+  SetIncludingMatcher,
+} from "../set-includes/set-includes.type.js";
+import type {
+  SetNotIncludingMatch,
+  SetNotIncludingMatcher,
+} from "../set-not-includes/set-not-includes.type.js";
+import type {
   ResponseOfStatusMatch,
   ResponseOfStatusMatcher,
 } from "../response-status/response-status.type.js";
@@ -271,13 +283,19 @@ type MiscMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
       ? MapOfSizeMatch<TActual, N>
       : TExpected extends SetOfSizeMatcher<infer N>
         ? SetOfSizeMatch<TActual, N>
-        : TExpected extends OneOfMatcher<infer TAllowed>
-          ? OneOfMatch<TActual, TAllowed>
-          : TExpected extends UuidV4Matcher
-            ? UuidV4Match<TActual>
-            : TExpected extends ResponseOfStatusMatcher<infer TStatus>
-              ? ResponseOfStatusMatch<TActual, TStatus>
-              : never;
+        : TExpected extends SetOfMatcher<infer TMember>
+          ? SetOfMatch<TActual, TMember>
+          : TExpected extends SetIncludingMatcher<infer TMember>
+            ? SetIncludingMatch<TActual, TMember>
+            : TExpected extends SetNotIncludingMatcher
+              ? SetNotIncludingMatch<TActual>
+              : TExpected extends OneOfMatcher<infer TAllowed>
+                ? OneOfMatch<TActual, TAllowed>
+                : TExpected extends UuidV4Matcher
+                  ? UuidV4Match<TActual>
+                  : TExpected extends ResponseOfStatusMatcher<infer TStatus>
+                    ? ResponseOfStatusMatch<TActual, TStatus>
+                    : never;
 
 /**
  * Run all explicit matcher refinements before trying generic fallbacks.
