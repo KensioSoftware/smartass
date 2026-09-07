@@ -6,9 +6,9 @@ import { findObjectComparisonMismatch } from "../../compare/object-comparison.js
  * Assert that an array equals the expected array, with type narrowing.
  *
  * Members are compared by value. Plain objects and nested arrays are compared
- * recursively, and object keys must match exactly. Class instances and other
- * values are compared using Object.is. assertArrayIdentical() compares members
- * by identity.
+ * recursively, and object keys must match exactly. Dates are compared by the
+ * instant they hold. Class instances and other values are compared using
+ * Object.is. assertArrayIdentical() compares members by identity.
  * @example
  * ```ts
  * import { assertArrayEquals } from "@kensio/smartass";

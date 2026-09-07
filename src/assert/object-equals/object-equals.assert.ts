@@ -7,8 +7,9 @@ import { findObjectComparisonMismatch } from "../../compare/object-comparison.js
  * type narrowing.
  *
  * Plain objects are compared recursively by value. Arrays are compared by length
- * and by recursively comparing each element in order. Primitive values and
- * non-plain objects are compared using Object.is.
+ * and by recursively comparing each element in order. Dates are compared by the
+ * instant they hold. Primitive values and other objects are compared using
+ * Object.is.
  * @example
  * ```ts
  * import { assertObjectEquals } from "@kensio/smartass";

@@ -44,6 +44,77 @@ describe("object-equals", () => {
     );
   });
 
+  describe("dates", () => {
+    it("does not throw when two dates hold the same instant", () => {
+      expect(() => {
+        assertObjectEquals(
+          { at: new Date("2026-01-01T00:00:00.000Z") },
+          { at: new Date("2026-01-01T00:00:00.000Z") },
+        );
+      }).not.toThrow();
+    });
+
+    it("does not throw when the dates are compared directly", () => {
+      expect(() => {
+        assertObjectEquals(
+          new Date("2026-01-01T00:00:00.000Z"),
+          new Date("2026-01-01T00:00:00.000Z"),
+        );
+      }).not.toThrow();
+    });
+
+    it("throws when the instants differ", () => {
+      expect(() => {
+        assertObjectEquals(
+          { at: new Date("2026-01-01T00:00:00.000Z") },
+          { at: new Date("2026-01-02T00:00:00.000Z") },
+        );
+      }).toThrow(
+        'Mismatch at $.at: expected Date("2026-01-02T00:00:00.000Z"), got Date("2026-01-01T00:00:00.000Z").',
+      );
+    });
+
+    it("throws when the actual value is not a date", () => {
+      expect(() => {
+        assertObjectEquals(
+          { at: "2026-01-01T00:00:00.000Z" },
+          { at: new Date("2026-01-01T00:00:00.000Z") },
+        );
+      }).toThrow(
+        'Mismatch at $.at: expected Date("2026-01-01T00:00:00.000Z"), got "2026-01-01T00:00:00.000Z".',
+      );
+    });
+
+    it("pairs one invalid date with another", () => {
+      expect(() => {
+        assertObjectEquals(
+          { at: new Date("nonsense") },
+          { at: new Date("nonsense") },
+        );
+      }).not.toThrow();
+    });
+
+    it("keeps an invalid date apart from a real instant", () => {
+      expect(() => {
+        assertObjectEquals(
+          { at: new Date("nonsense") },
+          { at: new Date("2026-01-01T00:00:00.000Z") },
+        );
+      }).toThrow(
+        'Mismatch at $.at: expected Date("2026-01-01T00:00:00.000Z"), got Date("Invalid").',
+      );
+    });
+
+    it("compares dates held in an array", () => {
+      expect(() => {
+        assertObjectEquals(
+          { at: [new Date("2026-01-01T00:00:00.000Z")] },
+          { at: [new Date("2026-01-01T00:00:00.000Z")] },
+        );
+      }).not.toThrow();
+    });
+  });
+
   it("throws when arrays differ by value", () => {
     expect(() => {
       assertObjectEquals(

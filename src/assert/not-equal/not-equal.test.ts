@@ -41,6 +41,37 @@ describe("not-equal", () => {
     expect(error.expected).toBe(unexpected);
   });
 
+  it("throws when two dates hold the same instant", () => {
+    // Given two Date objects built from one instant.
+    const actual = new Date("2026-01-01T00:00:00.000Z");
+    const unexpected = new Date("2026-01-01T00:00:00.000Z");
+
+    // When their difference is asserted.
+    const assertion = () => {
+      assertNotEqual(actual, unexpected);
+    };
+
+    // Then the separate objects count as equal.
+    expect(assertion).toThrow(AssertionError);
+    expect(assertion).toThrow(
+      'Expected object Date("2026-01-01T00:00:00.000Z") not to equal object Date("2026-01-01T00:00:00.000Z"), but it did.',
+    );
+  });
+
+  it("passes when two dates hold different instants", () => {
+    // Given Date objects one day apart.
+    const actual = new Date("2026-01-01T00:00:00.000Z");
+    const unexpected = new Date("2026-01-02T00:00:00.000Z");
+
+    // When their difference is asserted.
+    const assertion = () => {
+      assertNotEqual(actual, unexpected);
+    };
+
+    // Then the differing instants satisfy the assertion.
+    expect(assertion).not.toThrow();
+  });
+
   it("passes when values differ at any depth", () => {
     // Given objects with one different nested array value.
     const actual = { user: { roles: ["admin", "editor"] } };

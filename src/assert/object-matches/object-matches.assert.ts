@@ -14,7 +14,8 @@ import type {
  * Arrays are matched by length and by recursively matching each element in
  * order.
  * Matcher values are evaluated with their matcher predicate.
- * Primitive values and non-plain objects are compared using Object.is.
+ * Dates are compared by the instant they hold.
+ * Primitive values and other objects are compared using Object.is.
  * @example
  * ```ts
  * import { assertObjectMatches, oneOf, typeString } from "@kensio/smartass"
