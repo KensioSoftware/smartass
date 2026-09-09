@@ -18,7 +18,46 @@
  *   `Set` from a `Map`. Where the shape is ambiguous the message names every assertion that could
  *   apply rather than picking one; if only one side of an ambiguous shape has a specific assertion
  *   to offer, there is no selector for it, because the suggestion would be wrong for the others.
+ *   The exception is a receiver that is written as a string in the source, which
+ *   `stringLengthReceiver` below matches syntactically.
  */
+
+/**
+ * A `.length` whose receiver the source itself shows to be a string.
+ *
+ * `value.length` alone is as much an array as a string, which is why the `.length` selectors
+ * further down name both assertions rather than choosing one. These shapes settle it without type
+ * information: a string literal or template literal, a `String()` call, a call to a method that
+ * only strings answer to, or a fallback to a string literal. The last of those is the same kind of
+ * tell as a numeric literal beside `.status` — an author who defaults a value to `""` is telling
+ * you what they think it holds.
+ */
+/** Methods that only a string answers to, or that only ever return one. */
+const stringOnlyMethods = [
+  "charAt",
+  "join",
+  "normalize",
+  "padEnd",
+  "padStart",
+  "replace",
+  "replaceAll",
+  "substring",
+  "toLowerCase",
+  "toString",
+  "toUpperCase",
+  "trim",
+  "trimEnd",
+  "trimStart",
+].join("|");
+
+const stringLengthReceiver = `MemberExpression[property.name='length']:matches(${[
+  "[object.type='Literal'][object.value=type(string)]",
+  "[object.type='TemplateLiteral']",
+  "[object.type='CallExpression'][object.callee.name='String']",
+  `[object.type='CallExpression'][object.callee.property.name=/^(${stringOnlyMethods})$/]`,
+  "[object.type='LogicalExpression'][object.operator='??'][object.right.value=type(string)]",
+  "[object.type='LogicalExpression'][object.operator='||'][object.right.value=type(string)]",
+].join(", ")})`;
 
 /**
  * A single "you could be more specific here" suggestion, keyed by the AST shape that triggers it.
@@ -213,8 +252,9 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
     // comparison settles the type, the same way it settles the `.status` selectors. A comparison
     // between two identifiers has no such tell and is left alone.
     {
-      selector:
-        "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>'][right.type='Literal'][right.value=type(number)]",
+      // The `:not` hands `assertTrue(text.trim().length > 0)` to the emptiness selector below
+      // rather than reporting both suggestions on the one comparison.
+      selector: `CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>'][right.type='Literal'][right.value=type(number)]:not([right.value=0]:has(> ${stringLengthReceiver}))`,
       message:
         "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
     },
@@ -259,6 +299,20 @@ export const preferSpecificAssertionRules: readonly PreferSpecificAssertionRule[
         "CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='<='][left.type='Literal'][left.value=type(number)]",
       message:
         "Use assertGreaterThanOrEqual(actual, expected) instead of assertTrue(expected <= actual). Note that the arguments swap round: the value comes first.",
+    },
+    // Emptiness. A length compared against zero is asking whether there is anything there, and
+    // assertStringNotEmpty says that of a string in one call, narrowing to a string as it goes.
+    // Both selectors need `stringLengthReceiver`, because assertArrayNotEmpty is the right
+    // suggestion for the same comparison on an array.
+    {
+      selector: `CallExpression[callee.name='assertTrue'] > BinaryExpression[operator='>'][right.type='Literal'][right.value=type(number)][right.value=0]:has(> ${stringLengthReceiver})`,
+      message:
+        "Use assertStringNotEmpty(value) instead of assertTrue(value.length > 0).",
+    },
+    {
+      selector: `CallExpression[callee.name='assertGreaterThan']:has(> Literal[value=type(number)][value=0]:nth-child(2)) > ${stringLengthReceiver}:first-child`,
+      message:
+        "Use assertStringNotEmpty(value) instead of assertGreaterThan(value.length, 0).",
     },
     {
       selector:

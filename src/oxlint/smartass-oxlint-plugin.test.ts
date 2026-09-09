@@ -120,6 +120,17 @@ describe("smartassOxlintPlugin", () => {
         // ordering assertions take number and bigint only.
         { filename: "valid.ts", code: "assertTrue(later > earlier);" },
         { filename: "valid.ts", code: "assertTrue(version >= '2.0.0');" },
+        // assertArrayNotEmpty is the right suggestion for the same comparison on an array, so an
+        // emptiness check is left alone unless the source shows the receiver to be a string.
+        { filename: "valid.ts", code: "assertGreaterThan(values.length, 0);" },
+        {
+          filename: "valid.ts",
+          code: "assertGreaterThan(values.slice(1).length, 0);",
+        },
+        {
+          filename: "valid.ts",
+          code: "assertGreaterThan(text.trim().length, 1);",
+        },
       ],
       invalid: [
         {
@@ -260,6 +271,36 @@ describe("smartassOxlintPlugin", () => {
             {
               message:
                 "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: 'assertTrue((record.sequenceNumber ?? "").length > 0);',
+          errors: [
+            {
+              message:
+                "Use assertStringNotEmpty(value) instead of assertTrue(value.length > 0).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: 'assertGreaterThan((record.sequenceNumber ?? "").length, 0);',
+          errors: [
+            {
+              message:
+                "Use assertStringNotEmpty(value) instead of assertGreaterThan(value.length, 0).",
+            },
+          ],
+        },
+        {
+          filename: "invalid.ts",
+          code: "assertGreaterThan(String(id).trim().length, 0);",
+          errors: [
+            {
+              message:
+                "Use assertStringNotEmpty(value) instead of assertGreaterThan(value.length, 0).",
             },
           ],
         },

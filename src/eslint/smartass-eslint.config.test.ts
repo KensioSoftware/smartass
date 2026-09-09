@@ -124,6 +124,49 @@ describe("smartassPreferSpecificAssertions", () => {
       expect(lint("assertTrue(version >= '2.0.0');")).toStrictEqual([]);
     });
 
+    it("suggests assertStringNotEmpty when the receiver is written as a string", () => {
+      // Given emptiness checks whose receiver the source shows to be a string.
+      const code = [
+        'assertTrue((record.sequenceNumber ?? "").length > 0);',
+        'assertGreaterThan((record.sequenceNumber ?? "").length, 0);',
+        "assertGreaterThan(name.trim().length, 0);",
+        "assertGreaterThan(String(id).length, 0);",
+        `assertGreaterThan(\`\${id}\`.length, 0);`,
+      ].join("\n");
+
+      // When ESLint checks them with the published config.
+      const messages = lint(code);
+
+      // Then each one points at the string assertion, and the assertTrue form is not also told
+      // to use assertGreaterThan.
+      expect(messages).toStrictEqual([
+        "Use assertStringNotEmpty(value) instead of assertTrue(value.length > 0).",
+        "Use assertStringNotEmpty(value) instead of assertGreaterThan(value.length, 0).",
+        "Use assertStringNotEmpty(value) instead of assertGreaterThan(value.length, 0).",
+        "Use assertStringNotEmpty(value) instead of assertGreaterThan(value.length, 0).",
+        "Use assertStringNotEmpty(value) instead of assertGreaterThan(value.length, 0).",
+      ]);
+    });
+
+    // assertArrayNotEmpty is the right answer for the same comparison on an array, and following
+    // a string suggestion on one would turn a passing assertion into a failing one.
+    it("leaves an emptiness check with an ambiguous receiver alone", () => {
+      expect(lint("assertGreaterThan(values.length, 0);")).toStrictEqual([]);
+      expect(
+        lint("assertGreaterThan(values.slice(1).length, 0);"),
+      ).toStrictEqual([]);
+      expect(lint("assertTrue(values.length > 0);")).toStrictEqual([
+        "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
+      ]);
+    });
+
+    // Only a comparison against zero is an emptiness check in disguise.
+    it("keeps the ordering suggestion for a string length against a non-zero literal", () => {
+      expect(lint('assertTrue((name ?? "").length > 3);')).toStrictEqual([
+        "Use assertGreaterThan(actual, expected) instead of assertTrue(actual > expected).",
+      ]);
+    });
+
     it("still suggests both length assertions for an exact length check", () => {
       expect(lint("assertTrue(values.length === 2);")).toStrictEqual([
         "Use a more specific length assertion, such as assertArrayLength(value, expectedLength) or assertStringLength(value, expectedLength), instead of assertTrue(value.length === expectedLength).",

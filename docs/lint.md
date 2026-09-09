@@ -69,5 +69,10 @@ own — `@typescript-eslint/only-throw-error` suppresses `typescript/only-throw-
 [`src/lint/prefer-specific-assertions.ts`](../src/lint/prefer-specific-assertions.ts), so both
 linters report identically. Status checks against numeric literals suggest `assertResponseStatus`
 with `describeResponse`. Failure messages include the response metadata and body. Ordering
-comparisons against a numeric literal suggest `assertGreaterThan` and its three siblings. See the
-README for consumer setup.
+comparisons against a numeric literal suggest `assertGreaterThan` and its three siblings.
+
+A `.length` compared against zero suggests `assertStringNotEmpty` where the source itself shows the
+receiver to be a string (a string or template literal, a `String()` call, a call to a string-only
+method such as `trim()`, or a fallback to a string literal as in `(value ?? "")`). A bare
+`value.length` could belong to an array, where `assertArrayNotEmpty` is the right answer. Those keep
+the ordering suggestion. See the README for consumer setup.

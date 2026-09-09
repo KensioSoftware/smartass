@@ -61,6 +61,10 @@ import type {
   StringNotIncludingMatcher,
 } from "../string-not-includes/string-not-includes.type.js";
 import type {
+  NonEmptyStringMatch,
+  NonEmptyStringMatcher,
+} from "../string-not-empty/string-not-empty.type.js";
+import type {
   StringStartingWithMatch,
   StringStartingWithMatcher,
 } from "../string-starts-with/string-starts-with.type.js";
@@ -242,7 +246,9 @@ type StringMatcherRefine<TActual, TExpected extends AssertionMatcher<unknown>> =
             ? StringStartingWithMatch<TActual, TPrefix>
             : TExpected extends StringOfLengthMatcher<infer N>
               ? StringOfLengthMatch<TActual, N>
-              : never;
+              : TExpected extends NonEmptyStringMatcher
+                ? NonEmptyStringMatch<TActual>
+                : never;
 
 /**
  * Explicit refinement branches for primitive type matchers.
